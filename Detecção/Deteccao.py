@@ -1,0 +1,2 @@
+class Deteccao:
+    pass
