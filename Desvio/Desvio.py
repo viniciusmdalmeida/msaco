@@ -9,11 +9,11 @@ class Desvio(Thread):
         self.control = control
 
     def run(self):
-        while self.detectionData is None or self.detectionData.distance > 15:
+        while self.detectionData is None or self.detectionData.distance > 20:
             if self.detectionData is not None:
                 print("Distancia:",self.detectionData.distance)
-        print("Desvio")
+        print("---Desvio---")
         print("Distancia:", self.detectionData.distance)
-        route = [[3, 3, -9]]
+        route = [[1, 3, -9]]
         self.control.updateRota(route)
         self.detectionData = None

@@ -1,6 +1,7 @@
 from Detecção.Sensores.Vision import *
 from Controle.Controle import *
 from Desvio.Desvio import *
+from Detecção.Deteccao import *
 
 class SenseAvoid(Thread):
     def __init__(self, sensores,classDesvio=None,semaphore=None):
@@ -12,11 +13,14 @@ class SenseAvoid(Thread):
             self.desvioThread = Desvio(self.control)
         else:
             self.desvioThread = classDesvio(self.control)
+
     def run(self):
         self.control.moveUAS()
         self.desvioThread.start()
-        if 'visao' in self.sensores:
-            print("Ok")
-            visao = Visao(self.semaphore, self.control,self.desvioThread)
-            visao.start()
-            visao.join()
+        deteccao = Deteccao(self.semaphore,self.desvioThread)
+        deteccao.start()
+        # if 'visao' in self.sensores:
+        #     print("Ok")
+        #     visao = Visao(self.semaphore, self.control,self.desvioThread)
+        #     visao.start()
+        #     visao.join()

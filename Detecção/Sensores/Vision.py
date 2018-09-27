@@ -6,12 +6,16 @@ import cv2
 from threading import Thread
 
 class Visao(Thread):
-    def __init__(self,semaforo,controle,desvioThread):
+    def __init__(self,semaforo):
         Thread.__init__(self)
         self.cliente = airsim.MultirotorClient()
         self.semaforo = semaforo
-        self.controle = controle
-        self.desvioThread = desvioThread
+        # self.desvioThread = desvioThread
+        self.detectData = None
+        self.name = "Vision"
+
+    def getStatus(self):
+        return self.detectData
 
     def showDepth(self,image,max=np.inf,invert=True,bbox=None):
         def verifmax(x):
@@ -117,8 +121,9 @@ class Visao(Thread):
 
 
         #Calculando resultado
-        dados = DetectionData(distanceMin)
-        self.desvioThread.detectionData = dados
+        self.detectData = DetectionData(distanceMin)
+        return self.detectData
+        # self.desvioThread.detectionData = self.detectData
             # Desvio(self.controle).start()
 
 
