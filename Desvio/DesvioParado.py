@@ -1,8 +1,7 @@
 from threading import Thread
 from Controle.DetectionData import *
 
-
-class Desvio(Thread):
+class DesvioParado(Thread):
     detectionData = None
     def __init__(self,control):
         Thread.__init__(self)
@@ -16,6 +15,6 @@ class Desvio(Thread):
             #     print("Distancia:",self.detectionData.distance)
         print("---Desvio---")
         print("Distancia:", self.detectionData.distance)
-        route = [[1, -10, -9]]
+        route = [[0, 0, -8],[0, 0, -8]]
         self.control.updateRota(route)
         self.detectionData = None

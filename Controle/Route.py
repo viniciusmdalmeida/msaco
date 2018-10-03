@@ -4,12 +4,12 @@ from threading import Thread
 
 class Route(ThreadKillable):
     pontos = []
-    tempo = 20
     stop = False
-    def __init__(self,cliente,pontos):
+    def __init__(self,cliente,pontos,tempo=0):
         Thread.__init__(self)
         self.cliente = cliente
         self.pontos = pontos
+        self.tempo = tempo
 
     def run(self):
         print("Iniciando Rota")

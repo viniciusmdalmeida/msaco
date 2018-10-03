@@ -4,15 +4,18 @@ from Desvio.Desvio import *
 from Controle.DetectionData import *
 import cv2
 from threading import Thread
+import time
 
 class Visao(Thread):
+    name = 'vision'
+
     def __init__(self,semaforo):
         Thread.__init__(self)
         self.cliente = airsim.MultirotorClient()
         self.semaforo = semaforo
         # self.desvioThread = desvioThread
         self.detectData = None
-        self.name = "Vision"
+        print("Iniciando Visão")
 
     def getStatus(self):
         return self.detectData
@@ -57,15 +60,18 @@ class Visao(Thread):
     def run(self):
         while self.semaforo.value:
             pass
-        self.tracker = cv2.TrackerKCF_create()
+        print("Iniciar Video")
+
+        #self.tracker = cv2.TrackerKCF_create()
+        self.tracker = cv2.TrackerBoosting_create()
         primeroFrame = self.getImage()
+        while len(np.unique(primeroFrame)) < 20:
+            primeroFrame = self.getImage()
         #Verificando se algum objeto saliente
         bbox,size = self.detectObject(primeroFrame)
-        # Iniciando tracker a partir do primero Bounding box
-        if size < 200:
-            pass
         self.tracker.init(primeroFrame, bbox)
         self.cont = 0
+        print("Tracker Iniciado")
         while True:
             self.updateTracker()
             # Exit se ESC for pressionado
@@ -77,6 +83,8 @@ class Visao(Thread):
         bbox = None
         while bbox is None:
             bbox = self.backgroundDetect(frameBase)
+            cv2.imshow("Tracking", frameBase)
+            cv2.waitKey(1)
         size = bbox[2] * bbox[3]
         return bbox,size
 
@@ -94,17 +102,22 @@ class Visao(Thread):
         #     ok, bbox = self.tracker.update(frame2,bbox)
         # calculando Frames por segundo
         fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
-        if ok and (bbox[0]>=0 and bbox[1]>=0):
+        x1 = int(bbox[0])
+        y1 = int(bbox[1])
+        larg = int(bbox[2])
+        alt = int(bbox[3])
+        if ok and (x1>=0 and y1>=0 and int(larg) >=1 and int(alt)>=1):
             # Desenhando Bounding box
-            x1 = int(bbox[0])
-            y1 = int(bbox[1])
-            larg = int(bbox[2])
-            alt = int(bbox[3])
+            x2 = int(x1 + larg)
+            y2 = int(y1 + alt)
             p1 = (x1, y1)
-            p2 = (int(x1 + larg), int(y1 + alt))
-            cv2.rectangle(frame, p1, p2, (255, 0, 0), 2,1)
+            p2 = (x2, y2)
             depthImage = self.getDepth()
-            distanceMin = depthImage[x1:int(x1 + larg),y1:int(y1 + alt)].min()
+            # print("x:{} x2:{},y:{} y2:{},sizeD:{},sizeF:{}"
+            #       .format(x1,x2,y1,y2,depthImage.shape,frame.shape))
+            distanceMin = depthImage[y1:y2,x1:x2].min()
+
+            cv2.rectangle(frame, p1, p2, (255, 0, 0), 2,1)
             cv2.putText(frame, "distancia:{}".format(distanceMin), (100, 80),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
         else:
@@ -127,7 +140,8 @@ class Visao(Thread):
             # Desvio(self.controle).start()
 
 
-    def backgroundDetect(self,primeroFrame):
+    def backgroundDetect(self,frameInicial):
+        primeroFrame = frameInicial.copy()
         primeroFrame = cv2.cvtColor(primeroFrame, cv2.COLOR_BGR2GRAY)
         primeroFrame = cv2.GaussianBlur(primeroFrame, (21, 21), 0)
         # compute the absolute difference between the current frame and
