@@ -1,22 +1,8 @@
-from Controle.SenseAvoid import *
-from Desvio.Desvio import *
-from Desvio.DesvioParado import *
-from Controle.Controle import *
-from MyUtils.Semaphore import *
+from Interface.Start import Start
 
-#Parametros
-semaphore = Semaphore(True)
 sensors = ['vision']
-routePoints = [[0,0,-10],[2,0,-10],[2,1,-10],[-2,1,-10],[-2,-1,-10]]
-
-# Conectando ao simulador AirSim
-control = Controle(semaphore,routePoints)
-control.moveUAS()
-
-#Iniciand SenseAvoid
-principal = SenseAvoid(control,sensors,DesvioParado,semaphore)
-principal.start()
-principal.join()
+routePoints = [[0,-15,0],[0,-25,0],[0,-35,0],[0,-40,0]]
 
 
+Start(routePoints,sensors)
 
