@@ -19,7 +19,7 @@ class Detect(Thread):
         for sensor in sensors:
             if sensor.lower() == "visão" or sensor.lower() == "vision":
                 # visionThread = Vision_RGB_Depth(self.semaphore,desvioThread,'KFC')
-                visionThread = VisionRDSVM(self.semaphore,desvioThread)
+                visionThread = VisionRDSVMTracker(self.semaphore,desvioThread)
                 self.sensorsThreads.append(visionThread)
 
     def run(self):
