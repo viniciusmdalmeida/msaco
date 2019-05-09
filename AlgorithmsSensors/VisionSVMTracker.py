@@ -1,9 +1,7 @@
-import airsim  # pip install airsim
 import numpy as np
-from Avoid.Avoid import *
 from Control.DetectionData import *
 import cv2
-from Detect.Sensor import *
+from AlgorithmsSensors.AlgorithmSensor import *
 from os import listdir
 from os.path import isfile
 import airsim
@@ -12,14 +10,14 @@ from sklearn.svm import SVC
 from sklearn.decomposition import PCA
 
 
-class VisionSVMTracker(Sensor):
+class VisionSVMTracker(AlgorithmSensor):
     name = 'vision'
     latsBbox = None
     cont = 0
     svm = None
 
     def __init__(self, semaphore,desvioThread,tracker='KFC',dir = 'Others/Imagens/SemAviao/'):
-        Sensor.__init__(self, semaphore)
+        AlgorithmSensor.__init__(self, semaphore)
         print("Iniciando Visão")
         self.desvioThread = desvioThread
         self.client = airsim.MultirotorClient()

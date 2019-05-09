@@ -1,4 +1,4 @@
-from Detect.AlgorithmsSensors.Vision_RGB_Depth import *
+from AlgorithmsSensors.Vision_RGB_Depth import *
 from Control.Control import *
 from Avoid.Avoid import *
 from Detect.Detect import *

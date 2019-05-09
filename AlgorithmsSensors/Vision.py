@@ -214,3 +214,4 @@ class Vision(Thread):
             old_gray = frame_gray.copy()
             p0 = good_new.reshape(-1, 1, 2)
         cv2.destroyAllWindows()
+

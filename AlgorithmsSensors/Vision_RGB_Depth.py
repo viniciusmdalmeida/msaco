@@ -1,24 +1,23 @@
 import airsim  # pip install airsim
 import numpy as np
-from Avoid.Avoid import *
 from Control.DetectionData import *
 import cv2
-from threading import Thread
-import time
+from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
+from abc import abstractmethod
 
-class Vision_RGB_Depth(Thread):
+from sklearn.svm import SVC
+from sklearn.decomposition import PCA
+from os import listdir
+from os.path import isfile
+
+class Vision_RGB_Depth(AlgorithmSensor):
     name = 'vision'
 
-    def __init__(self,semaforo,desvioThread):
-        Thread.__init__(self)
-        self.cliente = airsim.MultirotorClient()
-        self.semaforo = semaforo
-        self.desvioThread = desvioThread
+    def __init__(self,semaphore,avoidThread):
+        print('Start', self.name)
+        AlgorithmSensor.__init__(self, semaphore)
+        self.avoidThread = avoidThread
         self.detectData = None
-        print("Iniciando Visão")
-
-    def getStatus(self):
-        return self.detectData
 
     def showDepth(self,image,max=np.inf,invert=True,bbox=None):
         def verifmax(x):
@@ -41,7 +40,7 @@ class Vision_RGB_Depth(Thread):
         cv2.imshow("Depth",image)
 
     def getImage(self):
-        response = self.cliente.simGetImages([airsim.ImageRequest("0", airsim.ImageType.Scene, False, False)])
+        response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.Scene, False, False)])
         response = response[0]
         # get numpy array
         img1d = np.fromstring(response.image_data_uint8, dtype=np.uint8)
@@ -50,20 +49,28 @@ class Vision_RGB_Depth(Thread):
         return img_rgba
 
     def getDepth(self):
-        response = self.cliente.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
+        response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
         response = response[0]
         # get numpy array
         img1d = airsim.list_to_2d_float_array(response.image_data_float, response.width, response.height)
         return img1d
 
     #Tracker sozinho
+    @abstractmethod
     def run(self):
-        while self.semaforo.value:
+        pass
+
+class VisionRDDefault(Vision_RGB_Depth):
+    name = "Vision RGB Depth Default"
+
+
+    def run(self):
+        while self.semaphore.value:
             pass
         print("Iniciar Video")
 
-        self.tracker = cv2.TrackerMIL_create()
-        # self.tracker = cv2.TrackerKCF_create()
+        #self.tracker = cv2.TrackerMIL_create()
+        self.tracker = cv2.TrackerKCF_create()
         # self.tracker = cv2.TrackerTLD_create()
         primeroFrame = self.getImage()
         while len(np.unique(primeroFrame)) < 20:
@@ -136,7 +143,7 @@ class Vision_RGB_Depth(Thread):
 
         #Calculando resultado
         self.detectData = DetectionData(distanceMin)
-        self.desvioThread.detectionData = self.detectData
+        self.avoidThread.detectionData = self.detectData
             # Desvio(self.controle).start()
         return self.detectData
 
@@ -214,3 +221,109 @@ class Vision_RGB_Depth(Thread):
             old_gray = frame_gray.copy()
             p0 = good_new.reshape(-1, 1, 2)
         cv2.destroyAllWindows()
+
+
+class VisionRDSVM(Vision_RGB_Depth):
+
+    name = 'Vision RRB Depth SVM Algorithm'
+    latsBbox = None
+    cont = 0
+    svm = None
+
+    def __init__(self,semaphore,avoidThread,train=True):
+        Vision_RGB_Depth.__init__(self, semaphore, avoidThread)
+        if train:
+            self.train()
+
+    def getDados(self):
+        imgs = []
+        datas = []
+        target = []
+        dir = 'Others/Imagens/SemAviao/'
+        listPaths = listdir(dir)
+        # Dados positivos
+        for item in listPaths:
+            path = dir + item
+            if isfile(path):
+                image = cv2.imread(path, 0)
+                imgs.append(image)
+                datas.append(image.reshape(-1))
+                target.append(0)
+        dir = 'Others/Imagens/ImagenAviao/'
+        listPaths = listdir(dir)
+        # Dados Negativos
+        for item in listPaths:
+            path = dir + item
+            if isfile(path):
+                image = cv2.imread(path, 0)
+                imgs.append(image)
+                datas.append(image.reshape(-1))
+                target.append(1)
+        dict = {'img': imgs, 'target': target, 'data': datas}
+        return dict
+
+    def train(self):
+        dicData = self.getDados()
+        data = np.array(dicData['data'])
+        target = dicData['target']
+        # PCA
+        n_components = 150
+        self.pca = PCA(n_components=n_components, svd_solver='randomized',
+                       whiten=True).fit(data)
+        data = self.pca.transform(data)
+        # SVM
+        self.svm = SVC(C=100, gamma=0.01)
+        print('target:', len(data), 'data', len(target))
+        self.svm.fit(data, target)
+
+    def slidingWindows(self, frame):
+        stepSize = 20
+        windowSizeX = 120
+        windowSizeY = 60
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        for y in range(0, frame.shape[0], stepSize):
+            if (y + windowSizeY > frame.shape[0]):
+                y = frame.shape[0] - windowSizeY
+            for x in range(0, frame.shape[1], stepSize):
+                if (x + windowSizeX > frame.shape[1]):
+                    x = frame.shape[1] - windowSizeX
+                crop_img = frame[y:y + windowSizeY, x:x + windowSizeX]
+                crop_img = crop_img.reshape(-1)
+                data = self.pca.transform([crop_img])
+                predito = self.svm.predict(data)
+                if predito[0] == 1:
+                    bbox = (x, x + windowSizeX, y, y + windowSizeY)
+                    return bbox
+        return None
+
+    def run(self):
+        while self.semaphore.value:
+            pass
+        print("Iniciar Video")
+
+        primeroFrame = self.getImage()
+        while len(np.unique(primeroFrame)) < 20:
+            # Verifica se o frame não é vazio
+            primeroFrame = self.getImage()
+        while True:
+            frameatual = self.getImage()
+            bbox = self.slidingWindows(frameatual)
+            if not bbox is None:
+                p1 = (int(bbox[0]), int(bbox[2]))
+                p2 = (bbox[1], bbox[3])
+                cv2.rectangle(frameatual, p1, p2, (255, 0, 0), 2, 1)
+
+                depthImage = self.getDepth()
+                distanceMin = depthImage[bbox[2]:bbox[3], bbox[0]:bbox[1]].min()
+                self.detectData = DetectionData(distanceMin)
+                self.avoidThread.detectionData = self.detectData
+                cv2.putText(frameatual, "distancia:{}".format(distanceMin), (100, 80),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+
+            cv2.imshow("Primeiro Frame", frameatual)
+            cv2.waitKey(1)
+
+        # Verificando se algum objeto saliente
+        bbox, size = self.detectObject(primeroFrame)
+        self.tracker.init(primeroFrame, bbox)
+        self.cont = 0

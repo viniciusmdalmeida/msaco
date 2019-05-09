@@ -1,23 +1,21 @@
-import airsim  # pip install airsim
 import numpy as np
-from Avoid.Avoid import *
 from Control.DetectionData import *
 import cv2
-from Detect.Sensor import *
+from AlgorithmsSensors.AlgorithmSensor import *
 from os import listdir
 from os.path import isfile
 
 from sklearn.svm import SVC
 from sklearn.decomposition import PCA
 
-class VisionSVM(Sensor):
+class VisionSVM(AlgorithmSensor):
     name = 'vision'
     latsBbox = None
     cont = 0
     svm = None
 
-    def __init__(self,semaforo,desvioThread):
-        Sensor.__init__(self,semaforo)
+    def __init__(self,semaphore,desvioThread):
+        AlgorithmSensor.__init__(self, semaphore)
         print("Iniciando Visão")
         self.desvioThread = desvioThread
         self.train()
@@ -26,7 +24,7 @@ class VisionSVM(Sensor):
         imgs = []
         datas = []
         target = []
-        dir = 'Imagens/SemAviao/'
+        dir = 'Others/Imagens/SemAviao/'
         listPaths = listdir(dir)
         # Dados positivos
         for item in listPaths:
@@ -36,7 +34,7 @@ class VisionSVM(Sensor):
                 imgs.append(image)
                 datas.append(image.reshape(-1))
                 target.append(0)
-        dir = 'Imagens/ImagenAviao/'
+        dir = 'Others/Imagens/ImagenAviao/'
         listPaths = listdir(dir)
         # Dados Negativos
         for item in listPaths:
@@ -85,7 +83,7 @@ class VisionSVM(Sensor):
         return None
 
     def run(self):
-        while self.semaforo.value:
+        while self.semaphore.value:
             pass
         print("Iniciar Video")
 
@@ -117,7 +115,7 @@ class VisionSVM(Sensor):
         self.cont = 0
 
     def getImage(self):
-        response = self.cliente.simGetImages([airsim.ImageRequest("0", airsim.ImageType.Scene, False, False)])
+        response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.Scene, False, False)])
         response = response[0]
         # get numpy array
         img1d = np.fromstring(response.image_data_uint8, dtype=np.uint8)
@@ -126,7 +124,7 @@ class VisionSVM(Sensor):
         return img_rgba
 
     def getDepth(self):
-        response = self.cliente.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
+        response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
         response = response[0]
         # get numpy array
         img1d = airsim.list_to_2d_float_array(response.image_data_float, response.width, response.height)

@@ -1,9 +1,9 @@
 from threading import Thread
-from Detect.AlgorithmsSensors.Vision_RGB_Depth import  *
-from Detect.AlgorithmsSensors.Vision_MOG import  *
-from Detect.AlgorithmsSensors.VisionSVM import  *
-from Detect.AlgorithmsSensors.VisionSVMTracker import *
-from Detect.AlgorithmsSensors.Vision_RGB import *
+from AlgorithmsSensors.Vision_RGB_Depth import  *
+from AlgorithmsSensors.Vision_MOG import  *
+from AlgorithmsSensors.VisionSVM import  *
+from AlgorithmsSensors.VisionSVMTracker import *
+from AlgorithmsSensors.Vision_RGB import *
 import time
 import airsim
 
@@ -19,10 +19,8 @@ class Detect(Thread):
         for sensor in sensors:
             if sensor.lower() == "visão" or sensor.lower() == "vision":
                 # visionThread = Vision_RGB_Depth(self.semaphore,desvioThread,'KFC')
-                visionThread = Vision_RGB(self.semaphore,desvioThread)
+                visionThread = VisionRDSVM(self.semaphore,desvioThread)
                 self.sensorsThreads.append(visionThread)
-
-
 
     def run(self):
         for sensorThread in self.sensorsThreads:
