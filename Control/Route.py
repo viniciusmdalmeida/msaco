@@ -17,7 +17,11 @@ class Route(ThreadKillable):
         time.sleep(self.tempo)
         while pontoAtual<len(self.pontos) and self.stop == False:
             ponto = self.pontos[pontoAtual]
+            if len(ponto) > 3:
+                velocity = ponto[3]
+            else:
+                velocity = 3
             print("movendo {}".format(ponto))
-            self.cliente.moveToPositionAsync(ponto[0],ponto[1],ponto[2], 3).join()
+            self.cliente.moveToPositionAsync(ponto[0],ponto[1],ponto[2], velocity).join()
             pontoAtual += 1
         print("Fim")

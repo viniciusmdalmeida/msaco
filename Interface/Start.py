@@ -4,7 +4,7 @@ from Control.Control import *
 from MyUtils.Semaphore import *
 
 class Start:
-    def __init__(self,routePoints,sensors=None,algorithms=None,avoid=None):
+    def __init__(self,routePoints,sensors=['Vision'],algorithms={'Vision':['SVMTracker']},avoid=None):
         # Parametros
         semaphore = Semaphore(True)
 
@@ -13,5 +13,5 @@ class Start:
         control.moveUAS()
 
         # Iniciand SenseAvoid
-        main = SenseAvoid(control, sensors, avoid, semaphore)
+        main = SenseAvoid(control, semaphore, sensors, algorithms,avoid)
         main.start()

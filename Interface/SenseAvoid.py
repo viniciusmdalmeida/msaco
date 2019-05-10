@@ -1,23 +1,18 @@
-from AlgorithmsSensors.Vision_RGB_Depth import *
-from Control.Control import *
 from Avoid.Avoid import *
 from Detect.Detect import *
-from MyUtils.Semaphore import *
+
 
 class SenseAvoid(Thread):
-    def __init__(self,control,sensors=['vision'],avoidClass=None,semaphore=None):
+    def __init__(self,control,semaphore,sensors=['vision'],algorithms={'vision':'SVMTracker'},avoidClass=None):
         Thread.__init__(self)
         self.sensors = sensors
         self.control = control
-        if semaphore is None:
-            self.semaphore = Semaphore(True)
-        else:
-            self.semaphore = semaphore
+        self.semaphore = semaphore
         if avoidClass is None:
             self.desvioThread = Avoid(self.control)
         else:
             self.desvioThread = avoidClass(self.control)
-        self.deteccao = Detect(semaphore,self.desvioThread,self.sensors)
+        self.deteccao = Detect(semaphore,self.desvioThread,self.sensors,algorithms)
 
     def run(self):
         self.deteccao.start()

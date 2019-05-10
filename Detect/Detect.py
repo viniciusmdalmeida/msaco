@@ -1,9 +1,6 @@
-from threading import Thread
-from AlgorithmsSensors.Vision_RGB_Depth import  *
-from AlgorithmsSensors.Vision_MOG import  *
-from AlgorithmsSensors.VisionSVM import  *
-from AlgorithmsSensors.VisionSVMTracker import *
-from AlgorithmsSensors.Vision_RGB import *
+from AlgorithmsSensors.cam.Vision_RGB_Depth import  *
+from AlgorithmsSensors.cam.VisionSVMTracker import *
+from AlgorithmsSensors.cam.Vision_RGB import *
 import time
 import airsim
 
@@ -11,15 +8,17 @@ class Detect(Thread):
     sensorsThreads = []
     stop = False
 
-    def __init__(self,semaphore,desvioThread,sensors=["visão","radar","inertial"]):
+    def __init__(self,semaphore,avoidThread,sensors=["visão","radar","inertial"],algorithm={"vision":'SVMTracker'}):
         Thread.__init__(self)
         self.semaphore = semaphore
-        self.desvioThread = desvioThread
+        self.avoidThread = avoidThread
         self.airsimConection = airsim.MultirotorClient()
         for sensor in sensors:
             if sensor.lower() == "visão" or sensor.lower() == "vision":
-                # visionThread = Vision_RGB_Depth(self.semaphore,desvioThread,'KFC')
-                visionThread = VisionRDSVMTracker(self.semaphore,desvioThread)
+                if 'SVMTracker' in algorithm.values():
+                    visionThread = VisionRDSVMTracker(self.semaphore, avoidThread)
+                else:
+                    visionThread = VisionRGBDefault(self.semaphore,avoidThread)
                 self.sensorsThreads.append(visionThread)
 
     def run(self):
@@ -30,7 +29,7 @@ class Detect(Thread):
             for sensorThread in self.sensorsThreads:
                 self.detecções[sensorThread.name] = sensorThread.getStatus()
             # if self.checkDetect():
-            #     self.desvioThread.detectionData = self.detecções['vision']
+            #     self.avoidThread.detectionData = self.detecções['vision']
             colision = self.airsimConection.simGetCollisionInfo()
             if colision.has_collided:
                 print("Colidiu! com ",colision.object_name)
