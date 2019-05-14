@@ -230,7 +230,7 @@ class VisionRDSVM(Vision_RGB_Depth):
     cont = 0
     svm = None
 
-    def __init__(self,semaphore,avoidThread,train=True):
+    def __init__(self,detect,semaphore,avoidThread,train=True):
         Vision_RGB_Depth.__init__(self, semaphore, avoidThread)
         if train:
             self.train()
@@ -338,8 +338,6 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
     def __init__(self, semaphore, avoidThread, tracker='KFC'):
         Vision_RGB_Depth.__init__(self, semaphore,avoidThread)
         print("Iniciando Visão")
-        self.client = airsim.MultirotorClient()
-        self.semaphore = semaphore
         self.train()
         if tracker == 'MIL':
             self.tracker = cv2.TrackerMIL_create()
