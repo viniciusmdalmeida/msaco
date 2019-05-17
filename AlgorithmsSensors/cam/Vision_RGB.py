@@ -12,10 +12,9 @@ from sklearn.decomposition import PCA
 class Vision_RGB(AlgorithmSensor):
     name = 'vision'
 
-    def __init__(self,semaphore,avoidThread):
+    def __init__(self,detectRoot,semaphore):
         print('Start',self.name)
-        AlgorithmSensor.__init__(self, semaphore)
-        self.avoidThread = avoidThread
+        AlgorithmSensor.__init__(self, detectRoot,semaphore)
         self.detectData = None
 
     @abstractmethod
@@ -41,8 +40,8 @@ class Vision_RGB(AlgorithmSensor):
 class VisionRGBDefault(Vision_RGB):
     name = "Vision RGB Default Algorithm"
 
-    def __init__(self,semaphore,avoidThread):
-        Vision_RGB.__init__(self, semaphore,avoidThread)
+    def __init__(self,detectRoot,semaphore):
+        Vision_RGB.__init__(self, detectRoot,semaphore)
 
     def run(self):
         pass
@@ -144,8 +143,8 @@ class VisionRGBMOG(Vision_RGB):
     latsBbox = None
     cont = 0
 
-    def __init__(self,semaphore,avoidThread):
-        Vision_RGB.__init__(self, semaphore,avoidThread)
+    def __init__(self,detectRoot,semaphore):
+        Vision_RGB.__init__(self, detectRoot,semaphore)
 
     def run(self):
         while self.semaphore.value:
@@ -207,7 +206,7 @@ class VisionRGBMOG(Vision_RGB):
             k = cv2.waitKey(30) & 0xff
             if k == 27:
                 break
-            self.avoidThread.detectionData = self.detectData
+            self.detectRoot.receiveData(self.detectData)
 
         fgmask = fgbg.apply(frame)
 
@@ -220,8 +219,8 @@ class VisionRGBSVM(Vision_RGB):
     dirNegativeImagem= "Others/Imagens/SemAviao/"
 
 
-    def __init__(self,semaphore,avoidThread,train=True):
-        Vision_RGB.__init__(self, semaphore,avoidThread)
+    def __init__(self,detectRoot,semaphore,train=True):
+        Vision_RGB.__init__(self, detectRoot,semaphore)
         if train:
             self.train()
 

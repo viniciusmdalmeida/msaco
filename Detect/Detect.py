@@ -5,22 +5,30 @@ import time
 import airsim
 
 class Detect(Thread):
-    sensorsThreads = []
     stop = False
 
-    def __init__(self,semaphore,avoidThread,sensors=["visão","radar","inertial"],algorithm={"vision":'SVMTracker'}):
+    def __init__(self,semaphore,avoidThread,sensorsAlgorithm={"vision":'SVMTracker'}):
         Thread.__init__(self)
         self.semaphore = semaphore
         self.avoidThread = avoidThread
         self.airsimConection = airsim.MultirotorClient()
-        for sensor in sensors:
-            if sensor.lower() == "visão" or sensor.lower() == "vision":
-                if 'SVMTracker' in algorithm.values():
-                    visionThread = VisionRDSVMTracker(self.semaphore, avoidThread)
-                else:
-                    visionThread = VisionRGBDefault(self.semaphore,avoidThread)
-                self.sensorsThreads.append(visionThread)
+        self.sensorsThreads = []
 
+        if type(sensorsAlgorithm) is list:
+            for sensor in sensorsAlgorithm:
+                if sensor.lower() == "visão" or sensor.lower() == "vision":
+                    visionThread = VisionRDSVMTracker(self,self.semaphore)
+                    self.sensorsThreads.append(visionThread)
+
+        if type(sensorsAlgorithm) is dict:
+            for sensor in sensorsAlgorithm:
+                if type(sensorsAlgorithm[sensor]) is list:
+                    for algorithm in sensorsAlgorithm[sensor]:
+                        newAlgorithm = algorithm(self,self.semaphore)
+                        self.sensorsThreads.append(newAlgorithm)
+                else:
+                    newAlgorithm = sensorsAlgorithm[sensor](self, self.semaphore)
+                    self.sensorsThreads.append(newAlgorithm)
     def run(self):
         for sensorThread in self.sensorsThreads:
             sensorThread.start()
@@ -48,7 +56,10 @@ class Detect(Thread):
         return True
 
     #Terminar essa função que vai receber os dados dos sensores
-    def recevieData(self,name,detectData):
-        pass
+    def receiveData(self,detectData,name='vision'):
+        self.sendData(detectData)
+
+    def sendData(self,detectData):
+        self.avoidThread.detectionData = detectData
 
 

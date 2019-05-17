@@ -57,6 +57,7 @@ class VisionSVMTracker(AlgorithmSensor):
         return dict
 
     def train(self):
+        print("Treinando")
         dicData = self.getDados()
         data = np.array(dicData['data'])
         target = dicData['target']
@@ -69,7 +70,7 @@ class VisionSVMTracker(AlgorithmSensor):
         self.svm = SVC(C=100, gamma=0.01)
         print('target:', len(data), 'data', len(target))
         self.svm.fit(data, target)
-        print("Finalizado")
+        print("Treino Finalizado")
 
     def slidingWindows(self, frame):
         stepSize = 30

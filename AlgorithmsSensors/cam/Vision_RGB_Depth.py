@@ -13,10 +13,9 @@ from os.path import isfile
 class Vision_RGB_Depth(AlgorithmSensor):
     name = 'vision'
 
-    def __init__(self,semaphore,avoidThread):
+    def __init__(self,detectRoot,semaphore):
         print('Start', self.name)
-        AlgorithmSensor.__init__(self, semaphore)
-        self.avoidThread = avoidThread
+        AlgorithmSensor.__init__(self, detectRoot, semaphore)
         self.detectData = None
 
     def showDepth(self,image,max=np.inf,invert=True,bbox=None):
@@ -143,7 +142,7 @@ class VisionRDDefault(Vision_RGB_Depth):
 
         #Calculando resultado
         self.detectData = DetectionData(distanceMin)
-        self.avoidThread.detectionData = self.detectData
+        self.detectRoot.receiveData(self.detectData)
             # Desvio(self.controle).start()
         return self.detectData
 
@@ -230,8 +229,8 @@ class VisionRDSVM(Vision_RGB_Depth):
     cont = 0
     svm = None
 
-    def __init__(self,detect,semaphore,avoidThread,train=True):
-        Vision_RGB_Depth.__init__(self, semaphore, avoidThread)
+    def __init__(self,detectRoot,semaphore,train=True):
+        Vision_RGB_Depth.__init__(self,detectRoot, semaphore)
         if train:
             self.train()
 
@@ -316,7 +315,7 @@ class VisionRDSVM(Vision_RGB_Depth):
                 depthImage = self.getDepth()
                 distanceMin = depthImage[bbox[2]:bbox[3], bbox[0]:bbox[1]].min()
                 self.detectData = DetectionData(distanceMin)
-                self.avoidThread.detectionData = self.detectData
+                self.detectRoot.receiveData(self.detectData)
                 cv2.putText(frameatual, "distancia:{}".format(distanceMin), (100, 80),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
 
@@ -335,8 +334,8 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
     cont = 0
     svm = None
 
-    def __init__(self, semaphore, avoidThread, tracker='KFC'):
-        Vision_RGB_Depth.__init__(self, semaphore,avoidThread)
+    def __init__(self, detectRoot,semaphore,tracker='KFC'):
+        Vision_RGB_Depth.__init__(self,detectRoot,semaphore)
         print("Iniciando Visão")
         self.train()
         if tracker == 'MIL':
@@ -374,6 +373,7 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
         return dict
 
     def train(self):
+        print("Treino Iniciado")
         dicData = self.getDados()
         data = np.array(dicData['data'])
         target = dicData['target']
@@ -386,7 +386,7 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
         self.svm = SVC(C=100, gamma=0.01)
         print('target:', len(data), 'data', len(target))
         self.svm.fit(data, target)
-        print("Finalizado")
+        print("Treino Finalizado")
 
     def slidingWindows(self, frame):
         stepSize = 30
@@ -460,10 +460,9 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
             distanceMin = depthImage[y1:y2, x1:x2].min()
             cv2.putText(frame, "distancia:{}".format(distanceMin), (100, 80),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-
             # Enviar dados recebidos
             detectData = DetectionData(distanceMin)
-            self.avoidThread.detectionData = detectData
+            self.detectRoot.receiveData(detectData)
 
         else:
             # Tracking failure
