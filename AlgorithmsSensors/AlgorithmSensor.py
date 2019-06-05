@@ -7,17 +7,19 @@ from MyUtils.Semaphore import *
 class AlgorithmSensor(Thread, ABC):
     name = "Sensor"
 
-    def __init__(self,detectRoot,semaphore):
+    def __init__(self,detectRoot):
         Thread.__init__(self)
         ABC.__init__(self)
         print("Iniciando Visão",self.name)
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
-        self.semaphore = semaphore
         self.detectData = None
 
     @abstractmethod
     def run(self):
+        pass
+
+    def getData(self):
         pass
 
     def sendresult(self,name=None):

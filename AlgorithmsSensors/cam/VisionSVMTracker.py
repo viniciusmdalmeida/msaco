@@ -16,13 +16,12 @@ class VisionSVMTracker(AlgorithmSensor):
     cont = 0
     svm = None
 
-    def __init__(self, semaphore,desvioThread,tracker='KFC',dir = 'Others/Imagens/SemAviao/'):
-        AlgorithmSensor.__init__(self, semaphore)
+    def __init__(self,desvioThread,tracker='KFC',dir = 'Others/Imagens/SemAviao/'):
+        AlgorithmSensor.__init__(self)
         print("Iniciando Visão")
         self.desvioThread = desvioThread
         self.client = airsim.MultirotorClient()
         self.dir = dir
-        self.semaphore = semaphore
         self.train()
         if tracker == 'MIL':
             self.tracker = cv2.TrackerMIL_create()
@@ -94,8 +93,6 @@ class VisionSVMTracker(AlgorithmSensor):
         return None
 
     def run(self):
-        while self.semaphore.value:
-            pass
         #Iniciando o video
         print("Iniciar Video")
         primeroFrame = self.getImage()

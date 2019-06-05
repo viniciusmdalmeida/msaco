@@ -12,9 +12,9 @@ from sklearn.decomposition import PCA
 class Vision_RGB(AlgorithmSensor):
     name = 'vision'
 
-    def __init__(self,detectRoot,semaphore):
+    def __init__(self,detectRoot):
         print('Start',self.name)
-        AlgorithmSensor.__init__(self, detectRoot,semaphore)
+        AlgorithmSensor.__init__(self, detectRoot)
         self.detectData = None
 
     @abstractmethod
@@ -40,13 +40,10 @@ class Vision_RGB(AlgorithmSensor):
 class VisionRGBDefault(Vision_RGB):
     name = "Vision RGB Default Algorithm"
 
-    def __init__(self,detectRoot,semaphore):
-        Vision_RGB.__init__(self, detectRoot,semaphore)
+    def __init__(self,detectRoot):
+        Vision_RGB.__init__(self, detectRoot)
 
     def run(self):
-        pass
-        while self.semaphore.value:
-            pass
         print("Iniciando",self.name)
 
         # self.tracker = cv2.TrackerMIL_create()
@@ -143,12 +140,10 @@ class VisionRGBMOG(Vision_RGB):
     latsBbox = None
     cont = 0
 
-    def __init__(self,detectRoot,semaphore):
-        Vision_RGB.__init__(self, detectRoot,semaphore)
+    def __init__(self,detectRoot):
+        Vision_RGB.__init__(self, detectRoot)
 
     def run(self):
-        while self.semaphore.value:
-            pass
         print("Iniciar Video")
         # self.camShifTracker()
         # self.tracker = cv2.TrackerKCF_create()
@@ -219,8 +214,8 @@ class VisionRGBSVM(Vision_RGB):
     dirNegativeImagem= "Others/Imagens/SemAviao/"
 
 
-    def __init__(self,detectRoot,semaphore,train=True):
-        Vision_RGB.__init__(self, detectRoot,semaphore)
+    def __init__(self,detectRoot,train=True):
+        Vision_RGB.__init__(self, detectRoot)
         if train:
             self.train()
 
@@ -286,8 +281,6 @@ class VisionRGBSVM(Vision_RGB):
         return None
 
     def run(self):
-        while self.semaphore.value:
-            pass
         print("Iniciar Video")
 
         primeroFrame = self.getImage()

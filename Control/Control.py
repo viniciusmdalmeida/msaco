@@ -1,39 +1,46 @@
-from threading import Thread
-import airsim
 from Control.Route import *
+from MyUtils.ThreadKillable import *
 
-class Control():
+class Control(Thread):
     desvio = False
-    def __init__(self,semaphore,route):
+    moving = False
+    def __init__(self,vehicleComunication,points,tempo = 0):
         Thread.__init__(self)
-        self.semaphore = semaphore
-        self.inicialRoute = route
+        self.client = vehicleComunication
+        self.route = Route(points)
+        self.tempo = tempo
 
     def startConnection(self):
-        self.client = airsim.MultirotorClient()
-        self.client.confirmConnection()
-        self.client.enableApiControl(True)
+        pass
+        # self.client.connect()
 
     def moveUAS(self):
         self.startConnection()
-        self.client.armDisarm(True)
-        # Async methods returns Future. Call join() to wait for task to complete.
-        self.client.takeoffAsync().join()
-        self.semaphore.value = False
-        self.route = Route(self.client,self.inicialRoute,0)
-        self.route.start()
+        self.client.takeOff()
 
-    def updateRota(self,listaPontos):
+    def run(self):
+        self.startConnection()
+        self.moveUAS()
+        self.moving =True
+        self.move()
+
+    def move(self):
+        print("Iniciando Rota")
+        pontoAtual = 0
+        time.sleep(self.tempo)
+        while self.route.getNumPoints() > 0:
+            ponto = self.route.getNextPoint()
+            print("movendo {}".format(ponto))
+            self.client.sendRoute(ponto)
+            pontoAtual += 1
+        print("Fim")
+
+    def updateRota(self,points):
         print("Update Rota")
         if not self.desvio :
             self.desvio = True
-            if self.route.is_alive():
-                self.route.terminate()
-            rotaFuga = Route(self.client, listaPontos,0)
-            rotaFuga.start()
-            # self.rota.join() #Tratar isso!!!!!!
-            self.route = rotaFuga
-
+            self.client.sendRoute(points[0])
+            self.route.replanning(points[1:])
 
 
 

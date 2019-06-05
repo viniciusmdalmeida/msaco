@@ -2,26 +2,23 @@ from  MyUtils.ThreadKillable import *
 import time
 from threading import Thread
 
-class Route(ThreadKillable):
-    pontos = []
+class Route:
+    points = []
     stop = False
-    def __init__(self,cliente,pontos,tempo=0):
-        Thread.__init__(self)
-        self.cliente = cliente
-        self.pontos = pontos
-        self.tempo = tempo
+    def __init__(self,points):
+        self.points = points
 
-    def run(self):
-        print("Iniciando Rota")
-        pontoAtual = 0
-        time.sleep(self.tempo)
-        while pontoAtual<len(self.pontos) and self.stop == False:
-            ponto = self.pontos[pontoAtual]
-            if len(ponto) > 3:
-                velocity = ponto[3]
-            else:
-                velocity = 3
-            print("movendo {}".format(ponto))
-            self.cliente.moveToPositionAsync(ponto[0],ponto[1],ponto[2], velocity).join()
-            pontoAtual += 1
-        print("Fim")
+    def getNextPoint(self):
+        next_point = self.points.pop(0)
+        return next_point
+
+    def getPoint(self):
+        return self.points
+
+    def replanning(self,points):
+        #Esta função pode acrestar logicas para replanejamento
+        #Acrescentando por exemplos, restrições de movimento do veiculo
+        self.points = points
+
+    def getNumPoints(self):
+        return len(self.points)

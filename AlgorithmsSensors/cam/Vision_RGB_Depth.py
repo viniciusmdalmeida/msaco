@@ -13,9 +13,9 @@ from os.path import isfile
 class Vision_RGB_Depth(AlgorithmSensor):
     name = 'vision'
 
-    def __init__(self,detectRoot,semaphore):
+    def __init__(self,detectRoot):
         print('Start', self.name)
-        AlgorithmSensor.__init__(self, detectRoot, semaphore)
+        AlgorithmSensor.__init__(self, detectRoot)
         self.detectData = None
 
     def showDepth(self,image,max=np.inf,invert=True,bbox=None):
@@ -64,8 +64,6 @@ class VisionRDDefault(Vision_RGB_Depth):
 
 
     def run(self):
-        while self.semaphore.value:
-            pass
         print("Iniciar Video")
 
         #self.tracker = cv2.TrackerMIL_create()
@@ -229,8 +227,8 @@ class VisionRDSVM(Vision_RGB_Depth):
     cont = 0
     svm = None
 
-    def __init__(self,detectRoot,semaphore,train=True):
-        Vision_RGB_Depth.__init__(self,detectRoot, semaphore)
+    def __init__(self,detectRoot,train=True):
+        Vision_RGB_Depth.__init__(self,detectRoot)
         if train:
             self.train()
 
@@ -296,8 +294,6 @@ class VisionRDSVM(Vision_RGB_Depth):
         return None
 
     def run(self):
-        while self.semaphore.value:
-            pass
         print("Iniciar Video")
 
         primeroFrame = self.getImage()
@@ -334,8 +330,8 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
     cont = 0
     svm = None
 
-    def __init__(self, detectRoot,semaphore,tracker='KFC'):
-        Vision_RGB_Depth.__init__(self,detectRoot,semaphore)
+    def __init__(self, detectRoot,tracker='KFC'):
+        Vision_RGB_Depth.__init__(self,detectRoot)
         print("Iniciando Visão")
         self.train()
         if tracker == 'MIL':
@@ -410,8 +406,6 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
         return None
 
     def run(self):
-        while self.semaphore.value:
-            pass
         # Iniciando o video
         print("Iniciar Video")
         primeroFrame = self.getImage()

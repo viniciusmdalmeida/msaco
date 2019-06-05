@@ -14,8 +14,8 @@ class VisionSVM(AlgorithmSensor):
     cont = 0
     svm = None
 
-    def __init__(self,semaphore,desvioThread):
-        AlgorithmSensor.__init__(self, semaphore)
+    def __init__(self,desvioThread):
+        AlgorithmSensor.__init__(self)
         print("Iniciando Visão")
         self.desvioThread = desvioThread
         self.train()
@@ -83,8 +83,6 @@ class VisionSVM(AlgorithmSensor):
         return None
 
     def run(self):
-        while self.semaphore.value:
-            pass
         print("Iniciar Video")
 
         primeroFrame = self.getImage()

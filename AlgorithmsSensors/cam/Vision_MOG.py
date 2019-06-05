@@ -14,8 +14,6 @@ class VisionMOG(AlgorithmSensor):
         print("Iniciando Visão")
 
     def run(self):
-        while self.semaphore.value:
-            pass
         print("Iniciar Video")
         # self.camShifTracker()
         # self.tracker = cv2.TrackerKCF_create()
