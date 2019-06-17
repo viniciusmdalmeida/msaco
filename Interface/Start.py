@@ -4,24 +4,29 @@ from Detect.Detect import *
 from Interface.Communication import AirSimCommunication
 
 class Start(Thread):
-    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},avoidClass=None,comunication=AirSimCommunication):
+    avoidThread = None
+    detect = None
+
+    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},avoidClass=Avoid,comunication=AirSimCommunication,showVideo=True):
         Thread.__init__(self)
         # vehicleComunication = comunication.getVehicle()
         # Conectando ao simulador AirSim
         vehicleComunication = AirSimCommunication()
         self.control = Control(vehicleComunication,routePoints)
 
-        if avoidClass is None:
-            self.avoidThread = Avoid(self.control)
-        else:
+        if avoidClass is not None:
             self.avoidThread  = avoidClass(self.control)
-        self.deteccao = Detect(vehicleComunication,sensorsAlgorithms,self.avoidThread)
-
+        if sensorsAlgorithms is not None:
+            self.detect = Detect(vehicleComunication,sensorsAlgorithms,self.avoidThread)
         self.start()
 
     def run(self):
         self.control.start()
-        self.deteccao.start()
-        self.avoidThread.start()
-        self.deteccao.join()
-        self.avoidThread.join()
+        if self.detect is not None:
+            self.detect.start()
+        if self.avoidThread is not None:
+            self.avoidThread.start()
+        if self.detect is not None:
+            self.detect.join()
+        if self.avoidThread is not None:
+            self.avoidThread.join()

@@ -12,10 +12,11 @@ from sklearn.decomposition import PCA
 class Vision_RGB(AlgorithmSensor):
     name = 'vision'
 
-    def __init__(self,detectRoot):
+    def __init__(self,detectRoot,showVideo=True):
         print('Start',self.name)
         AlgorithmSensor.__init__(self, detectRoot)
         self.detectData = None
+        self.showVideo = showVideo
 
     @abstractmethod
     def run(self):
@@ -30,11 +31,32 @@ class Vision_RGB(AlgorithmSensor):
         img_rgba = img1d.reshape(response.height, response.width, 4)
         return img_rgba
 
-    def printDetection(self,frameBase,bbox=None):
-        if not bbox is None:
-            cv2.rectangle(frameBase, (bbox[0], bbox[1]), (bbox[0] + bbox[2], bbox[1] + bbox[3]), (255, 0, 0), 2, 1)
-        cv2.imshow("Detect", frameBase)
-        cv2.waitKey(1)
+    def printDetection(self,frame,bbox=None):
+        # Start timer
+        if self.showVideo:
+            timer = cv2.getTickCount()
+            if bbox is not None and len(bbox) >= 4:
+                fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
+                x1 = int(bbox[0])
+                y1 = int(bbox[1])
+                larg = int(bbox[2])
+                alt = int(bbox[3])
+                if (x1 >= 0 and y1 >= 0 and int(larg) >= 1 and int(alt) >= 1):
+                    # Draw Bounding box
+                    x2 = int(x1 + larg)
+                    y2 = int(y1 + alt)
+                    p1 = (x1, y1)
+                    p2 = (x2, y2)
+                    cv2.rectangle(frame, p1, p2, (255, 0, 0), 2, 1)
+                else:
+                    # Tracking failure
+                    cv2.putText(frame, "Tracking failure detected", (100, 80),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
+                # Display FPS on frame
+                cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2);
+            cv2.imshow("Detect", frame)
+            cv2.waitKey(1)
 
 
 class VisionRGBDefault(Vision_RGB):
@@ -68,7 +90,7 @@ class VisionRGBDefault(Vision_RGB):
         bbox = None
         while bbox is None:
             bbox = self.backgroundDetect(frameBase)
-            cv2.imshow("Tracking", frameBase)
+            self.printDetection(frameBase)
             cv2.waitKey(1)
         size = bbox[2] * bbox[3]
         self.printDetection(frameBase, bbox)
@@ -88,9 +110,10 @@ class VisionRGBDefault(Vision_RGB):
         # dilate the thresholded image to fill in holes, then find contours
         # on thresholded image
         thresh = cv2.dilate(thresh, None, iterations=2)
-        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+        img, cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)
-        cnts = cnts[1]
+        if type(cnts) is not None and len(cnts) > 0:
+            cnts = cnts[0]
         # loop over the contours
         for c in cnts:
             # if the contour is too small, ignore it
@@ -106,34 +129,9 @@ class VisionRGBDefault(Vision_RGB):
 
     def updateTracker(self):
         frame = self.getImage()
-        # Start timer
-        timer = cv2.getTickCount()
         # Update tracker
         ok, bbox = self.tracker.update(frame[:, :, :3])
-
-        fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
-        x1 = int(bbox[0])
-        y1 = int(bbox[1])
-        larg = int(bbox[2])
-        alt = int(bbox[3])
-        if ok and (x1 >= 0 and y1 >= 0 and int(larg) >= 1 and int(alt) >= 1):
-            # Desenhando Bounding box
-            x2 = int(x1 + larg)
-            y2 = int(y1 + alt)
-            p1 = (x1, y1)
-            p2 = (x2, y2)
-            cv2.rectangle(frame, p1, p2, (255, 0, 0), 2, 1)
-        else:
-            # Tracking failure
-            cv2.putText(frame, "Tracking failure detected", (100, 80),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
-
-        # Display FPS on frame
-        cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2);
-        # Display resultado
-        cv2.imshow("Tracking", frame)
-        self.sendresult()
+        self.printDetection(frame,bbox)
 
 class VisionRGBMOG(Vision_RGB):
     name = 'vision MOG algorithm'
@@ -157,17 +155,6 @@ class VisionRGBMOG(Vision_RGB):
 
         self.backgroundDetectMog2()
 
-    def detectObject(self,frameBase):
-        # print("detectObject")
-        bbox = None
-        while bbox is None:
-            bbox = self.backgroundDetect(frameBase)
-            cv2.imshow("Tracking", frameBase)
-            cv2.waitKey(1)
-        size = bbox[2] * bbox[3]
-        self.printDetection(frameBase,bbox)
-        return bbox,size
-
     def getPoints(self,bbox):
         x1 = int(bbox[0])
         y1 = int(bbox[1])
@@ -185,19 +172,19 @@ class VisionRGBMOG(Vision_RGB):
 
             thresh = cv2.threshold(fgmask, 25, 255, cv2.THRESH_BINARY)[1]
             thresh = cv2.dilate(thresh, None, iterations=2)
-            cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+            img,cnts,hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                                     cv2.CHAIN_APPROX_SIMPLE)
-            first_cnts = cnts[1]
-            print("first:",first_cnts,'conts',cnts)
-            max = first_cnts [0]
+            if type(cnts) is None or len(cnts) <= 0:
+                continue
+            max = cnts[0]
             for c in cnts:
                 if cv2.contourArea(c) >cv2.contourArea(max) :
                     max = c
-            (x, y, w, h) = cv2.boundingRect(max)
+            # (x, y, w, h) = cv2.boundingRect(max)
 
             #Desenhando quadrado
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2, 1)
-            cv2.imshow('frame', frame)
+            # cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2, 1)
+            self.printDetection(frame,cv2.boundingRect(max))
             k = cv2.waitKey(30) & 0xff
             if k == 27:
                 break
@@ -293,7 +280,6 @@ class VisionRGBSVM(Vision_RGB):
             if not bbox is None:
                 self.sendresult()
             self.printDetection(frameBase, bbox)
-            cv2.waitKey(1)
 
         # Verificando se algum objeto saliente
         bbox, size = self.detectObject(primeroFrame)

@@ -16,6 +16,7 @@ class Detect(Thread):
 
 
     def startAlgorithms(self):
+        print("Start sensor Algorithms")
         if type(self.sensorsAlgorithm) is list:
             for sensor in self.sensorsAlgorithm:
                 if sensor.lower() == "visão" or sensor.lower() == "vision":
@@ -26,8 +27,8 @@ class Detect(Thread):
             for sensor in self.sensorsAlgorithm:
                 if type(self.sensorsAlgorithm[sensor]) is list:
                     for algorithm in self.sensorsAlgorithm[sensor]:
-                        print(algorithm)
                         newAlgorithm = algorithm(self)
+                        print("-----------",newAlgorithm.name)
                         self.sensorsThreads.append(newAlgorithm)
                 else:
                     newAlgorithm = self.sensorsAlgorithm[sensor](self)

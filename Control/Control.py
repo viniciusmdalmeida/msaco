@@ -6,40 +6,52 @@ class Control(Thread):
     moving = False
     def __init__(self,vehicleComunication,points,tempo = 0):
         Thread.__init__(self)
-        self.client = vehicleComunication
+        self.vehicle = vehicleComunication
         self.route = Route(points)
         self.tempo = tempo
+        self.points = points
 
     def startConnection(self):
         pass
         # self.client.connect()
 
-    def moveUAS(self):
+    def takeOff(self):
         self.startConnection()
-        self.client.takeOff()
+        self.vehicle.takeOff()
 
     def run(self):
+        print("Control Start")
         self.startConnection()
-        self.moveUAS()
+        self.takeOff()
+        print("Takeoff finalized")
         self.moving =True
-        self.move()
+        self.moveByPath()
 
-    def move(self):
+    def moveByPoints(self):
         print("Iniciando Rota")
         pontoAtual = 0
         time.sleep(self.tempo)
         while self.route.getNumPoints() > 0:
             ponto = self.route.getNextPoint()
             print("movendo {}".format(ponto))
-            self.client.sendRoute(ponto)
+            self.vehicle.sendRoute(ponto)
             pontoAtual += 1
         print("Fim")
+
+    def moveByPath(self,velocity=10):
+        print("Start path")
+        self.vehicle.movePath(self.points,velocity)
+
+    def updatePath(self,points,velocity):
+        print("Start update Path")
+        self.points = points
+        self.vehicle.movePath(points, velocity)
 
     def updateRota(self,points):
         print("Update Rota")
         if not self.desvio :
             self.desvio = True
-            self.client.sendRoute(points[0])
+            self.vehicle.sendRoute(points[0])
             self.route.replanning(points[1:])
 
 

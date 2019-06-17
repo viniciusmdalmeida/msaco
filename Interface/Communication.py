@@ -39,6 +39,11 @@ class ICommunication(ABC,Thread):
         # function to disconnect from the vehicle
         pass
 
+    @abstractmethod
+    def movePath(self,points):
+        # function to move vehicle by route point
+        pass
+
     def sendMavlinkCommand(self,command):
         # function to send a command, in mavLink format, to vehicle to got to a certain point
         # This function return the command response data
@@ -108,5 +113,11 @@ class AirSimCommunication(ICommunication):
 
     def __str__(self):
         return "AirSimCommunication"
+
+    def movePath(self,points,velocity=10):
+        path = []
+        for point in points:
+            path.append(airsim.Vector3r(point[0], point[1], point[2]))
+        self.client.moveOnPathAsync(path, velocity)
 
 

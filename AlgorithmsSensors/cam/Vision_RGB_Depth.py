@@ -13,10 +13,11 @@ from os.path import isfile
 class Vision_RGB_Depth(AlgorithmSensor):
     name = 'vision'
 
-    def __init__(self,detectRoot):
+    def __init__(self,detectRoot,showVideo=True):
         print('Start', self.name)
         AlgorithmSensor.__init__(self, detectRoot)
         self.detectData = None
+        self.showVideo = showVideo
 
     def showDepth(self,image,max=np.inf,invert=True,bbox=None):
         def verifmax(x):
@@ -54,6 +55,45 @@ class Vision_RGB_Depth(AlgorithmSensor):
         img1d = airsim.list_to_2d_float_array(response.image_data_float, response.width, response.height)
         return img1d
 
+    def printDetection(self,frame,bbox=None):
+        # Start timer
+        distanceMin = np.inf
+        if self.showVideo:
+            timer = cv2.getTickCount()
+            if bbox is not None and len(bbox) >= 4:
+                fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
+                x1 = int(bbox[0])
+                y1 = int(bbox[1])
+                larg = int(bbox[2])
+                alt = int(bbox[3])
+                if (x1 >= 0 and y1 >= 0 and int(larg) >= 1 and int(alt) >= 1):
+                    # Desenhando Bounding box
+                    x2 = int(x1 + larg)
+                    y2 = int(y1 + alt)
+                    p1 = (x1, y1)
+                    p2 = (x2, y2)
+                    depthImage = self.getDepth()
+                    # print("x:{} x2:{},y:{} y2:{},sizeD:{},sizeF:{}"
+                    #       .format(x1,x2,y1,y2,depthImage.shape,frame.shape))
+                    distanceMin = depthImage[y1:y2, x1:x2].min()
+
+                    cv2.rectangle(frame, p1, p2, (255, 0, 0), 2, 1)
+                    cv2.putText(frame, "distancia:{}".format(distanceMin), (100, 80),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+                else:
+                    # Tracking failure
+                    cv2.putText(frame, "Tracking failure detected", (100, 80),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
+                    distanceMin = np.inf
+
+                # Display FPS on frame
+                cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2);
+                # Display resultado
+            cv2.imshow("Detect", frame)
+            cv2.waitKey(1)
+        return distanceMin
+
     #Tracker sozinho
     @abstractmethod
     def run(self):
@@ -87,9 +127,9 @@ class VisionRDDefault(Vision_RGB_Depth):
     def detectObject(self,frameBase):
         bbox = None
         while bbox is None:
+            print("NAda!")
             bbox = self.backgroundDetect(frameBase)
-            cv2.imshow("Tracking", frameBase)
-            cv2.waitKey(1)
+            self.printDetection(frameBase)
         size = bbox[2] * bbox[3]
         return bbox,size
 
@@ -106,36 +146,8 @@ class VisionRDDefault(Vision_RGB_Depth):
         #     frame2 = self.getImage()
         #     ok, bbox = self.tracker.update(frame2,bbox)
         # calculando Frames por segundo
-        fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
-        x1 = int(bbox[0])
-        y1 = int(bbox[1])
-        larg = int(bbox[2])
-        alt = int(bbox[3])
-        if ok and (x1>=0 and y1>=0 and int(larg) >=1 and int(alt)>=1):
-            # Desenhando Bounding box
-            x2 = int(x1 + larg)
-            y2 = int(y1 + alt)
-            p1 = (x1, y1)
-            p2 = (x2, y2)
-            depthImage = self.getDepth()
-            # print("x:{} x2:{},y:{} y2:{},sizeD:{},sizeF:{}"
-            #       .format(x1,x2,y1,y2,depthImage.shape,frame.shape))
-            distanceMin = depthImage[y1:y2,x1:x2].min()
+        distanceMin = self.printDetection(frame,bbox)
 
-            cv2.rectangle(frame, p1, p2, (255, 0, 0), 2,1)
-            cv2.putText(frame, "distancia:{}".format(distanceMin), (100, 80),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-        else:
-            # Tracking failure
-            cv2.putText(frame, "Tracking failure detected", (100, 80),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
-            distanceMin = np.inf
-
-        # Display FPS on frame
-        cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2);
-        # Display resultado
-        cv2.imshow("Tracking", frame)
 
 
         #Calculando resultado
@@ -159,9 +171,10 @@ class VisionRDDefault(Vision_RGB_Depth):
         # dilate the thresholded image to fill in holes, then find contours
         # on thresholded image
         thresh = cv2.dilate(thresh, None, iterations=2)
-        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+        image, cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)
-        cnts = cnts[1]
+        if len(cnts) > 0:
+            cnts = cnts[0]
         # loop over the contours
         for c in cnts:
             # if the contour is too small, ignore it
@@ -210,7 +223,7 @@ class VisionRDDefault(Vision_RGB_Depth):
                 mask = cv2.line(mask, (a, b), (c, d), color[i].tolist(), 2)
                 frame = cv2.circle(frame, (a, b), 5, color[i].tolist(), -1)
             img = cv2.add(frame, mask)
-            cv2.imshow('frame', img)
+            self.printDetection(img)
             k = cv2.waitKey(30) & 0xff
             if k == 27:
                 break
@@ -218,7 +231,6 @@ class VisionRDDefault(Vision_RGB_Depth):
             old_gray = frame_gray.copy()
             p0 = good_new.reshape(-1, 1, 2)
         cv2.destroyAllWindows()
-
 
 class VisionRDSVM(Vision_RGB_Depth):
 
@@ -303,20 +315,7 @@ class VisionRDSVM(Vision_RGB_Depth):
         while True:
             frameatual = self.getImage()
             bbox = self.slidingWindows(frameatual)
-            if not bbox is None:
-                p1 = (int(bbox[0]), int(bbox[2]))
-                p2 = (bbox[1], bbox[3])
-                cv2.rectangle(frameatual, p1, p2, (255, 0, 0), 2, 1)
-
-                depthImage = self.getDepth()
-                distanceMin = depthImage[bbox[2]:bbox[3], bbox[0]:bbox[1]].min()
-                self.detectData = DetectionData(distanceMin)
-                self.detectRoot.receiveData(self.detectData)
-                cv2.putText(frameatual, "distancia:{}".format(distanceMin), (100, 80),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-
-            cv2.imshow("Primeiro Frame", frameatual)
-            cv2.waitKey(1)
+            self.printDetection(frameatual,bbox)
 
         # Verificando se algum objeto saliente
         bbox, size = self.detectObject(primeroFrame)
@@ -325,12 +324,12 @@ class VisionRDSVM(Vision_RGB_Depth):
 
 
 class VisionRDSVMTracker(Vision_RGB_Depth):
-    name = 'Vision RGB Depth Tracker Algorithm'
+    name = 'Vision SVM RGB Depth Tracker Algorithm'
     latsBbox = None
     cont = 0
     svm = None
 
-    def __init__(self, detectRoot,tracker='KFC'):
+    def __init__(self, detectRoot,tracker='KFC',showVideo=True):
         Vision_RGB_Depth.__init__(self,detectRoot)
         print("Iniciando Visão")
         self.train()
@@ -414,8 +413,7 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
             primeroFrame = self.getImage()
 
         # Começa a mostrar o video
-        cv2.imshow("svm", primeroFrame)
-        cv2.waitKey(1)
+        self.printDetection(primeroFrame)
         # Detectando com SVM
         frame, bboxInicial = self.detect()
         frame = self.getImage()
@@ -430,8 +428,7 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
         while bbox is None:
             frameatual = self.getImage()
             bbox = self.slidingWindows(frameatual)
-            cv2.imshow("svm", frameatual)
-            cv2.waitKey(1)
+            self.printDetection(frameatual)
         bboxReturn = (bbox[0], bbox[2], bbox[1] - bbox[0], bbox[3] - bbox[2])
         return frameatual, bboxReturn
 
@@ -442,34 +439,9 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
         # Update tracker
 
         ok, bbox = self.tracker.update(frame[:, :, :3])
-        fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
-        x1, y1, x2, y2 = self.getPoints(bbox)
 
-        if ok:
-            # Desenhando Bounding box
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2, 1)
-            # Verificando Distancia
-            depthImage = self.getDepth()
-            # print("depth:", y1, y2, x1, x2)
-            distanceMin = depthImage[y1:y2, x1:x2].min()
-            cv2.putText(frame, "distancia:{}".format(distanceMin), (100, 80),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-            # Enviar dados recebidos
-            detectData = DetectionData(distanceMin)
-            self.detectRoot.receiveData(detectData)
-
-        else:
-            # Tracking failure
-            cv2.putText(frame, "Tracking failure detected", (100, 80),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
-            distanceMin = np.inf
-
-        # Display FPS on frame
-        cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2);
         # Display resultado
-        cv2.imshow("svm", frame)
-        cv2.waitKey(1)
+        distanceMin = self.printDetection(frame,bbox)
 
     def getPoints(self, bbox):
         x1 = abs(int(bbox[0]))

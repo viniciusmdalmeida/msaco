@@ -9,6 +9,7 @@ class Avoid(Thread):
         self.control = control
 
     def run(self):
+        print("Avoid Start!")
         while self.detectionData is None or \
                 self.detectionData.distance is None or \
                 self.detectionData.distance > 30:
@@ -19,5 +20,5 @@ class Avoid(Thread):
         print("---Desvio---")
         print("Distancia:", self.detectionData.distance)
         route = [[60, -20, -9],[100, -40, -9],[30, -60, -9]]
-        self.control.updateRota(route)
+        self.control.updatePath(route)
         self.detectionData = None
