@@ -2,7 +2,18 @@ from AlgorithmsSensors.cam.Vision_RGB_Depth import  *
 from AlgorithmsSensors.cam.VisionSVMTracker import *
 from AlgorithmsSensors.cam.Vision_RGB import *
 import time
-import airsim
+
+from abc import ABC, abstractmethod
+
+class IDetect(Thread):
+    #Interface de detecção
+    def __init__(self,vehicleComunication,sensorsAlgorithm,avoidThread):
+        Thread.__init__(self)
+        self.avoidThread = avoidThread
+        self.vehicle = vehicleComunication
+        self.sensorsThreads = []
+        self.sensorsAlgorithm = sensorsAlgorithm
+
 
 class Detect(Thread):
     stop = False

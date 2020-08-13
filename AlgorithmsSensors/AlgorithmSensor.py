@@ -10,7 +10,7 @@ class AlgorithmSensor(Thread, ABC):
     def __init__(self,detectRoot):
         Thread.__init__(self)
         ABC.__init__(self)
-        print("Iniciando Visão",self.name)
+        print("Start Algorithm ",self.name)
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
         self.detectData = None

@@ -1,17 +1,19 @@
-from Interface.Start import Start
+from Interface.Simulation import Simulation
 from AlgorithmsSensors.cam.Vision_RGB_Depth import *
 from AlgorithmsSensors.cam.Vision_RGB import *
+from AlgorithmsSensors.lidar.LidarBase import *
+from AlgorithmsSensors.IMU.InertialSensors import *
 
-routePoints = [[10,-5,0,4],[15,-15,0,4],[30,-35,0,4],[40,-40,0,4]]
-
-sensor = ["vision"]
-algorithm = {"vision":VisionRGBDefault}
+routePoints = [[0,-15,-10,2],[0,-15,-10,2],[50,-15,-10,2]]
+algorithm = {"lidar":LidarBase,'IMU':InertialSensorsPrint}
 
 #Start simples
 print("Iniciando programa")
-Start(routePoints,algorithm)
+run_simulation = Simulation(routePoints,algorithm)
+run_simulation.start()
 
 #Start com lista
+#sensor = ["vision"]
 #Start(routePoints,sensor)
 
 #Start com dicionario

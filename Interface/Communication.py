@@ -120,4 +120,6 @@ class AirSimCommunication(ICommunication):
             path.append(airsim.Vector3r(point[0], point[1], point[2]))
         self.client.moveOnPathAsync(path, velocity)
 
+    def restart(self):
+        pass
 
