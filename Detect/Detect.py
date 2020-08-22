@@ -28,50 +28,58 @@ class Detect(Thread):
 
     def startAlgorithms(self):
         print("Start sensor Algorithms")
-        if type(self.sensorsAlgorithm) is list:
-            for sensor in self.sensorsAlgorithm:
-                if sensor.lower() == "visão" or sensor.lower() == "vision":
-                    visionThread = VisionRDSVMTracker(self)
-                    self.sensorsThreads.append(visionThread)
-
-        if type(self.sensorsAlgorithm) is dict:
-            for sensor in self.sensorsAlgorithm:
-                if type(self.sensorsAlgorithm[sensor]) is list:
-                    for algorithm in self.sensorsAlgorithm[sensor]:
-                        newAlgorithm = algorithm(self)
-                        print("-----------",newAlgorithm.name)
-                        self.sensorsThreads.append(newAlgorithm)
-                else:
-                    newAlgorithm = self.sensorsAlgorithm[sensor](self)
+        for sensor in self.sensorsAlgorithm:
+            if type(self.sensorsAlgorithm[sensor]) is list:
+                for algorithm in self.sensorsAlgorithm[sensor]:
+                    newAlgorithm = algorithm(self)
+                    print("-----------",newAlgorithm.name)
                     self.sensorsThreads.append(newAlgorithm)
+            else:
+                newAlgorithm = self.sensorsAlgorithm[sensor](self)
+                self.sensorsThreads.append(newAlgorithm)
+
     def run(self):
         self.startAlgorithms()
+        #Iniciando os algoritmos
         for sensorThread in self.sensorsThreads:
             sensorThread.start()
+
+        #Rodando loop infinito de ler os dados
         while not self.stop:
-            self.detecções = {}
+            dict_sensor_data = {}
             for sensorThread in self.sensorsThreads:
-                self.detecções[sensorThread.name] = sensorThread.getStatus()
-            # if self.checkDetect():
-            #     self.avoidThread.detectionData = self.detecções['vision']
-            # if self.vehicle.name == "AirSim":
-            #     colision = self.vehicle.client.simGetCollisionInfo()
-            #     if colision.has_collided:
-            #         print("Colidiu! com ",colision.object_name)
-                    ## Reset AirSim
-                    #self.vehicle.reset()
+                dict_sensor_data[sensorThread.name] = sensorThread.getStatus()
+            #colocar um eval para funsão do algoritmos
+            detect_data = self.fusion_data(dict_sensor_data[sensorThread.name])
+            if self.checkDetect(detect_data):
+                self.avoidThread.detectionData = detect_data
+            '''
+            if self.vehicle.name == "AirSim":
+                 colision = self.vehicle.client.simGetCollisionInfo()
+                 if colision.has_collided:
+                     print("Colidiu! com ",colision.object_name)
+                    # Reset AirSim
+                    self.vehicle.reset()
+            '''
             time.sleep(0.1)
 
-    def checkDetect(self):
-        if self.vehicle.name == "AirSim":
-            selfPosition = self.vehicle.simGetVehiclePose().position
-            #Print posição
-            # print("Position = x:{}, y:{}, z:{}"
-            #       .format(selfPosition.x_val,selfPosition.y_val,selfPosition.z_val))
-            for detectName in self.detecções:
-                if self.detecções[detectName] is None:
-                    return False
+    def fusion_data(self,list_sensor_data):
+        if type(list_sensor_data) == list:
+            dict_data = vars(list_sensor_data[0])
+            for sensor_data in list_sensor_data[1:]:
+                dict_sensor = vars(sensor_data)
+                for data in  dict_sensor:
+                    if dict_sensor[data] and (dict_data[data] is None):
+                        dict_data[data] = dict_sensor[data]
+            return dict_data
+        else:
+            return list_sensor_data
+
+    def checkDetect(self,fusion_data):
+        #aprimorar para pegar apenas os dados relevantes
+        if fusion_data:
             return True
+        return False
 
     #Terminar essa função que vai receber os dados dos sensores
     def receiveData(self,detectData,name='vision'):

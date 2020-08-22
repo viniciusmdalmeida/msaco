@@ -3,9 +3,10 @@ from AlgorithmsSensors.cam.Vision_RGB_Depth import *
 from AlgorithmsSensors.cam.Vision_RGB import *
 from AlgorithmsSensors.lidar.LidarBase import *
 from AlgorithmsSensors.IMU.InertialSensors import *
+from AlgorithmsSensors.passive.ADS_B import *
 
 routePoints = [[0,-15,-10,2],[0,-15,-10,2],[50,-15,-10,2]]
-algorithm = {"lidar":LidarBase,'IMU':InertialSensorsPrint}
+algorithm = {"ADS_B":ADS_B}
 
 #Start simples
 print("Iniciando programa")

@@ -3,17 +3,20 @@ import airsim
 from abc import ABC, abstractmethod
 from Control.DetectionData import DetectionData
 from MyUtils.Semaphore import *
+import yaml
 
 class AlgorithmSensor(Thread, ABC):
     name = "Sensor"
 
-    def __init__(self,detectRoot):
+    def __init__(self,detectRoot,config_path='config.yml'):
         Thread.__init__(self)
         ABC.__init__(self)
         print("Start Algorithm ",self.name)
+        self.config = yaml.load(config_path,Loader=yaml.FullLoader)
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
         self.detectData = None
+
 
     @abstractmethod
     def run(self):

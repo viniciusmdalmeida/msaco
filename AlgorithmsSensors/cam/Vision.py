@@ -132,11 +132,9 @@ class Vision(Thread):
                    cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2);
         # Display resultado
         cv2.imshow("Tracking", frame)
-
-
         #Calculando resultado
         self.detectData = DetectionData(distanceMin)
-        self.desvioThread.detectionData = self.detectData
+        #self.desvioThread.detectionData = self.detectData
             # Desvio(self.controle).start()
         return self.detectData
 
