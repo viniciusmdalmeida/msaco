@@ -11,18 +11,23 @@ class InertialSensorsPrint(AlgorithmSensor):
     def __init__(self,detectRoot):
         print('Start',self.name)
         AlgorithmSensor.__init__(self, detectRoot)
+        self.path_file = None
 
     def run(self):
         while True:
             self.saveData(file_name='log_drone')
             time.sleep(1/6)
 
-    def saveData(self,path='Others/CloudPoints/arrays/',file_name='test'):
+    def saveData(self,path='../data/logs_voos/',file_name='log_drone'):
         #get data from lidar
         data = self.getData(to_str=True)
+        if not self.path_file:
+            now_str = datetime.now().strftime('%Y-%m-%d_%H_%M')
+            self.path_file = f'{path}{file_name}_{now_str}.txt'
         #save data
-        file = open(f'{path}{file_name}.txt','a')
-        file.write(data+"\n")
+        file = open(self.path_file,'a')
+        str_data = str(data).replace("'",'"') + ",\n"
+        file.write(str_data)
         file.close()
 
     def getData(self,to_str=True):

@@ -5,17 +5,10 @@ from AlgorithmsSensors.lidar.LidarBase import *
 from AlgorithmsSensors.IMU.InertialSensors import *
 from AlgorithmsSensors.passive.ADS_B import *
 
-routePoints = [[0,-15,-10,2],[0,-15,-10,2],[50,-15,-10,2]]
-algorithm = {"ADS_B":ADS_B}
+routePoints = [[0,-20,-20,5],[50,-20,-20,5]]
+algorithm = {"ADS_B":ADS_B,"LIDAR":LidarGetData,"IMU":InertialSensorsPrint}
 
 #Start simples
 print("Iniciando programa")
 run_simulation = Simulation(routePoints,algorithm)
 run_simulation.start()
-
-#Start com lista
-#sensor = ["vision"]
-#Start(routePoints,sensor)
-
-#Start com dicionario
-#Start(routePoints,algorithm)

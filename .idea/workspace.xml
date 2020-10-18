@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="911f39d3-6d91-49ad-b626-aaec9093e896" name="Default" comment="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio.">
-<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-=======
       <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
@@ -262,7 +260,6 @@
       <change beforePath="$PROJECT_DIR$/Others/notebooks/Test_TCAS_IMU.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Others/notebooks/Test_TCAS_IMU.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/passive/__init__.py" afterDir="false" />
->>>>>>> Stashed changes
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -477,13 +474,13 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.Principal" />
+      <item itemvalue="Python.testeMove" />
+      <item itemvalue="Python.visão" />
       <item itemvalue="Python.Classe_Abastrada" />
       <item itemvalue="Python.Communication" />
       <item itemvalue="Python.Keras" />
-      <item itemvalue="Python.Principal" />
       <item itemvalue="Python.Teste" />
-      <item itemvalue="Python.testeMove" />
-      <item itemvalue="Python.visão" />
     </list>
     <recent_temporary>
       <list>

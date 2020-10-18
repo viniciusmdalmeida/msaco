@@ -9,16 +9,17 @@ class Simulation(Thread):
 
     def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},avoidClass=Avoid,comunication=AirSimCommunication,showVideo=True):
         Thread.__init__(self)
+        self.status = 'start'
         # vehicleComunication = comunication.getVehicle()
         # Conectando ao simulador AirSim
-        vehicleComunication = AirSimCommunication()
         print("Communication")
-        self.control = Control(vehicleComunication,routePoints)
+        self.vehicleComunication = AirSimCommunication()
+        self.control = Control(self.vehicleComunication,routePoints)
 
         if avoidClass is not None:
             self.avoidThread  = avoidClass(self.control)
         if sensorsAlgorithms is not None:
-            self.detect = Detect(vehicleComunication,sensorsAlgorithms,self.avoidThread)
+            self.detect = Detect(self.vehicleComunication,sensorsAlgorithms,self.avoidThread)
         #self.start()
 
     def run(self):
@@ -26,13 +27,16 @@ class Simulation(Thread):
         #Start thread detect and avoid
         if self.detect is not None:
             self.detect.start()
-        if self.avoidThread is not None:
-            self.avoidThread.start()
+        #if self.avoidThread is not None:
+        #    self.avoidThread.start()
         #Run threads detect and avoid
         if self.detect is not None:
             self.detect.join()
-        if self.avoidThread is not None:
-            self.avoidThread.join()
+        #if self.avoidThread is not None:
+        #    self.avoidThread.join()
 
     def end_run(self):
         pass
+
+    def get_status(self):
+        return self.status

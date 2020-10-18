@@ -1,6 +1,7 @@
 from AlgorithmsSensors.cam.Vision_RGB_Depth import  *
 from AlgorithmsSensors.cam.VisionSVMTracker import *
 from AlgorithmsSensors.cam.Vision_RGB import *
+from AlgorithmsSensors.Colision_sensor import *
 import time
 
 from abc import ABC, abstractmethod
@@ -13,7 +14,7 @@ class IDetect(Thread):
         self.vehicle = vehicleComunication
         self.sensorsThreads = []
         self.sensorsAlgorithm = sensorsAlgorithm
-
+        self.colisionSensor = Colision_sensor()
 
 class Detect(Thread):
     stop = False
@@ -24,6 +25,7 @@ class Detect(Thread):
         self.vehicle = vehicleComunication
         self.sensorsThreads = []
         self.sensorsAlgorithm = sensorsAlgorithm
+        self.colisionSensor = Colision_sensor(self)
 
 
     def startAlgorithms(self):
@@ -50,30 +52,28 @@ class Detect(Thread):
             for sensorThread in self.sensorsThreads:
                 dict_sensor_data[sensorThread.name] = sensorThread.getStatus()
             #colocar um eval para funsão do algoritmos
-            detect_data = self.fusion_data(dict_sensor_data[sensorThread.name])
+            detect_data = self.fusion_data(dict_sensor_data)
             if self.checkDetect(detect_data):
-                self.avoidThread.detectionData = detect_data
-            '''
-            if self.vehicle.name == "AirSim":
-                 colision = self.vehicle.client.simGetCollisionInfo()
-                 if colision.has_collided:
-                     print("Colidiu! com ",colision.object_name)
-                    # Reset AirSim
-                    self.vehicle.reset()
-            '''
+                self.avoidThread.check_colision(detect_data)
+            #Colisão
+            if self.colisionSensor.getStatus():
+                print("Colidiu!")
+                self.vehicle.client.reset()
+                return
             time.sleep(0.1)
 
-    def fusion_data(self,list_sensor_data):
-        if type(list_sensor_data) == list:
-            dict_data = vars(list_sensor_data[0])
-            for sensor_data in list_sensor_data[1:]:
+    def fusion_data(self,dict_sensor_data):
+        sensor_base = 'ADS_B Base'
+        if type(dict_sensor_data[sensor_base]) == list:
+            dict_data = vars(dict_sensor_data[sensor_base][0])
+            for sensor_data in dict_sensor_data[1:]:
                 dict_sensor = vars(sensor_data)
                 for data in  dict_sensor:
                     if dict_sensor[data] and (dict_data[data] is None):
                         dict_data[data] = dict_sensor[data]
             return dict_data
         else:
-            return list_sensor_data
+            return dict_sensor_data[sensor_base]
 
     def checkDetect(self,fusion_data):
         #aprimorar para pegar apenas os dados relevantes

@@ -12,7 +12,8 @@ class AlgorithmSensor(Thread, ABC):
         Thread.__init__(self)
         ABC.__init__(self)
         print("Start Algorithm ",self.name)
-        self.config = yaml.load(config_path,Loader=yaml.FullLoader)
+        with open(config_path, 'r') as file_config:
+            self.config = yaml.full_load(file_config)
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
         self.detectData = None

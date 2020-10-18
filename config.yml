@@ -1,3 +1,29 @@
 detect:
   vertical_limit: 300
   horizontal_limit: 300
+  min_distance: 600
+
+sensors:
+  ADS-B:
+    reader_path: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/log_aviao
+    reader_file_prefix: log_voo
+    ADS-B_header:
+      - icao24
+      - callsign
+      - origin_country
+      - time_position
+      - x_position
+      - y_position
+      - barometric_altitude
+      - on_ground
+      - velocidade
+      - heading
+      - vertical_rate
+      - geo_altitude
+      - squawk
+      - spi
+      - position_source
+
+  LIDAR:
+    save_path: ../data/cloud_points/
+    save_file_prefix: test
