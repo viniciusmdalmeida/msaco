@@ -1,7 +1,11 @@
+unreal:
+  path:  C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/control
+  file: control.txt
+
 detect:
-  vertical_limit: 300
-  horizontal_limit: 300
-  min_distance: 600
+  vertical_limit: 20
+  horizontal_limit: 20
+  min_distance: 20
 
 sensors:
   ADS-B:

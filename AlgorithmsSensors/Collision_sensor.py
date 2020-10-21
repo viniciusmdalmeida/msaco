@@ -2,7 +2,7 @@ import airsim  # pip install airsim
 import time
 from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
 
-class Colision_sensor(AlgorithmSensor):
+class Collision_sensor(AlgorithmSensor):
     name = "Colision Sensor"
 
     def __init__(self,detectRoot):

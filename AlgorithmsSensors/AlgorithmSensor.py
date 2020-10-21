@@ -2,7 +2,7 @@ from threading import Thread
 import airsim
 from abc import ABC, abstractmethod
 from Control.DetectionData import DetectionData
-from MyUtils.Semaphore import *
+from Utils.Semaphore import *
 import yaml
 
 class AlgorithmSensor(Thread, ABC):

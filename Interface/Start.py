@@ -2,8 +2,9 @@ from Control.Control import *
 from Avoid.Avoid import *
 from Detect.Detect import *
 from Interface.Communication import AirSimCommunication
+from Utils.UnrealCommunication import UnrealCommunication
 
-class Simulation(Thread):
+class Start(Thread):
     avoidThread = None
     detect = None
 
@@ -15,11 +16,12 @@ class Simulation(Thread):
         print("Communication")
         self.vehicleComunication = AirSimCommunication()
         self.control = Control(self.vehicleComunication,routePoints)
+        self.unrealControl = UnrealCommunication()
 
         if avoidClass is not None:
             self.avoidThread  = avoidClass(self.control)
         if sensorsAlgorithms is not None:
-            self.detect = Detect(self.vehicleComunication,sensorsAlgorithms,self.avoidThread)
+            self.detect = Detect(self,self.vehicleComunication,sensorsAlgorithms,self.avoidThread)
         #self.start()
 
     def run(self):
@@ -40,3 +42,10 @@ class Simulation(Thread):
 
     def get_status(self):
         return self.status
+
+    def set_status(self,status):
+        self.status = status
+        if status == 'collision':
+            self.unrealControl.reset_plane()
+        if status == 'avoid':
+            self.unrealControl.reset_plane()

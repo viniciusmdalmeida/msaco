@@ -2,264 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="911f39d3-6d91-49ad-b626-aaec9093e896" name="Default" comment="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio.">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.greener.png" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/Utils/UnrealCommunication.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/Colision_sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/Collision_sensor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Avoid/Avoid.py" beforeDir="false" afterPath="$PROJECT_DIR$/Avoid/Avoid.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Control/DetectionData.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/DetectionData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Control/Control.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/Control.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Control/Route.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/Route.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Detect/Detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Detect/Detect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/log_drone.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Others/CloudPoints/arrays/log_drone.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203110.692399.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203111.240876.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203111.690523.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203115.740284.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203116.534338.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203117.408351.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203118.198296.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203119.962323.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203122.414358.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203122.934383.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203123.787331.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203124.094391.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203124.666332.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203124.901386.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203127.814445.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203128.429455.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203130.246446.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203130.815438.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203131.096766.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203133.532439.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203134.112919.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203135.037456.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203135.632317.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203137.669395.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203138.392946.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203140.712934.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203140.997413.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203144.12037.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203144.433401.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203144.949401.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203147.150408.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203147.433675.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203147.658076.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203147.873497.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203148.277439.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203148.863405.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203151.743379.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203152.239582.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203154.578476.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203154.808376.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203157.433546.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203157.946195.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203158.302263.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203158.622443.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203159.102163.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203160.402305.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203160.690558.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203161.326409.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203161.601679.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/1597203161.955728.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_00/log_lidar.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208036.997288.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208037.986209.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208038.562199.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208038.750208.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208040.399935.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208040.787406.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208041.168432.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208041.542454.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208044.762103.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208045.029411.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208045.772469.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208048.819962.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208049.326124.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208049.768499.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208052.063232.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208052.316276.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208052.84425.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208053.130317.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208053.414261.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208055.875301.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208056.130321.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208058.780161.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208059.085184.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208061.954173.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208062.23623.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208063.124133.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208063.599149.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208064.332085.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208065.407105.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208066.541167.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208066.754059.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208067.413122.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208067.680123.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208068.078113.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208068.380118.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208069.504193.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208070.521204.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208070.890239.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208072.991205.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208073.41226.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208074.107296.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208074.494718.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208075.975283.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208076.22349.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208076.538236.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208077.114225.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208077.398232.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208077.773213.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208080.593225.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208080.917213.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208083.667243.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208084.01623.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208087.200271.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208087.48222.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208088.134223.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208088.680225.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208091.266226.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208091.720214.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208094.721177.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208095.079162.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208097.46627.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208097.84717.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208100.328195.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208101.268142.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208101.693148.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208103.935236.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208104.337339.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208106.23316.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208106.514655.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208106.940184.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208108.932146.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208109.76515.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208110.461174.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208112.043193.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208112.404698.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208112.803226.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208113.109266.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208113.501238.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208113.984719.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208115.583205.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208116.209134.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208117.759117.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208119.672106.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208119.956116.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208120.458073.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208120.751008.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208121.434683.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208121.911177.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208122.768191.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208123.564587.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208124.328081.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208124.697144.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208125.556175.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208126.325069.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208127.220086.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208128.121113.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/1597208128.453094.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-12_01/log_lidar.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294756.302716.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294760.613641.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294761.782671.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294762.093665.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294762.793682.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294765.42161.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294765.796608.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294766.024712.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294768.688602.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294769.044642.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294769.494673.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294771.635624.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294771.905754.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294772.292629.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294774.021115.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294779.516769.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294779.802657.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294781.407596.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294781.638599.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294782.166656.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294784.532626.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294784.98056.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294786.082594.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294786.415623.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294786.724011.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294786.95768.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294787.5507.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294787.742725.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294787.981231.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294788.980722.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294790.005663.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294790.35473.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294790.774778.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294793.253788.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294793.718698.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294794.081655.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294794.412631.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294794.878617.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294797.041646.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294797.515613.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/1597294797.814737.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_01/log_lidar.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294800.180519.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294800.779572.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294802.938642.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294803.548631.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294805.920648.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294806.18826.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294806.647986.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294806.971922.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294807.411889.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294807.786824.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294810.048602.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294810.281644.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294810.652606.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294813.292724.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294813.865709.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294816.297733.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294816.875727.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294817.329689.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294817.673702.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294819.184669.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294819.44361.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294819.8776.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294820.166602.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294820.472589.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294820.782612.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294823.346657.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294823.614674.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294824.131743.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294826.646658.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294827.065689.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294827.381158.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294829.771691.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294830.322675.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294830.694669.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294831.040701.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294831.384671.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294831.694693.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294833.316604.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294833.530549.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294833.910566.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294834.224598.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294834.550577.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294834.812673.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294837.378638.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294837.669589.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294838.251149.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294840.561766.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294841.254744.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/1597294844.774713.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/CloudPoints/arrays/test2020-08-13_02/log_lidar.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/notebooks/.ipynb_checkpoints/Test_TCAS_IMU-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Others/notebooks/.ipynb_checkpoints/Test_TCAS_IMU-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Others/notebooks/Test_TCAS_IMU.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Others/notebooks/Test_TCAS_IMU.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interface/Simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Start.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyUtils/ExemploThread.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/ExemploThread.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyUtils/Semaphore.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/Semaphore.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyUtils/ThreadKillable.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/ThreadKillable.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyUtils/showVideo.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/showVideo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/passive/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Principal_multi_executions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal_multi_executions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -325,7 +83,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Principal">
+  <component name="RunManager" selected="Python.Principal_multi_executions">
     <configuration name="Classe_Abastrada" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SenseAvoid_framework" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -410,6 +168,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Principal_multi_executions" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="SenseAvoid_framework" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Principal_multi_executions.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Teste" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SenseAvoid_framework" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -481,9 +260,11 @@
       <item itemvalue="Python.Communication" />
       <item itemvalue="Python.Keras" />
       <item itemvalue="Python.Teste" />
+      <item itemvalue="Python.Principal_multi_executions" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Principal_multi_executions" />
         <item itemvalue="Python.Communication" />
         <item itemvalue="Python.Teste" />
         <item itemvalue="Python.Classe_Abastrada" />

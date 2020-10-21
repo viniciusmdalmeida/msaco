@@ -1,7 +1,7 @@
 from AlgorithmsSensors.cam.Vision_RGB_Depth import  *
 from AlgorithmsSensors.cam.VisionSVMTracker import *
 from AlgorithmsSensors.cam.Vision_RGB import *
-from AlgorithmsSensors.Colision_sensor import *
+from AlgorithmsSensors.Collision_sensor import *
 import time
 
 from abc import ABC, abstractmethod
@@ -14,18 +14,19 @@ class IDetect(Thread):
         self.vehicle = vehicleComunication
         self.sensorsThreads = []
         self.sensorsAlgorithm = sensorsAlgorithm
-        self.colisionSensor = Colision_sensor()
+        self.collisionSensor = Collision_sensor()
 
 class Detect(Thread):
     stop = False
 
-    def __init__(self,vehicleComunication,sensorsAlgorithm,avoidThread):
+    def __init__(self,startObj,vehicleComunication,sensorsAlgorithm,avoidThread):
         Thread.__init__(self)
         self.avoidThread = avoidThread
         self.vehicle = vehicleComunication
         self.sensorsThreads = []
         self.sensorsAlgorithm = sensorsAlgorithm
-        self.colisionSensor = Colision_sensor(self)
+        self.collisionSensor = Collision_sensor(self)
+        self.startObj = startObj
 
 
     def startAlgorithms(self):
@@ -53,17 +54,19 @@ class Detect(Thread):
                 dict_sensor_data[sensorThread.name] = sensorThread.getStatus()
             #colocar um eval para funsão do algoritmos
             detect_data = self.fusion_data(dict_sensor_data)
+            #Verificando se existe um objeto em risco de colisão
             if self.checkDetect(detect_data):
-                self.avoidThread.check_colision(detect_data)
+                self.avoidThread.check_risk_colision(detect_data)
             #Colisão
-            if self.colisionSensor.getStatus():
-                print("Colidiu!")
+            if self.collisionSensor.getData():
                 self.vehicle.client.reset()
+                self.startObj.set_status('collision')
+                print("Colidiu!")
                 return
             time.sleep(0.1)
 
     def fusion_data(self,dict_sensor_data):
-        sensor_base = 'ADS_B Base'
+        sensor_base = list(dict_sensor_data.keys())[0]
         if type(dict_sensor_data[sensor_base]) == list:
             dict_data = vars(dict_sensor_data[sensor_base][0])
             for sensor_data in dict_sensor_data[1:]:

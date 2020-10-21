@@ -1,8 +1,9 @@
 from Control.Route import *
-from MyUtils.ThreadKillable import *
+from Utils.ThreadKillable import *
+from Utils.UnrealCommunication import UnrealCommunication
 
 class Control(Thread):
-    desvio = False
+    #avoiding = False
     moving = False
     def __init__(self,vehicleComunication,points,tempo = 0):
         Thread.__init__(self)
@@ -10,6 +11,7 @@ class Control(Thread):
         self.route = Route(points)
         self.tempo = tempo
         self.points = points
+        self.unrealControl = UnrealCommunication()
 
     def startConnection(self):
         pass
@@ -25,6 +27,7 @@ class Control(Thread):
         self.takeOff()
         print("Takeoff finalized")
         self.moving =True
+        self.unrealControl.start_plane()
         self.moveByPath()
 
     def moveByPoints(self):
@@ -48,11 +51,11 @@ class Control(Thread):
         self.vehicle.movePath(points, velocity)
 
     def updateRota(self,points):
-        print("Update Rota")
-        if not self.desvio :
-            self.desvio = True
-            self.vehicle.sendRoute(points[0])
-            self.route.replanning(points[1:])
+        #print("Update Rota")
+        #if not self.avoiding :
+        #self.avoiding = True
+        self.vehicle.sendRoute(points[0])
+        self.route.replanning(points[1:])
 
 
 

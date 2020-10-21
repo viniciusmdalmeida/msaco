@@ -1,4 +1,4 @@
-from  MyUtils.ThreadKillable import *
+from  Utils.ThreadKillable import *
 import time
 from threading import Thread
 
