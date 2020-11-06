@@ -4,17 +4,14 @@ import cv2
 from AlgorithmsSensors.AlgorithmSensor import *
 
 class VisionMOG(AlgorithmSensor):
-    name = 'vision'
+    name = 'Vision MOG'
     latsBbox = None
     cont = 0
 
-    def __init__(self,semaforo,desvioThread):
-        AlgorithmSensor.__init__(self, semaforo)
-        self.desvioThread = desvioThread
-        print("Iniciando Visão")
+    def __init__(self,detectRoot):
+        AlgorithmSensor.__init__(self, detectRoot)
 
     def run(self):
-        print("Iniciar Video")
         # self.camShifTracker()
         # self.tracker = cv2.TrackerKCF_create()
         self.tracker = cv2.TrackerBoosting_create()
@@ -26,7 +23,6 @@ class VisionMOG(AlgorithmSensor):
             primeroFrame = self.getImage()
 
         self.backgroundDetectMog2()
-
         # while True:
         #     print("Tracker Iniciado")
         #     self.updateTracker()
@@ -43,13 +39,15 @@ class VisionMOG(AlgorithmSensor):
         # get numpy array
         img1d = np.fromstring(response.image_data_uint8, dtype=np.uint8)
         # reshape array to 4 channel image array H X W X 4
-        img_rgba = img1d.reshape(response.height, response.width, 4)
+        img_rgba = img1d.reshape(response.height, response.width, 3)
         return img_rgba
 
     def getDepth(self):
         response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
         response = response[0]
         # get numpy array
+        if len(response.image_data_float) <= 1:
+            return
         img1d = airsim.list_to_2d_float_array(response.image_data_float, response.width, response.height)
         return img1d
 
@@ -76,7 +74,6 @@ class VisionMOG(AlgorithmSensor):
         y2 = int(y1 + alt)
         return x1,y1,x2,y2
 
-
     def backgroundDetectMog2(self):
         fgbg = cv2.createBackgroundSubtractorMOG2()
         while True:
@@ -85,34 +82,29 @@ class VisionMOG(AlgorithmSensor):
 
             thresh = cv2.threshold(fgmask, 25, 255, cv2.THRESH_BINARY)[1]
             thresh = cv2.dilate(thresh, None, iterations=2)
-            cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+            cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                                     cv2.CHAIN_APPROX_SIMPLE)
-            cnts = cnts[1]
+            if len(cnts)<1:
+                continue
             max = cnts[0]
             for c in cnts:
-                if cv2.contourArea(c) >cv2.contourArea(max) :
+                if cv2.contourArea(c) > cv2.contourArea(max) :
                     max = c
             (x, y, w, h) = cv2.boundingRect(max)
-
-
-            depthImage = self.getDepth()
-            print(x,y,w,h)
-            print(depthImage.shape)
-            distanceMin = depthImage[y:y+w, x:x+h].min()
-            # Salvando Imagem
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2, 1)
-            cv2.putText(frame, "distancia:{}".format(distanceMin), (100, 80),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2, 1)
-
+            #Se encontrou o dado
+            if w * h >  self.config['sensors']['Vision']['min_area']:
+                depthImage = self.getDepth()
+                distanceMin = depthImage[y:y + w, x:x + h].min()
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2, 1)
+                cv2.putText(frame, "distancia:{}".format(distanceMin), (100, 80),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+                self.detectData = DetectionData(distanceMin)
+                self.detectData = DetectionData(distanceMin)
+            #Apresentando a imagem
             cv2.imshow('frame', frame)
-            self.detectData = DetectionData(distanceMin)
             k = cv2.waitKey(30) & 0xff
             if k == 27:
                 break
-            self.detectData = DetectionData(distanceMin)
-            self.desvioThread.detectionData = self.detectData
 
         fgmask = fgbg.apply(frame)
 

@@ -2,21 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="911f39d3-6d91-49ad-b626-aaec9093e896" name="Default" comment="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio.">
-      <change afterPath="$PROJECT_DIR$/Utils/UnrealCommunication.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionML.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionMOG.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/Colision_sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/Collision_sensor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/Collision_sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/Collision_sensor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/IMU/InertialSensors.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/IMU/InertialSensors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionSVM.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionSVM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionSVMTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionSVMTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision_MOG.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision_MOG.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision_RGB.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionRGB.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision_RGB_Depth.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision_RGB_Depth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Avoid/Avoid.py" beforeDir="false" afterPath="$PROJECT_DIR$/Avoid/Avoid.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Control/Control.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/Control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Control/Route.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/Route.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Detect/Detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Detect/Detect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/Simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Start.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyUtils/ExemploThread.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/ExemploThread.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyUtils/Semaphore.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/Semaphore.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyUtils/ThreadKillable.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/ThreadKillable.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyUtils/showVideo.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/showVideo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interface/Communication.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Communication.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interface/Start.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Start.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal_multi_executions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal_multi_executions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils/UnrealCommunication.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/UnrealCommunication.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -54,21 +60,23 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://E:/onedrive/Mestrado/Programa/Python/ControleVisao/MyUtils/Semaphore.py" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/AlgorithmsSensors/passive" />
+    <property name="ignore.virus.scanning.warn.message" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/AlgorithmsSensors/cam" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\cam" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\passive" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\ADS_B" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Others\CloudPoints\arrays\test2020-07-22_02" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\cam_others" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Others\CloudPoints\arrays\test2020-07-24_01" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Others\CloudPoints\arrays\test2020-07-22_02" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\cam" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework" />
-      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Detect\AlgorithmsSensors" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -118,27 +126,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Interface/Communication.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Keras" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="SenseAvoid_framework" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="C:\Users\vinic\AppData\Local\Programs\Python\Python37\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Imagens" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Imagens/Keras.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -210,6 +197,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test_image" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="SenseAvoid_framework" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Others/Test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Others/Test/test_image.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="testeMove" type="PythonConfigurationType" factoryName="Python">
       <module name="SenseAvoid_framework" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -258,17 +266,17 @@
       <item itemvalue="Python.visão" />
       <item itemvalue="Python.Classe_Abastrada" />
       <item itemvalue="Python.Communication" />
-      <item itemvalue="Python.Keras" />
       <item itemvalue="Python.Teste" />
       <item itemvalue="Python.Principal_multi_executions" />
+      <item itemvalue="Python.test_image" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.Principal_multi_executions" />
+        <item itemvalue="Python.test_image" />
         <item itemvalue="Python.Communication" />
         <item itemvalue="Python.Teste" />
         <item itemvalue="Python.Classe_Abastrada" />
-        <item itemvalue="Python.Keras" />
       </list>
     </recent_temporary>
   </component>
@@ -309,15 +317,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio." />
     <option name="LAST_COMMIT_MESSAGE" value="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AlgorithmsSensors/cam/Vision_RGB.py</url>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

@@ -42,7 +42,7 @@ class Control(Thread):
         print("Fim")
 
     def moveByPath(self,velocity=10):
-        print("Start path")
+        print("Start path",self.points)
         self.vehicle.movePath(self.points,velocity)
 
     def updatePath(self,points,velocity):

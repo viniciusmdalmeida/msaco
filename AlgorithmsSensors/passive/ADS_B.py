@@ -9,7 +9,6 @@ class ADS_B(AlgorithmSensor):
     name = "ADS_B Base"
 
     def __init__(self,detectRoot):
-        print('Start',self.name)
         AlgorithmSensor.__init__(self, detectRoot)
         self.file_path = self.config['sensors']['ADS-B']['reader_path']
         self.file_prefix = self.config['sensors']['ADS-B']['reader_file_prefix']

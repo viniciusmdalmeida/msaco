@@ -12,17 +12,29 @@ class UnrealCommunication:
                 file_name = self.config['unreal']['file']
         self.file_path = path+'/'+file_name
 
-    def reset_plane(self):
+    def reset_plane(self,location = None,rotation = None):
         file = open(self.file_path,'w')
-        file.write('status:reset')
+        text_file = 'status:reset\n'
+        if location:
+            text_file += "X:" + str(location[0]) + '\n'
+            text_file += "Y:" + str(location[1]) + '\n'
+            text_file += "Z:" + str(location[2]) + '\n'
+        if rotation:
+            text_file += "Pitch:" + str(rotation[0]) + '\n'
+            text_file += "Yaw:" + str(rotation[1]) + '\n'
+            text_file += "Roll:" + str(rotation[2]) + '\n'
+        file.write(text_file)
         file.close()
+
+
 
     def start_plane(self):
         file = open(self.file_path, 'w')
         file.write('status:start')
         file.close()
-
+    """
     def stop_plane(self):
         file = open(self.file_path, 'w')
         file.write('status:stop')
         file.close()
+    """

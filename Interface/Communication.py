@@ -68,6 +68,7 @@ class AirSimCommunication(ICommunication):
         #     raise Exception("This class is a singleton, use getInstance method.")
         # else:
         super().__init__()
+        print("AirSim")
         self.client = airsim.MultirotorClient()
         self.connect()
         # AirSimCommunication.__instance = self
@@ -76,6 +77,7 @@ class AirSimCommunication(ICommunication):
         self.client.confirmConnection()
         self.client.enableApiControl(True)
         self.client.armDisarm(True)
+        print("Communication: Connected")
 
     def takeOff(self):
         # Async methods returns Future. Call join() to wait for task to complete.
@@ -118,6 +120,12 @@ class AirSimCommunication(ICommunication):
         path = []
         for point in points:
             path.append(airsim.Vector3r(point[0], point[1], point[2]))
+        '''
+        if not self.client.getMultirotorState().rc_data.is_initialized:
+            print("ReArm drone")
+            self.client.enableApiControl(True)
+            self.client.armDisarm(True)
+        '''
         self.client.moveOnPathAsync(path, velocity)
 
     def restart(self):

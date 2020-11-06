@@ -9,7 +9,6 @@ class InertialSensorsPrint(AlgorithmSensor):
     name = "InertialSensors Base"
 
     def __init__(self,detectRoot):
-        print('Start',self.name)
         AlgorithmSensor.__init__(self, detectRoot)
         self.path_file = None
 

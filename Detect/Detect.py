@@ -1,10 +1,7 @@
-from AlgorithmsSensors.cam.Vision_RGB_Depth import  *
-from AlgorithmsSensors.cam.VisionSVMTracker import *
-from AlgorithmsSensors.cam.Vision_RGB import *
+from AlgorithmsSensors.cam_others.VisionSVMTracker import *
 from AlgorithmsSensors.Collision_sensor import *
 import time
 
-from abc import ABC, abstractmethod
 
 class IDetect(Thread):
     #Interface de detecção
@@ -30,12 +27,10 @@ class Detect(Thread):
 
 
     def startAlgorithms(self):
-        print("Start sensor Algorithms")
         for sensor in self.sensorsAlgorithm:
             if type(self.sensorsAlgorithm[sensor]) is list:
                 for algorithm in self.sensorsAlgorithm[sensor]:
                     newAlgorithm = algorithm(self)
-                    print("-----------",newAlgorithm.name)
                     self.sensorsThreads.append(newAlgorithm)
             else:
                 newAlgorithm = self.sensorsAlgorithm[sensor](self)
@@ -54,14 +49,10 @@ class Detect(Thread):
                 dict_sensor_data[sensorThread.name] = sensorThread.getStatus()
             #colocar um eval para funsão do algoritmos
             detect_data = self.fusion_data(dict_sensor_data)
-            #Verificando se existe um objeto em risco de colisão
-            if self.checkDetect(detect_data):
-                self.avoidThread.check_risk_colision(detect_data)
+            self.sendData(detect_data)
             #Colisão
-            if self.collisionSensor.getData():
-                self.vehicle.client.reset()
+            if self.collisionSensor.check_collision():
                 self.startObj.set_status('collision')
-                print("Colidiu!")
                 return
             time.sleep(0.1)
 
@@ -78,17 +69,12 @@ class Detect(Thread):
         else:
             return dict_sensor_data[sensor_base]
 
-    def checkDetect(self,fusion_data):
-        #aprimorar para pegar apenas os dados relevantes
-        if fusion_data:
-            return True
-        return False
-
     #Terminar essa função que vai receber os dados dos sensores
     def receiveData(self,detectData,name='vision'):
-        self.sendData(detectData)
+        pass
+        #self.sendData(detectData)
 
     def sendData(self,detectData):
-        self.avoidThread.detectionData = detectData
+        self.avoidThread.update_detect_data(detectData)
 
 

@@ -11,13 +11,15 @@ from os import listdir
 from os.path import isfile
 
 class Vision_RGB_Depth(AlgorithmSensor):
-    name = 'vision'
+    name = 'Vision RGB Depth'
 
     def __init__(self,detectRoot,showVideo=True):
-        print('Start', self.name)
         AlgorithmSensor.__init__(self, detectRoot)
         self.detectData = None
-        self.showVideo = showVideo
+        if showVideo is None:
+            self.showVideo = self.config['sensors']['Vision']['show_video']
+        else:
+            self.showVideo = showVideo
 
     def showDepth(self,image,max=np.inf,invert=True,bbox=None):
         def verifmax(x):
@@ -45,8 +47,11 @@ class Vision_RGB_Depth(AlgorithmSensor):
         # get numpy array
         img1d = np.fromstring(response.image_data_uint8, dtype=np.uint8)
         # reshape array to 4 channel image array H X W X 4
-        img_rgba = img1d.reshape(response.height, response.width, 4)
-        return img_rgba
+        try:
+            img_rgba = img1d.reshape(response.height, response.width, 3)
+            return img_rgba
+        except:
+            return None
 
     def getDepth(self):
         response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
@@ -104,8 +109,7 @@ class VisionRDDefault(Vision_RGB_Depth):
 
 
     def run(self):
-        print("Iniciar Video")
-
+        print("Iniciando",self.name)
         #self.tracker = cv2.TrackerMIL_create()
         self.tracker = cv2.TrackerKCF_create()
         # self.tracker = cv2.TrackerTLD_create()
@@ -127,16 +131,15 @@ class VisionRDDefault(Vision_RGB_Depth):
     def detectObject(self,frameBase):
         bbox = None
         while bbox is None:
-            print("NAda!")
             bbox = self.backgroundDetect(frameBase)
             self.printDetection(frameBase)
+            cv2.waitKey(1)
         size = bbox[2] * bbox[3]
+        self.printDetection(frameBase, bbox)
         return bbox,size
 
     def updateTracker(self):
         frame = self.getImage()
-        # Start timer
-        timer = cv2.getTickCount()
         # Update tracker
         ok, bbox = self.tracker.update(frame[:, :, :3])
         # print(bbox)
@@ -147,9 +150,6 @@ class VisionRDDefault(Vision_RGB_Depth):
         #     ok, bbox = self.tracker.update(frame2,bbox)
         # calculando Frames por segundo
         distanceMin = self.printDetection(frame,bbox)
-
-
-
         #Calculando resultado
         self.detectData = DetectionData(distanceMin)
         self.detectRoot.receiveData(self.detectData)
@@ -171,7 +171,7 @@ class VisionRDDefault(Vision_RGB_Depth):
         # dilate the thresholded image to fill in holes, then find contours
         # on thresholded image
         thresh = cv2.dilate(thresh, None, iterations=2)
-        image, cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+        cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)
         if len(cnts) > 0:
             cnts = cnts[0]
@@ -437,7 +437,6 @@ class VisionRDSVMTracker(Vision_RGB_Depth):
         # Start timer
         timer = cv2.getTickCount()
         # Update tracker
-
         ok, bbox = self.tracker.update(frame[:, :, :3])
 
         # Display resultado

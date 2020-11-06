@@ -5,7 +5,8 @@ unreal:
 detect:
   vertical_limit: 20
   horizontal_limit: 20
-  min_distance: 20
+  min_distance: 10
+  max_progress_data: 8
 
 sensors:
   ADS-B:
@@ -31,3 +32,7 @@ sensors:
   LIDAR:
     save_path: ../data/cloud_points/
     save_file_prefix: test
+
+  Vision:
+    show_video: true
+    min_area: 350

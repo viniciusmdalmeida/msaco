@@ -1,37 +1,52 @@
 from Interface.Start import Start
-from AlgorithmsSensors.cam.Vision_RGB_Depth import *
-from AlgorithmsSensors.cam.Vision_RGB import *
-from AlgorithmsSensors.lidar.LidarBase import *
-from AlgorithmsSensors.IMU.InertialSensors import *
+from AlgorithmsSensors.cam_others.Vision_RGB_Depth import *
+from AlgorithmsSensors.cam_others.VisionRGB import VisionRGBDefault
+from AlgorithmsSensors.cam.VisionTracker import *
+from AlgorithmsSensors.cam_others.Vision_MOG import *
 from AlgorithmsSensors.passive.ADS_B import *
 import pandas as pd
+from Utils.UnrealCommunication import UnrealCommunication
 
 list_algorithms = [
-    {"ADS_B":ADS_B,"IMU":InertialSensorsPrint},
-    {"Vision":Vision_RGB_Depth,"IMU":InertialSensorsPrint},
-    {"Vision":VisionRDDefault,"IMU":InertialSensorsPrint},
-    {"Vision":VisionRDSVMTracker,"IMU":InertialSensorsPrint},
-    {"Vision":Vision_RGB,"IMU":InertialSensorsPrint},
+    {"ADS_B": ADS_B},
+    {"Vision":VisionMOG},
+    {"Vision": VisionRGBDefault}, #Não detecta
+    {"Vision":VisionRDDefault}, #Não detecta
+    {"Vision:":VisionRDSVM}, #Error tamanho da imagem
+    {"Vision:":VisionRDSVMTracker}
 ]
 
 list_algorithms = [
-    {"ADS_B":ADS_B,"IMU":InertialSensorsPrint},
-    {"Vision":Vision_RGB_Depth,"IMU":InertialSensorsPrint},
-    {"Vision":VisionRDDefault,"IMU":InertialSensorsPrint}
+    {"Vision": VisionTracker_MIL},
+    {"Vision":VisionTracker_KFC},
+    {"Vision:":VisionTracker_Boosting},
+    {"Vision:": VisionTracker_TLD},
 ]
 
-routePoints = [[0,-1,-6,5],[0,-2,-6,5]]
-num_execution = 5 #Numero de execução por grupo algoritmo
+#rotas = [lateral,frente(negativa),cima] #em metros
+routePoints = [[0,2,-6,5]]
+list_position = [[[-1700, -5900, 700],[0,70,0]],
+                 [[750, -5900, 700],[0,95,0]],
+                 [[3600, -5900, 700],[0,120,0]]]
+num_repetitions = 1
 
 list_status = []
-for algorithm in list_algorithms:
-    for count in range(num_execution):
-        #Start simples
-        print("Iniciando programa")
-        run_simulation = Start(routePoints,algorithm)
-        run_simulation.start()
-        run_simulation.join()
-        status = run_simulation.get_status()
-        list_status.append(status)
+unreal_communication = UnrealCommunication()
+for position in list_position:
+    location = position[0]
+    rotation = position[1]
+    for algorithm in list_algorithms:
+        for count in range(num_repetitions):
+            #Start simples
+            print("\n\n###############")
+            print(f"Iniciando execução Algoritmos:{algorithm}, rota:{routePoints}")
+            print("###############")
+            run_simulation = Start(routePoints,algorithm)
+            run_simulation.start()
+            run_simulation.join()
+            status = run_simulation.get_status()
+            list_status.append([algorithm,status])
+            unreal_communication.reset_plane(location,rotation)
 df_out = pd.DataFrame({"Status":list_status})
 df_out.to_csv("status_out.csv")
+print("Finalizado")
