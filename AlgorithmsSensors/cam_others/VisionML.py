@@ -82,7 +82,7 @@ class VisionRGBSVM(VisionBase):
     def run(self):
         print("Iniciar Video")
         primeroFrame = self.getImage()
-        while len(np.unique(primeroFrame)) < self.config['sensors']['Vision']['min_area']:
+        while len(np.unique(primeroFrame)) < self.config['algorithm']['Vision']['min_area']:
             # Verifica se o frame não é vazio
             primeroFrame = self.getImage()
         while True:

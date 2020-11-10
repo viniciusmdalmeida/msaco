@@ -2,28 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="911f39d3-6d91-49ad-b626-aaec9093e896" name="Default" comment="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio.">
-      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionML.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionMOG.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthTracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/Collision_sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/Collision_sensor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/IMU/InertialSensors.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/IMU/InertialSensors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionSVM.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionSVM.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionSVMTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionSVMTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision_MOG.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision_MOG.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision_RGB.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionRGB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/Vision_RGB_Depth.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision_RGB_Depth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionML.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionML.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Avoid/Avoid.py" beforeDir="false" afterPath="$PROJECT_DIR$/Avoid/Avoid.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Control/Control.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/Control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Detect/Detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Detect/Detect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/Communication.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Communication.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/Start.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Start.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Principal.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal_multi_executions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal_multi_executions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utils/UnrealCommunication.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/UnrealCommunication.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/status_out.csv" beforeDir="false" afterPath="$PROJECT_DIR$/status_out.csv" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

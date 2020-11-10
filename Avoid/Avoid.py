@@ -51,10 +51,11 @@ class Avoid(Thread):
             elif progress == 0:
                 return
             elif progress == -1:
+                print("Progress:",progress)
                 print("Progress avoid  is negative")
                 self.replanning_route()
         elif self.status == "inactive" and detectionData.distance < self.config['detect']['min_distance']:
-            print("Start avoid")
+            print(f"Start avoid, Distance:{detectionData.distance}")
             self.replanning_route()
             self.status = "avoiding"
 
@@ -78,7 +79,7 @@ class Avoid(Thread):
         if mean_distance > self.config['detect']['min_distance'] \
                 and len(distance_list) >= self.config['detect']['max_progress_data']\
                 and mean_gradient >= 0:
-            print(f"mean_distance:{mean_distance}||mean_gradient:{mean_gradient}")
+            print(f"mean_distance:{mean_distance}||mean_gradient:{mean_gradient}||Tamanho:{len(distance_list)}")
             #se é seguro retorna  1 (significa sucesso)
             return 1
         #calculando a inclinação media da curva de distancia, ou seja para que ponto ela aponta em media

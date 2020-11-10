@@ -2,6 +2,7 @@ from Interface.Start import Start
 from AlgorithmsSensors.cam_others.Vision_RGB_Depth import *
 from AlgorithmsSensors.cam_others.VisionRGB import VisionRGBDefault
 from AlgorithmsSensors.cam.VisionTracker import *
+from AlgorithmsSensors.cam.VisionDepthTracker import *
 from AlgorithmsSensors.cam_others.Vision_MOG import *
 from AlgorithmsSensors.passive.ADS_B import *
 import pandas as pd
@@ -17,15 +18,17 @@ list_algorithms = [
 ]
 
 list_algorithms = [
-    {"Vision": VisionTracker_MIL},
-    {"Vision":VisionTracker_KFC},
-    {"Vision:":VisionTracker_Boosting},
-    {"Vision:": VisionTracker_TLD},
+    {"ADS_B": ADS_B},
+    {"Vision": VisionTrackerDepth_MIL},
+    {"Vision":VisionTrackerDepth_KFC},
+    {"Vision:":VisionTrackerDepth_Boosting},
+    {"Vision:": VisionTrackerDepth_TLD},
 ]
+#list_algorithms = [{"Vision":VisionCaptureImage}]
 
 #rotas = [lateral,frente(negativa),cima] #em metros
 routePoints = [[0,2,-6,5]]
-list_position = [[[-1700, -5900, 700],[0,70,0]],
+list_position = [[[-1700, -5900, 700],[0,71,0]],
                  [[750, -5900, 700],[0,95,0]],
                  [[3600, -5900, 700],[0,120,0]]]
 num_repetitions = 1

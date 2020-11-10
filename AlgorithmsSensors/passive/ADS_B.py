@@ -13,11 +13,6 @@ class ADS_B(AlgorithmSensor):
         self.file_path = self.config['sensors']['ADS-B']['reader_path']
         self.file_prefix = self.config['sensors']['ADS-B']['reader_file_prefix']
 
-    def run(self):
-        while True:
-            self.detect()
-            time.sleep(0.5)
-
     def getData(self,to_str=True):
         date_str = datetime.now().strftime('%#d_%#m_%Y').replace("_0","_")
         file_path = f'{self.file_path}/{self.file_prefix}_{date_str}.txt'
@@ -40,8 +35,6 @@ class ADS_B(AlgorithmSensor):
         y_distance = abs((float(intruse_data['y_position'])/100) - my_position['y_val'])
         z_distance = abs((float(intruse_data['geo_altitude'])/100) - my_position['z_val'])
         distanceMin = min([x_distance,y_distance,z_distance])
-
-
         #calc distance
         intruse_position = [float(intruse_data['x_position']) / 100,
                             float(intruse_data['y_position']) / 100,

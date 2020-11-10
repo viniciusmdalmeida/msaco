@@ -38,6 +38,9 @@ class AlgorithmSensor(Thread, ABC):
     def getStatus(self):
         return self.detectData
 
+    def terminate(self):
+        self._stop = False
+
 
 class SensorProtocol:
     #Esta classe cria o procolo de retorno generico de um sensor

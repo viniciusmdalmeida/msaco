@@ -3,10 +3,10 @@ unreal:
   file: control.txt
 
 detect:
-  vertical_limit: 20
-  horizontal_limit: 20
-  min_distance: 10
-  max_progress_data: 8
+  vertical_limit: 15
+  horizontal_limit: 10
+  min_distance: 15
+  max_progress_data: 30
 
 sensors:
   ADS-B:
@@ -35,4 +35,11 @@ sensors:
 
   Vision:
     show_video: true
+
+algorithm:
+  time_max: 40 #2min
+  vision:
     min_area: 350
+    dirPositveImagem: ../data/imagens/ImagenAviao/
+    dirNegativeImagem: ../data/imagens/SemAviao/
+    dirModels: ../data/models/
