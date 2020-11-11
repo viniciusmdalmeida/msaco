@@ -43,3 +43,6 @@ algorithm:
     dirPositveImagem: ../data/imagens/ImagenAviao/
     dirNegativeImagem: ../data/imagens/SemAviao/
     dirModels: ../data/models/
+
+test:
+  out_put_path: ../data/out_put_test/

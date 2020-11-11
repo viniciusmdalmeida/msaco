@@ -2,18 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="911f39d3-6d91-49ad-b626-aaec9093e896" name="Default" comment="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio.">
-      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthTracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/Collision_sensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/Collision_sensor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionML.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionML.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthTracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Avoid/Avoid.py" beforeDir="false" afterPath="$PROJECT_DIR$/Avoid/Avoid.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal_multi_executions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal_multi_executions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/status_out.csv" beforeDir="false" afterPath="$PROJECT_DIR$/status_out.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/status_out.csv" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

@@ -7,6 +7,16 @@ from AlgorithmsSensors.cam_others.Vision_MOG import *
 from AlgorithmsSensors.passive.ADS_B import *
 import pandas as pd
 from Utils.UnrealCommunication import UnrealCommunication
+from datetime import datetime
+
+#Read Config
+config_path='config.yml'
+with open(config_path, 'r') as file_config:
+    config = yaml.full_load(file_config)
+
+#Get Day
+date_now = datetime.now()
+date_str = f"{date_now.day}-{date_now.month}-{date_now.hour}"
 
 list_algorithms = [
     {"ADS_B": ADS_B},
@@ -18,7 +28,7 @@ list_algorithms = [
 ]
 
 list_algorithms = [
-    {"ADS_B": ADS_B},
+    #{"ADS_B": ADS_B},
     {"Vision": VisionTrackerDepth_MIL},
     {"Vision":VisionTrackerDepth_KFC},
     {"Vision:":VisionTrackerDepth_Boosting},
@@ -51,5 +61,5 @@ for position in list_position:
             list_status.append([algorithm,status])
             unreal_communication.reset_plane(location,rotation)
 df_out = pd.DataFrame({"Status":list_status})
-df_out.to_csv("status_out.csv")
+df_out.to_csv(f"{config['test']['out_put_path']}status_out_{date_str}.csv")
 print("Finalizado")

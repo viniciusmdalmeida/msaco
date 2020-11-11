@@ -24,35 +24,29 @@ class VisionTrackerDepthBase(VisionDepthBase):
                 return False
         return True
 
-    def run(self):
-        print("Iniciando",self.name)
-        start = time.time()
-        time_max = start + self.config['algorithm']['time_max']
-        while True:
-            #Verificando se algum objeto saliente
-            bbox = self.firstDetect()
-            frame = self.getImage()
-            print('bbox:', bbox)
-            self.tracker.init(frame, bbox)
-            print("Tracker Iniciado")
-            tracker_status = True
-            while self.check_status(tracker_status):
-                tracker_status = self.updateTracker()
-            if time.time() > time_max:
-                print("Acabou o tempo!")
-                break
+    def start_tracker(self):
+        print("Start Tracker")
+        # Pegando o primeiro frame
+        start_frame = self.getImage()
+        while len(np.unique(start_frame)) < 20:
+            start_frame = self.getImage()
+        # Primeira detecção
+        bbox,frame = self.firstDetect(start_frame)
+        self.tracker.init(frame, bbox)
 
-    def firstDetect(self):
+    def detect(self):
+        status = self.updateTracker()
+        if not self.check_status(status):
+            self.start_tracker()
+
+    def firstDetect(self,start_frame):
         #Pegando o primeiro frame
-        primeroFrame = self.getImage()
-        while len(np.unique(primeroFrame)) < 20:
-            primeroFrame = self.getImage()
         bbox = None
         while bbox is None:
-            frameAtual = self.getImage()
-            bbox = self.detectObject.detect(frameAtual,primeroFrame)
-            self.printDetection(primeroFrame,bbox)
-        return bbox
+            frame = self.getImage()
+            bbox = self.detectObject.detect(frame,start_frame)
+            self.printDetection(frame,bbox)
+        return bbox,frame
 
     def mog2_ObjectDetect(self):
         fgbg = cv2.createBackgroundSubtractorMOG2()
@@ -81,12 +75,13 @@ class VisionTrackerDepthBase(VisionDepthBase):
         if frame is None:
             return False
         else:
-            ok, bbox = self.tracker.update(frame[:, :, :3])
-            self.printDetection(frame,bbox)
-            distanceMin = self.printDetection(frame, bbox)
+            status_tracker, bbox = self.tracker.update(frame[:, :, :3])
+            distanceMin = self.calc_distance(bbox)
             self.detectData = DetectionData(distanceMin)
             self.detectRoot.receiveData(self.detectData)
-            return ok
+            self.printDetection(frame, bbox)
+            status = status_tracker and distanceMin
+            return status
 
 class VisionTrackerDepth_KFC(VisionTrackerDepthBase):
     def __init__(self,detectRoot):

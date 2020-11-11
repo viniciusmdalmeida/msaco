@@ -9,7 +9,7 @@ class Collision_sensor(AlgorithmSensor):
         AlgorithmSensor.__init__(self, detectRoot)
         self.path_file = None
 
-    def run(self):
+    def detect(self):
         pass
 
     def getData(self):

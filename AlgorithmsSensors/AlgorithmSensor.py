@@ -3,6 +3,7 @@ import airsim
 from abc import ABC, abstractmethod
 from Control.DetectionData import DetectionData
 from Utils.Semaphore import *
+import time
 import yaml
 
 class AlgorithmSensor(Thread, ABC):
@@ -17,10 +18,21 @@ class AlgorithmSensor(Thread, ABC):
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
         self.detectData = None
+        self.interval = 0.25
+        self._stop = True
 
+    def run(self):
+        self.start_tracker()
+        print("Iniciando",self.name)
+        while self._stop:
+            self.detect()
+            time.sleep(self.interval)
+
+    def start_tracker(self):
+        pass
 
     @abstractmethod
-    def run(self):
+    def detect(self):
         pass
 
     def getData(self):

@@ -6,8 +6,6 @@ from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
 from abc import abstractmethod
 import time
 
-
-
 class VisionBase(AlgorithmSensor):
     name = 'vision'
 
@@ -21,7 +19,6 @@ class VisionBase(AlgorithmSensor):
         else:
             self.showVideo = showVideo
 
-
     def getPoints(self, bbox):
         x1 = int(bbox[0])
         y1 = int(bbox[1])
@@ -31,7 +28,7 @@ class VisionBase(AlgorithmSensor):
         y2 = int(y1 + alt)
         return x1, y1, x2, y2
 
-    def getImage(self,save=False    ):
+    def getImage(self,save=False):
         response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.Scene, False, False)])
         response = response[0]
         # get numpy array
@@ -45,16 +42,19 @@ class VisionBase(AlgorithmSensor):
             self.cont += 1
         return img_rgba
 
-    def printDetection(self, frame, bbox=None):
+    def printDetection(self, frame, bbox=None,distance=None):
         # Start timer
         if self.showVideo:
             if bbox is not None and len(bbox) >= 4:
                 x1,y1,x2,y2 = self.getPoints(bbox)
                 # Draw Bounding box
-                p1 = (x1, y1)
-                p2 = (x2, y2)
                 if min(x1,x2,y1,y2) >= 0:
+                    p1 = (x1, y1)
+                    p2 = (x2, y2)
                     cv2.rectangle(frame, p1, p2, (255, 0, 0), 2, 1)
+                    if distance:
+                        cv2.putText(frame, "distancia:{}".format(distance), (100, 80),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
                 else:
                     # Tracking failure
                     cv2.putText(frame, "Tracking failure detected", (100, 80),
@@ -63,9 +63,6 @@ class VisionBase(AlgorithmSensor):
             cv2.waitKey(1)
 
 class VisionDepthBase(VisionBase):
-    @abstractmethod
-    def run(self):
-        pass
 
     def getDepth(self):
         response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
@@ -94,44 +91,26 @@ class VisionDepthBase(VisionBase):
             cv2.rectangle(image, p1, p2, (255, 0, 0), 2, 1)
         cv2.imshow("Depth", image)
 
-    def calc_distance(self,x1,x2,y1,y2):
+    def calc_distance(self,bbox):
+        x1, y1, x2, y2 = self.getPoints(bbox)
         if x2 < x1:
             aux = x1
             x1 = x2
             x2 = aux
         elif x2 == x1:
-            print('Depth Error: x2 == x1')
+            print('Depth Error: x2 == x1',x1,x2,y1,y2)
             return None
         if y2 < y1:
             aux = y1
             y1 = y2
             y2 = aux
         elif y2 == y1:
-            print('Depth Error: y2 == y1')
+            print('Depth Error: y2 == y1',x1,x2,y1,y2)
             return None
         depthImage = self.getDepth()
         distanceMin = depthImage[y1:y2, x1:x2].min()
         return distanceMin
 
-    def printDetection(self, frame, bbox=None):
-        # Start timer
-        if self.showVideo:
-            if bbox is not None and len(bbox) >= 4:
-                x1, y1, x2, y2 = self.getPoints(bbox)
-                # Draw Bounding box
-                p1 = (x1, y1)
-                p2 = (x2, y2)
-                if min(x1, x2, y1, y2) >= 0:
-                    cv2.rectangle(frame, p1, p2, (255, 0, 0), 2, 1)
-                    distance = self.calc_distance(x1,x2,y1,y2)
-                    cv2.putText(frame, "distancia:{}".format(distance), (100, 80),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-                else:
-                    # Tracking failure
-                    cv2.putText(frame, "Tracking failure detected", (100, 80),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
-            cv2.imshow("Detect", frame)
-            cv2.waitKey(1)
 
 class VisionCaptureImage(VisionBase):
     def __init__(self, detectRoot):

@@ -24,30 +24,27 @@ class VisionTrackerBase(VisionBase):
                 return False
         return True
 
-    def run(self):
-        print("Iniciando",self.name)
-        while True:
-            #Verificando se algum objeto saliente
-            bbox = self.firstDetect()
-            frame = self.getImage()
-            print('bbox:', bbox)
-            self.tracker.init(frame, bbox)
-            print("Tracker Iniciado")
-            tracker_status = True
-            while self.check_status(tracker_status):
-                tracker_status = self.updateTracker()
+    def start_tracker(self):
+        # Pegando o primeiro frame
+        start_frame = self.getImage()
+        while len(np.unique(start_frame)) < 20:
+            start_frame = self.getImage()
+        #Primeira detecção
+        bbox,frame = self.firstDetect()
+        self.tracker.init(frame, bbox)
 
-    def firstDetect(self):
-        #Pegando o primeiro frame
-        primeroFrame = self.getImage()
-        while len(np.unique(primeroFrame)) < 20:
-            primeroFrame = self.getImage()
+    def detect(self):
+        status = self.updateTracker()
+        if self.check_status(status):
+            self.start_detect()
+
+    def firstDetect(self,start_frame):
         bbox = None
         while bbox is None:
-            frameAtual = self.getImage()
-            bbox = self.detectObject.detect(frameAtual,primeroFrame)
-            self.printDetection(primeroFrame,bbox)
-        return bbox
+            frame = self.getImage()
+            bbox = self.detectObject.detect(frame,start_frame)
+            self.printDetection(frame,bbox)
+        return bbox,frame
 
     def mog2_ObjectDetect(self):
         fgbg = cv2.createBackgroundSubtractorMOG2()
@@ -69,7 +66,6 @@ class VisionTrackerBase(VisionBase):
             # cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2, 1)
             self.printDetection(frame,cv2.boundingRect(max))
             self.detectRoot.receiveData(self.detectData)
-
 
     def updateTracker(self):
         frame = self.getImage()
