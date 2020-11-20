@@ -12,19 +12,20 @@ class AlgorithmSensor(Thread, ABC):
     def __init__(self,detectRoot,config_path='config.yml'):
         Thread.__init__(self)
         ABC.__init__(self)
-        print("Start Algorithm ",self.name)
         with open(config_path, 'r') as file_config:
             self.config = yaml.full_load(file_config)
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
         self.detectData = None
         self.interval = 0.25
-        self._stop = True
+        self._stop_detect = False
 
     def run(self):
         self.start_tracker()
-        print("Iniciando",self.name)
-        while self._stop:
+        print("Start Algorithm",self.name)
+        while True:
+            if self._stop_detect:
+                break
             self.detect()
             time.sleep(self.interval)
 
@@ -51,7 +52,7 @@ class AlgorithmSensor(Thread, ABC):
         return self.detectData
 
     def terminate(self):
-        self._stop = False
+        self._stop_detect = True
 
 
 class SensorProtocol:
