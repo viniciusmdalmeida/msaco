@@ -25,7 +25,7 @@ class VisionTrackerDepthBase(VisionDepthBase):
         return True
 
     def start_tracker(self):
-        print("Start Tracker")
+        print(f"Algorithm {self.name} Start Tracker")
         # Pegando o primeiro frame
         start_frame = self.getImage()
         while len(np.unique(start_frame)) < 20:
@@ -84,23 +84,50 @@ class VisionTrackerDepthBase(VisionDepthBase):
             return status
 
 class VisionTrackerDepth_KFC(VisionTrackerDepthBase):
+    name = "Vision SVM KFC"
     def __init__(self,detectRoot):
         VisionTrackerDepthBase.__init__(self, detectRoot)
         self.tracker = cv2.TrackerKCF_create()
 
 class VisionTrackerDepth_TLD(VisionTrackerDepthBase):
+    name = "Vision SVM TLD"
     def __init__(self,detectRoot):
         VisionTrackerDepthBase.__init__(self, detectRoot)
         self.tracker = cv2.TrackerTLD_create()
 
 class VisionTrackerDepth_MIL(VisionTrackerDepthBase):
+    name = "Vision SVM MIL"
     def __init__(self,detectRoot):
         VisionTrackerDepthBase.__init__(self, detectRoot)
         self.tracker = cv2.TrackerMIL_create()
 
 class VisionTrackerDepth_Boosting(VisionTrackerDepthBase):
+    name = "Vision SVM Boosting"
     def __init__(self,detectRoot):
         VisionTrackerDepthBase.__init__(self, detectRoot)
         self.tracker = cv2.TrackerBoosting_create()
 
+class VisionTrackerDepth_KFC_MOG(VisionTrackerDepthBase):
+    name = "Vision SVM KFC"
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerKCF_create()
+        self.detectObject = DetectMog(self.config)
 
+class VisionTrackerDepth_TLD_MOG(VisionTrackerDepthBase):
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerTLD_create()
+        self.detectObject = DetectMog(self.config)
+
+class VisionTrackerDepth_MIL_MOG(VisionTrackerDepthBase):
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerMIL_create()
+        self.detectObject = DetectMog(self.config)
+
+class VisionTrackerDepth_Boosting_MOG(VisionTrackerDepthBase):
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerBoosting_create()
+        self.detectObject = DetectMog(self.config)

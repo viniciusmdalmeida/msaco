@@ -43,7 +43,7 @@ class VisionBase(AlgorithmSensor):
         return img_rgba
 
     def printDetection(self, frame, bbox=None,distance=None):
-        # Start timer
+        print("Print detection")
         if self.showVideo:
             if bbox is not None and len(bbox) >= 4:
                 x1,y1,x2,y2 = self.getPoints(bbox)
@@ -62,6 +62,17 @@ class VisionBase(AlgorithmSensor):
             cv2.imshow("Detect", frame)
             cv2.waitKey(1)
 
+    def terminate(self):
+        cv2.destroyAllWindows()
+        self._stop_detect = True
+'''
+    def terminate(self):
+        AlgorithmSensor.terminate(self)
+        if self.showVideo:
+            print("Force destroy!")
+            cv2.destroyAllWindows()
+            cv2.waitKey(1)
+'''
 class VisionDepthBase(VisionBase):
 
     def getDepth(self):
@@ -98,14 +109,12 @@ class VisionDepthBase(VisionBase):
             x1 = x2
             x2 = aux
         elif x2 == x1:
-            print('Depth Error: x2 == x1',x1,x2,y1,y2)
             return None
         if y2 < y1:
             aux = y1
             y1 = y2
             y2 = aux
         elif y2 == y1:
-            print('Depth Error: y2 == y1',x1,x2,y1,y2)
             return None
         depthImage = self.getDepth()
         distanceMin = depthImage[y1:y2, x1:x2].min()
