@@ -9,48 +9,69 @@ class Start(Thread):
     avoidThread = None
     detect = None
 
-    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},avoidClass=Avoid,comunication=AirSimCommunication,showVideo=True):
+    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},avoidClass=Avoid,comunication=AirSimCommunication,config_path='config.yml'):
         Thread.__init__(self)
         self.status = 'start'
         # vehicleComunication = comunication.getVehicle()
         # Conectando ao simulador AirSim
-        print("Communication")
         self.vehicleComunication = AirSimCommunication()
         self.control = Control(self.vehicleComunication,routePoints)
         self.unrealControl = UnrealCommunication()
+        self.stop = False
+
+        with open(config_path, 'r') as file_config:
+            self.config = yaml.full_load(file_config)
 
         if avoidClass is not None:
             self.avoidThread  = avoidClass(self,self.control)
         if sensorsAlgorithms is not None:
             self.detect = Detect(self,self.vehicleComunication,sensorsAlgorithms,self.avoidThread)
+
         #self.start()
 
-    def run(self):
+    def start_run(self):
+        # Start drone
+        self.control.takeOff()
+        # Start control
         self.control.start()
-        #Start thread detect and avoid
+        # Start thread detect
         if self.detect is not None:
             self.detect.start()
-        #if self.avoidThread is not None:
-        #    self.avoidThread.start()
-        #Run threads detect and avoid
-        if self.detect is not None:
-            self.detect.join()
-        #if self.avoidThread is not None:
-        #    self.avoidThread.join()
+
+    def run(self):
+        self.start_run()
+        #Wating from  time or collision
+        max_time = time.time() + self.config['algorithm']['time_max']
+        while not self.stop:
+            time.sleep(1)
+            if time.time() >= max_time:
+                print("Max time execution")
+                break
+        #Reset Plane
+        self.end_run()
 
     def end_run(self):
-        pass
+        #stop detect
+        self.detect.stop = True
+        if self.detect is not None:
+            #Wating detect
+            self.detect.join()
+        #Reset Plane
+        self.unrealControl.reset_plane()
+        self.vehicleComunication.client.reset()
+        #Delete detect thread
+        del self.detect
 
     def get_status(self):
         return self.status
 
     def set_status(self,status,):
-        print("Start status:",status)
+        print("Voo status:",status)
         self.status = status
         if status == 'collision':
-            self.unrealControl.reset_plane()
-            self.vehicleComunication.client.reset()
-        if status == "success":
-            self.unrealControl.reset_plane()
-            self.vehicleComunication.client.reset()
             self.detect.stop = True
+            self.stop = True
+        #if status == "success":
+        #    self.unrealControl.reset_plane()
+        #    self.vehicleComunication.client.reset()
+        #    self.detect.stop = True

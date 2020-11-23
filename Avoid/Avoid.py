@@ -20,8 +20,8 @@ class Avoid(Thread):
 
 
     def avoid_strategy(self):
-        route = [[20, -20, -9]]
-        velocity = 3
+        route = [[0,1, -25]]
+        velocity = 8
         return route,velocity
 
     def run(self):
@@ -67,12 +67,13 @@ class Avoid(Thread):
             self.progress_data.pop()
 
     def check_progress(self):
-        if not self.progress_data:
-            print("Progress Zero!!")
+        if len(self.progress_data) < self.config['detect']['min_progress_data']:
+            print("Dados insuficiente para calcular progresso do desvio")
             return 0
         distance_list = []
         for data in self.progress_data:
-            distance_list.append(data.distance)
+            if data.distance:
+                distance_list.append(data.distance)
         #verificando se a media de atualizações de distancia é um ponto seguro
         mean_distance = sum(distance_list)/len(distance_list)
         mean_gradient = np.gradient(distance_list).mean()
@@ -86,5 +87,7 @@ class Avoid(Thread):
             # se a inclinação é positiva significa que o drone esta afastando do risco
             return 0
         else:
-            # se a inclinação é negativa significa que o drone esta aproximando do risco
+            #se a inclinação é negativa significa que o drone esta aproximando do risco
+            #Reinicia a lista de progresso e retorna erro
+            self.progress_data = []
             return -1

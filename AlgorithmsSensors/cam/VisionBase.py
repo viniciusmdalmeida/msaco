@@ -43,7 +43,6 @@ class VisionBase(AlgorithmSensor):
         return img_rgba
 
     def printDetection(self, frame, bbox=None,distance=None):
-        print("Print detection")
         if self.showVideo:
             if bbox is not None and len(bbox) >= 4:
                 x1,y1,x2,y2 = self.getPoints(bbox)

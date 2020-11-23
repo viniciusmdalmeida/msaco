@@ -13,6 +13,7 @@ class UnrealCommunication:
         self.file_path = path+'/'+file_name
 
     def reset_plane(self,location = None,rotation = None):
+        print("Reset Plane")
         file = open(self.file_path,'w')
         text_file = 'status:reset\n'
         if location:
@@ -25,8 +26,6 @@ class UnrealCommunication:
             text_file += "Roll:" + str(rotation[2]) + '\n'
         file.write(text_file)
         file.close()
-
-
 
     def start_plane(self):
         file = open(self.file_path, 'w')

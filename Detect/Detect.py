@@ -16,15 +16,16 @@ class IDetect(Thread):
 class Detect(Thread):
     stop = False
 
-    def __init__(self,startObj,vehicleComunication,sensorsAlgorithm,avoidThread):
+    def __init__(self,startObj,vehicleComunication,sensorsAlgorithm,avoidThread,config_path='config.yml'):
         Thread.__init__(self)
+        with open(config_path, 'r') as file_config:
+            self.config = yaml.full_load(file_config)
         self.avoidThread = avoidThread
         self.vehicle = vehicleComunication
         self.sensorsThreads = []
         self.sensorsAlgorithm = sensorsAlgorithm
         self.collisionSensor = Collision_sensor(self)
         self.startObj = startObj
-
 
     def startAlgorithms(self):
         for sensor in self.sensorsAlgorithm:
@@ -53,8 +54,11 @@ class Detect(Thread):
             #Colisão
             if self.collisionSensor.check_collision():
                 self.startObj.set_status('collision')
-                return
+                break
             time.sleep(0.1)
+            #Observando tempo de execução
+            time_exec = time.time()
+        self.end_run()
 
     def fusion_data(self,dict_sensor_data):
         sensor_base = list(dict_sensor_data.keys())[0]
@@ -76,5 +80,13 @@ class Detect(Thread):
 
     def sendData(self,detectData):
         self.avoidThread.update_detect_data(detectData)
+
+    def end_run(self):
+        print("End Detect")
+        for thread in self.sensorsThreads:
+            thread.terminate()
+            thread.join()
+            print("Thread Terminate",thread.name)
+
 
 

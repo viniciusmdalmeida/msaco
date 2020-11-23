@@ -20,12 +20,9 @@ class Control(Thread):
     def takeOff(self):
         self.startConnection()
         self.vehicle.takeOff()
+        print("Take Off")
 
     def run(self):
-        print("Control Start")
-        self.startConnection()
-        self.takeOff()
-        print("Takeoff finalized")
         self.moving =True
         self.unrealControl.start_plane()
         self.moveByPath()

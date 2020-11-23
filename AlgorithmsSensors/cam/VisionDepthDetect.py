@@ -41,4 +41,9 @@ class VisionDetect_SVM(VisionDepthDetectBase):
 class VisionDetect_MOG(VisionDepthDetectBase):
     def __init__(self,detectRoot):
         VisionDepthDetectBase.__init__(self, detectRoot)
-        self.detectObject = DetectMog(self.config)(self.config)
+        self.detectObject = DetectMog(self.config)
+
+class VisionDetect_Neural(VisionDepthDetectBase):
+    def __init__(self,detectRoot):
+        VisionDepthDetectBase.__init__(self, detectRoot)
+        self.detectObject = DetectNeural(self.config)

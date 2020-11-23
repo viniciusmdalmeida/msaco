@@ -25,7 +25,7 @@ class VisionTrackerDepthBase(VisionDepthBase):
         return True
 
     def start_tracker(self):
-        print(f"Algorithm {self.name} Start Tracker")
+        print(f"Start tracker: algorithm {self.name}")
         # Pegando o primeiro frame
         start_frame = self.getImage()
         while len(np.unique(start_frame)) < 20:

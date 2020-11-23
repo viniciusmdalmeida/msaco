@@ -5,6 +5,7 @@ from abc import abstractmethod
 from os import listdir
 from os.path import isfile
 from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import PCA
 import pickle
 
@@ -48,8 +49,8 @@ class DetectMog(DetectBase):
         (x, y, w, h) = cv2.boundingRect(max_cnts)
         return (x, y, w, h)
 
-class DetectSVM(DetectBase):
-    def __init__(self, config,nameModel='svm',namePrepDataModel='pca',train=False):
+class DetectMLBase(DetectBase):
+    def __init__(self, config,nameModel=None,namePrepDataModel=None,train=False):
         self.config = config
         self.nameModel = nameModel
         self.namePrepDataModel = namePrepDataModel
@@ -59,16 +60,16 @@ class DetectSVM(DetectBase):
         self.dirPositveImagem = self.config['algorithm']['vision']['dirPositveImagem']
         self.dirNegativeImagem = self.config['algorithm']['vision']['dirNegativeImagem']
         self.dirModel = self.config['algorithm']['vision']['dirModels']+self.nameModel+'.sav'
-        self.dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
+        if namePrepDataModel:
+            self.dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
         if train:
-            self.model = None
             self.train()
         else:
             self.model = pickle.load(open(self.dirModel, 'rb'))
             self.prepData = pickle.load(open(self.dirModelPrepData, 'rb'))
 
     def getDados(self):
-        dim = (self.windowSizeY,self.windowSizeX)
+        dim = (self.windowSizeY, self.windowSizeX)
 
         imgs = []
         datas = []
@@ -101,17 +102,14 @@ class DetectSVM(DetectBase):
         dicData = self.getDados()
         data = np.array(dicData['data'])
         target = dicData['target']
-        # PCA
-        n_components = 150
-        self.prepData = PCA(n_components=n_components, svd_solver='randomized',whiten=True).fit(data)
-        data = self.prepData.transform(data)
+        if self.namePrepDataModel:
+            data = self.prepData.fit(data).transform(data)
+            pickle.dump(self.prepData, open(self.dirModelPrepData, 'wb'))
+
         # SVM
-        self.model = SVC(C=100, gamma=0.01)
         self.model.fit(data, target)
         pickle.dump(self.model, open(self.dirModel, 'wb'))
-        pickle.dump(self.prepData, open(self.dirModelPrepData, 'wb'))
         print("Fim do treino")
-
 
     def detect(self, frame, primeiroFrame=None):
         stepSize = 20
@@ -122,11 +120,32 @@ class DetectSVM(DetectBase):
             for x in range(0, frame.shape[1], stepSize):
                 if (x + self.windowSizeX > frame.shape[1]):
                     x = frame.shape[1] - self.windowSizeX
-                crop_img = frame[y:y +self.windowSizeY, x:x + self.windowSizeX]
-                crop_img = crop_img.reshape(-1)
-                data = self.prepData.transform([crop_img])
-                predito = self.model.predict(data)
+                crop_img = frame[y:y + self.windowSizeY, x:x + self.windowSizeX]
+                data = crop_img.reshape(-1)
+                if self.namePrepDataModel :
+                    data = self.prepData.transform([data])
+                predito = self.model.predict([data])
                 if predito[0] == 1:
                     bbox = (x, y, self.windowSizeX, self.windowSizeY)
                     return bbox
         return None
+
+
+class DetectSVM(DetectMLBase):
+    def __init__(self, config,nameModel='svm',namePrepDataModel='pca',train=False):
+        # PCA
+        n_components = 150
+        self.prepData = PCA(n_components=n_components, svd_solver='randomized', whiten=True)
+        # SVM
+        self.model = SVC(C=100, gamma=0.01)
+        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel, train=train)
+
+class DetectNeural(DetectMLBase):
+    def __init__(self, config,nameModel='neural network',namePrepDataModel='pca',train=True):
+        if namePrepDataModel == 'pca':
+            # PCA
+            n_components = 150
+            self.prepData = PCA(n_components=n_components, svd_solver='randomized', whiten=True)
+        # SVM
+        self.model = MLPClassifier(hidden_layer_sizes=(75,20))
+        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel, train=train)

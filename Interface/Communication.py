@@ -9,6 +9,7 @@ class ICommunication(ABC,Thread):
 
     def __init__(self):
         super().__init__()
+        print(f"Communication {self.name}")
 
     def getVehicle():
         pass
@@ -68,7 +69,6 @@ class AirSimCommunication(ICommunication):
         #     raise Exception("This class is a singleton, use getInstance method.")
         # else:
         super().__init__()
-        print("AirSim")
         self.client = airsim.MultirotorClient()
         self.connect()
         # AirSimCommunication.__instance = self
