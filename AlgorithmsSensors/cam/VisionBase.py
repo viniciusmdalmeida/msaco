@@ -1,23 +1,24 @@
 import airsim  # pip install airsim
 import numpy as np
-from Control.DetectionData import *
 import cv2
 from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
-from abc import abstractmethod
 import time
+from datetime import datetime
+from Control.DetectionData import *
+from abc import abstractmethod
 
 class VisionBase(AlgorithmSensor):
     name = 'vision'
 
-    def __init__(self, detectRoot, showVideo=None):
+    def __init__(self, detectRoot):
         AlgorithmSensor.__init__(self, detectRoot)
         self.detectData = None
         self.depth = False
         self.cont = 0
-        if showVideo is None:
-            self.showVideo = self.config['sensors']['Vision']['show_video']
-        else:
-            self.showVideo = showVideo
+        self.showVideo = self.config['sensors']['Vision']['show_video']
+        #get data
+        date_now = datetime.now()
+        self.date_str = f"{date_now.day}-{date_now.month}_{date_now.hour}-{date_now.minute}-{date_now.second}"
 
     def getPoints(self, bbox):
         x1 = int(bbox[0])
@@ -38,7 +39,7 @@ class VisionBase(AlgorithmSensor):
             return None
         img_rgba = img1d.reshape(response.height, response.width, 3)
         if save:
-            cv2.imwrite(f'../data/imagens/voo/frame_{self.cont}.jpg',img_rgba)
+            cv2.imwrite(f'../data/imagens/RGB/voo/frame_{self.cont}_{self.date_str}.jpg',img_rgba)
             self.cont += 1
         return img_rgba
 
@@ -73,12 +74,19 @@ class VisionBase(AlgorithmSensor):
             cv2.waitKey(1)
 '''
 class VisionDepthBase(VisionBase):
+    def __init__(self,detectRoot):
+        VisionBase.__init__(self, detectRoot)
+        self.cont_depth = 0
 
-    def getDepth(self):
+    def getDepth(self,save=False):
         response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
         response = response[0]
         # get numpy array
         img1d = airsim.list_to_2d_float_array(response.image_data_float, response.width, response.height)
+        if save:
+
+            cv2.imwrite(f'../data/imagens/Depth/voo/frame_{self.cont_depth}_{self.date_str}.jpg', img1d)
+            self.cont_depth += 1
         return img1d
 
     def showDepth(self, image, max=np.inf, invert=True, bbox=None):
@@ -119,12 +127,16 @@ class VisionDepthBase(VisionBase):
         distanceMin = depthImage[y1:y2, x1:x2].min()
         return distanceMin
 
-
 class VisionCaptureImage(VisionBase):
     def __init__(self, detectRoot):
         VisionBase.__init__(self, detectRoot)
 
-    def run(self):
-        while True:
-            self.getImage(True)
-            time.sleep(0.25)
+    def detect(self):
+        self.getImage(True)
+
+class VisionCaptureImageDeth(VisionDepthBase):
+    def __init__(self, detectRoot):
+        VisionDepthBase.__init__(self, detectRoot)
+
+    def detect(self):
+        self.getDepth(True)

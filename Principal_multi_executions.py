@@ -1,6 +1,6 @@
 from Interface.Start import Start
 from AlgorithmsSensors.cam.VisionDepthTracker import *
-from AlgorithmsSensors.cam.VisionDepthDetect import *
+from AlgorithmsSensors.cam.VisionDetect import *
 from AlgorithmsSensors.cam_others.Vision_MOG import *
 from AlgorithmsSensors.passive.ADS_B import *
 from AlgorithmsSensors.Collision_sensor import *
@@ -31,7 +31,7 @@ list_algorithms = [
     {"Vision":VisionDetect_MOG}
 ]
 
-list_algorithms = [{"Vision": VisionDetect_Neural}]
+list_algorithms = [{"Vision": VisionCaptureImageDeth}]
 #Configuração testes
 routePoints = [[0,1,-6,5]] #[lateral,frente(negativa),cima,tempo] #em metros
 colision_point = [260, 260, 920]
@@ -78,5 +78,5 @@ for angle in tqdm(list_angle):
             df_out_put.to_csv(f"{config['test']['out_put_path']}status_out_{date_str}.csv")
             #Finalizando simulação
             del run_simulation
-            time.sleep(0.5)
+            time.sleep(1.5)
 print("Finalizado")

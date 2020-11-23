@@ -54,8 +54,8 @@ class DetectMLBase(DetectBase):
         self.config = config
         self.nameModel = nameModel
         self.namePrepDataModel = namePrepDataModel
-        self.windowSizeX = 80
-        self.windowSizeY = 40
+        self.windowSizeX = self.config['algorithm']['vision']['windowSizeX']
+        self.windowSizeY = self.config['algorithm']['vision']['windowSizeY']
 
         self.dirPositveImagem = self.config['algorithm']['vision']['dirPositveImagem']
         self.dirNegativeImagem = self.config['algorithm']['vision']['dirNegativeImagem']

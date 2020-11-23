@@ -2,7 +2,8 @@ from AlgorithmsSensors.cam.VisionBase import *
 from AlgorithmsSensors.cam.DetectObjClasses import *
 import time
 
-class VisionDepthDetectBase(VisionDepthBase):
+#class VisionRGBDefault(VisionBase):
+class VisionDetectBase(VisionDepthBase):
     name = "Vision RGB Default Algorithm"
 
     def __init__(self,detectRoot):
@@ -16,7 +17,7 @@ class VisionDepthDetectBase(VisionDepthBase):
     def detect(self):
         #Pegando o primeiro frame
         if self.status == 'start':
-            self.base_frame = self.getDepth()
+            self.base_frame = self.getImage()
         #Detectando avião
         frame = self.getImage()
         bbox = self.detectObject.detect(frame,self.base_frame)
@@ -26,23 +27,23 @@ class VisionDepthDetectBase(VisionDepthBase):
             distanceMin = self.calc_distance(bbox)
             self.detectData = DetectionData(distanceMin)
             #Atualizar os frame base e o status
-            self.base_frame = self.getDepth()
+            self.base_frame = self.getImage()
             self.status = 'detect'
         else:
             #Se não detectado atualizar o status
             self.status = 'lost'
 
-class VisionDepthDetect_SVM(VisionDepthDetectBase):
+class VisionDetect_SVM(VisionDetectBase):
     def __init__(self,detectRoot):
         VisionDepthDetectBase.__init__(self, detectRoot)
         self.detectObject = DetectSVM(self.config)
 
-class VisionDepthDetect_MOG(VisionDepthDetectBase):
+class VisionDetect_MOG(VisionDetectBase):
     def __init__(self,detectRoot):
         VisionDepthDetectBase.__init__(self, detectRoot)
         self.detectObject = DetectMog(self.config)
 
-class VisionDepthDetect_Neural(VisionDepthDetectBase):
+class VisionDetect_Neural(VisionDetectBase):
     def __init__(self,detectRoot):
         VisionDepthDetectBase.__init__(self, detectRoot)
         self.detectObject = DetectNeural(self.config)

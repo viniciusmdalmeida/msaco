@@ -5,9 +5,11 @@ algorithm:
   time_max: 40 #1min30seg
   vision:
     min_area: 350
-    dirPositveImagem: ../data/imagens/ImagenAviao/
-    dirNegativeImagem: ../data/imagens/SemAviao/
+    dirPositveImagem: ../data/imagens/RGB/ImagenAviao/
+    dirNegativeImagem: ../data/imagens/RGB/SemAviao/
     dirModels: ../data/models/
+    windowSizeX : 80
+    windowSizeY : 40
 
 detect:
   vertical_limit: 20
