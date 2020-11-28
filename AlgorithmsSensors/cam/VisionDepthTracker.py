@@ -83,6 +83,9 @@ class VisionTrackerDepthBase(VisionDepthBase):
             status = status_tracker and distanceMin
             return status
 
+############################################################
+#               SVM
+############################################################
 class VisionTrackerDepth_KFC(VisionTrackerDepthBase):
     name = "Vision SVM KFC"
     def __init__(self,detectRoot):
@@ -107,6 +110,9 @@ class VisionTrackerDepth_Boosting(VisionTrackerDepthBase):
         VisionTrackerDepthBase.__init__(self, detectRoot)
         self.tracker = cv2.TrackerBoosting_create()
 
+############################################################
+#               MOG
+############################################################
 class VisionTrackerDepth_KFC_MOG(VisionTrackerDepthBase):
     name = "Vision SVM KFC"
     def __init__(self,detectRoot):
@@ -131,3 +137,59 @@ class VisionTrackerDepth_Boosting_MOG(VisionTrackerDepthBase):
         VisionTrackerDepthBase.__init__(self, detectRoot)
         self.tracker = cv2.TrackerBoosting_create()
         self.detectObject = DetectMog(self.config)
+
+############################################################
+#          Neural Network
+############################################################
+class VisionTrackerDepth_KFC_MOG(VisionTrackerDepthBase):
+    name = "Vision SVM KFC"
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerKCF_create()
+        self.detectObject = DetectNeural(self.config)
+
+class VisionTrackerDepth_TLD_MOG(VisionTrackerDepthBase):
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerTLD_create()
+        self.detectObject = DetectNeural(self.config)
+
+class VisionTrackerDepth_MIL_MOG(VisionTrackerDepthBase):
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerMIL_create()
+        self.detectObject = DetectNeural(self.config)
+
+class VisionTrackerDepth_Boosting_MOG(VisionTrackerDepthBase):
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerBoosting_create()
+        self.detectObject = DetectNeural(self.config)
+
+############################################################
+#                   Depth Learning
+############################################################
+class VisionTrackerDepth_KFC_MOG(VisionTrackerDepthBase):
+    name = "Vision SVM KFC"
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerKCF_create()
+        self.detectObject = DetectKeras(self.config)
+
+class VisionTrackerDepth_TLD_MOG(VisionTrackerDepthBase):
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerTLD_create()
+        self.detectObject = DetectKeras(self.config)
+
+class VisionTrackerDepth_MIL_MOG(VisionTrackerDepthBase):
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerMIL_create()
+        self.detectObject = DetectKeras(self.config)
+
+class VisionTrackerDepth_Boosting_MOG(VisionTrackerDepthBase):
+    def __init__(self,detectRoot):
+        VisionTrackerDepthBase.__init__(self, detectRoot)
+        self.tracker = cv2.TrackerBoosting_create()
+        self.detectObject = DetectKeras(self.config)

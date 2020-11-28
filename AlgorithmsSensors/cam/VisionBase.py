@@ -33,11 +33,11 @@ class VisionBase(AlgorithmSensor):
         response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.Scene, False, False)])
         response = response[0]
         # get numpy array
-        img1d = np.fromstring(response.image_data_uint8, dtype=np.uint8)
+        img_rgba = np.fromstring(response.image_data_uint8, dtype=np.uint8)
         # reshape array to 4 channel image array H X W X 4
-        if len(img1d) == 1:
+        if len(img_rgba) == 1:
             return None
-        img_rgba = img1d.reshape(response.height, response.width, 3)
+        img_rgba = img_rgba.reshape(response.height, response.width, 3)
         if save:
             cv2.imwrite(f'../data/imagens/RGB/voo/frame_{self.cont}_{self.date_str}.jpg',img_rgba)
             self.cont += 1
@@ -84,12 +84,13 @@ class VisionDepthBase(VisionBase):
         # get numpy array
         img1d = airsim.list_to_2d_float_array(response.image_data_float, response.width, response.height)
         if save:
-
             cv2.imwrite(f'../data/imagens/Depth/voo/frame_{self.cont_depth}_{self.date_str}.jpg', img1d)
             self.cont_depth += 1
+        if len(img1d) < 1:
+            return None
         return img1d
 
-    def showDepth(self, image, max=np.inf, invert=True, bbox=None):
+    def normalize_image(self,image,max=np.inf,invert=True):
         def verifmax(x):
             if x > max:
                 return max
@@ -103,6 +104,10 @@ class VisionDepthBase(VisionBase):
         else:
             image = image * 255
         image = image.astype(np.uint8)
+        return image
+
+    def printDepthDetection(self, image, bbox=None, max=np.inf, invert=True):
+        image = self.normalize_image(image,max,invert)
         if not (bbox is None):
             p1 = (int(bbox[0]), int(bbox[1]))
             p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))

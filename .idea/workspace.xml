@@ -2,12 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="911f39d3-6d91-49ad-b626-aaec9093e896" name="Default" comment="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio.">
-      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDetect.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTrackerCustom.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/dict_custons_class.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/DetectClass.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Utils/get_windows.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Utils/keras_train.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config_algorithm.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthDetect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDetect.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal_multi_executions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal_multi_executions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils/calc_colision.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/calc_colision.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,7 +53,7 @@
   <component name="PropertiesComponent">
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://E:/onedrive/Mestrado/Programa/Python/ControleVisao/MyUtils/Semaphore.py" />
     <property name="ignore.virus.scanning.warn.message" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/AlgorithmsSensors/cam" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Utils" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -58,6 +65,7 @@
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Utils" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\cam" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\passive" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\ADS_B" />
@@ -77,27 +85,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.Principal_multi_executions">
-    <configuration name="Communication" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="SenseAvoid_framework" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Interface" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Interface/Communication.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="Principal" type="PythonConfigurationType" factoryName="Python">
       <module name="SenseAvoid_framework" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -140,7 +127,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Teste" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="keras_classification" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SenseAvoid_framework" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -148,11 +135,53 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Others/Teste" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Utils" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Others/Teste/Teste.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Utils\keras_train.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="keras_train" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="SenseAvoid_framework" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Utils" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Utils/keras_train.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="prep_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="SenseAvoid_framework" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Utils" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Utils\get_windows.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -174,27 +203,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_image.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="test_image" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="SenseAvoid_framework" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Others/Test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Others/Test/test_image.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -249,19 +257,19 @@
       <item itemvalue="Python.Principal" />
       <item itemvalue="Python.testeMove" />
       <item itemvalue="Python.visão" />
-      <item itemvalue="Python.Communication" />
-      <item itemvalue="Python.Teste" />
       <item itemvalue="Python.Principal_multi_executions" />
-      <item itemvalue="Python.test_image" />
       <item itemvalue="Python.test_image (1)" />
+      <item itemvalue="Python.keras_classification" />
+      <item itemvalue="Python.prep_data" />
+      <item itemvalue="Python.keras_train" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.Principal_multi_executions" />
+        <item itemvalue="Python.keras_train" />
+        <item itemvalue="Python.prep_data" />
+        <item itemvalue="Python.keras_classification" />
         <item itemvalue="Python.test_image (1)" />
-        <item itemvalue="Python.test_image" />
-        <item itemvalue="Python.Communication" />
-        <item itemvalue="Python.Teste" />
       </list>
     </recent_temporary>
   </component>
@@ -302,5 +310,15 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio." />
     <option name="LAST_COMMIT_MESSAGE" value="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Utils/get_windows.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

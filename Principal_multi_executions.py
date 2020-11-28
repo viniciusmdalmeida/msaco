@@ -10,6 +10,22 @@ from Utils.calc_colision import calc_plane_position
 from datetime import datetime
 from tqdm import tqdm
 
+## import keras
+#Read Config
+config_path='config.yml'
+with open(config_path, 'r') as file_config:
+    config = yaml.full_load(file_config)
+
+#Para iniciar o keras
+"""
+from keras.models import Model,model_from_json
+path_model = '../data/models/'
+with open(path_model + 'keras_Xception.json', 'r') as json_file:
+    model_json = json_file.read()
+model = model_from_json(model_json)
+model.load_weights(path_model + 'keras_Xception.h5')
+"""
+
 #Posição do avião
 list_position = [[[-1700, -5900, 700],[0,71,0]],
                  [[750, -5900, 700],[0,95,0]],
@@ -31,18 +47,17 @@ list_algorithms = [
     {"Vision":VisionDetect_MOG}
 ]
 
-list_algorithms = [{"Vision": VisionCaptureImageDeth}]
+list_algorithms = [{"Vision":VisionDetectDepth_SVM}]
+
 #Configuração testes
-routePoints = [[0,1,-6,5]] #[lateral,frente(negativa),cima,tempo] #em metros
+altura = 6
+routePoints = [[0,1,-altura,10],[0,10,-altura,config['test']['time_to_colision']]] #[lateral,frente(negativa),cima,tempo] #em metros
 colision_point = [260, 260, 920]
 list_angle = [30,20,10,0,-10,-20,-30]
 distance_plane = 5000
-num_repetitions = 1
+num_repetitions = 3
 
-#Read Config
-config_path='config.yml'
-with open(config_path, 'r') as file_config:
-    config = yaml.full_load(file_config)
+
 #Get Day
 date_now = datetime.now()
 date_str = f"{date_now.day}-{date_now.month}_" \
@@ -55,8 +70,10 @@ df_out_put = pd.DataFrame(columns={'algoritmo','status'})
 ##############################
 list_status = []
 unreal_communication = UnrealCommunication()
+time_to_colision = config['test']['time_to_colision']
+plane_velocity = config['test']['plane_velocity']
 for angle in tqdm(list_angle):
-    location,rotation = calc_plane_position(angle,distance_plane,colision_point)
+    location,rotation = calc_plane_position(angle,colision_point,time_to_colision,plane_velocity)
     print("Colision:", colision_point)
     print("Plane location:",location,"Plane rotation:",rotation)
     for algorithm in list_algorithms:
@@ -77,6 +94,6 @@ for angle in tqdm(list_angle):
             df_out_put = df_out_put.append(df_result,ignore_index=True)
             df_out_put.to_csv(f"{config['test']['out_put_path']}status_out_{date_str}.csv")
             #Finalizando simulação
+            time.sleep(2.5)
             del run_simulation
-            time.sleep(1.5)
 print("Finalizado")

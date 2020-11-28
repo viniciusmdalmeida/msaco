@@ -9,6 +9,9 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import PCA
 import pickle
 
+from keras.preprocessing.image import img_to_array
+from keras.models import Model,model_from_json
+
 class DetectBase:
     def __init__(self,config):
         self.config = config
@@ -51,7 +54,9 @@ class DetectMog(DetectBase):
 
 class DetectMLBase(DetectBase):
     def __init__(self, config,nameModel=None,namePrepDataModel=None,train=False):
+        print("Detect Base")
         self.config = config
+        self.depth = True
         self.nameModel = nameModel
         self.namePrepDataModel = namePrepDataModel
         self.windowSizeX = self.config['algorithm']['vision']['windowSizeX']
@@ -60,21 +65,22 @@ class DetectMLBase(DetectBase):
         self.dirPositveImagem = self.config['algorithm']['vision']['dirPositveImagem']
         self.dirNegativeImagem = self.config['algorithm']['vision']['dirNegativeImagem']
         self.dirModel = self.config['algorithm']['vision']['dirModels']+self.nameModel+'.sav'
-        if namePrepDataModel:
-            self.dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
         if train:
             self.train()
         else:
-            self.model = pickle.load(open(self.dirModel, 'rb'))
-            self.prepData = pickle.load(open(self.dirModelPrepData, 'rb'))
+            self.load_model()
+        if namePrepDataModel:
+            dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
+            self.prepData = pickle.load(open(dirModelPrepData, 'rb'))
+
+    def load_model(self):
+        self.model = pickle.load(open(self.dirModel, 'rb'))
 
     def getDados(self):
         dim = (self.windowSizeY, self.windowSizeX)
-
         imgs = []
         datas = []
         target = []
-
         listPaths = listdir(self.dirNegativeImagem)
         # Dados Negativos: Sem o avião
         for item in listPaths:
@@ -99,12 +105,14 @@ class DetectMLBase(DetectBase):
         return dict
 
     def train(self):
+        print("Iniciando treino")
         dicData = self.getDados()
         data = np.array(dicData['data'])
         target = dicData['target']
         if self.namePrepDataModel:
             data = self.prepData.fit(data).transform(data)
-            pickle.dump(self.prepData, open(self.dirModelPrepData, 'wb'))
+            dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
+            pickle.dump(self.prepData, open(dirModelPrepData, 'wb'))
 
         # SVM
         self.model.fit(data, target)
@@ -113,7 +121,8 @@ class DetectMLBase(DetectBase):
 
     def detect(self, frame, primeiroFrame=None):
         stepSize = 20
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        if not self.depth:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         for y in range(0, frame.shape[0], stepSize):
             if (y + self.windowSizeY > frame.shape[0]):
                 y = frame.shape[0] - self.windowSizeY
@@ -124,7 +133,7 @@ class DetectMLBase(DetectBase):
                 data = crop_img.reshape(-1)
                 if self.namePrepDataModel :
                     data = self.prepData.transform([data])
-                predito = self.model.predict([data])
+                predito = self.model.predict(data)
                 if predito[0] == 1:
                     bbox = (x, y, self.windowSizeX, self.windowSizeY)
                     return bbox
@@ -132,7 +141,8 @@ class DetectMLBase(DetectBase):
 
 
 class DetectSVM(DetectMLBase):
-    def __init__(self, config,nameModel='svm',namePrepDataModel='pca',train=False):
+    def __init__(self, config,nameModel='svm',namePrepDataModel='pca_depth',train=False):
+        print("Detect SVM")
         # PCA
         n_components = 150
         self.prepData = PCA(n_components=n_components, svd_solver='randomized', whiten=True)
@@ -149,3 +159,101 @@ class DetectNeural(DetectMLBase):
         # SVM
         self.model = MLPClassifier(hidden_layer_sizes=(75,20))
         DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel, train=train)
+
+class DetectKeras(DetectMLBase):
+    def __init__(self, config,nameModel='keras_Xception',namePrepDataModel=None,train=False):
+        # Keras
+        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel, train=train)
+
+    def load_model(self):
+        json_path = self.config['algorithm']['vision']['dirModels']+self.nameModel+'.json'
+        json_file = open(json_path, 'r')
+        model_json = json_file.read()
+        json_file.close()
+        weights_file = self.config['algorithm']['vision']['dirModels']+self.nameModel+'.h5'
+        self.model = model_from_json(model_json)
+        self.model.load_weights(weights_file)
+        self.model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+    def detect(self, frame, primeiroFrame=None):
+        stepSize = 60
+        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        cont = 0
+        list_image = []
+        for y in range(0, frame.shape[0], stepSize):
+            if (y + self.windowSizeY > frame.shape[0]):
+                y = frame.shape[0] - self.windowSizeY
+            for x in range(0, frame.shape[1], stepSize):
+                if (x + self.windowSizeX > frame.shape[1]):
+                    x = frame.shape[1] - self.windowSizeX
+                crop_img = frame[y:y + self.windowSizeY, x:x + self.windowSizeX]
+                list_image.append({'image':crop_img,'x':x,'y':y})
+        print("iniciando predito")
+        predito = self.keras_predict(list_image)
+        if predito is not None:
+            bbox = (predito['x'], predito['y'], self.windowSizeX, self.windowSizeY)
+            return bbox
+        return None
+
+    def keras_predict(self, list_image, threshold=0.997):
+        list_data = []
+        for image_data in list_image:
+            image = img_to_array(image_data['image'])
+            data = image.astype('float32') / 255.0
+            list_data.append(data)
+        list_predict = self.model.predict(np.array(list_data))
+        for cont in range(len(list_predict)):
+            predict = list_predict[cont]
+            if predict.argmax() == 1 and predict[1] >= threshold:
+                print(predict)
+                return list_image[cont]
+        return None
+    """
+    def detect(self, frame, primeiroFrame=None):
+        stepSize = 20
+        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        print(frame.shape,stepSize)
+        for y in range(0, frame.shape[0], stepSize):
+            if (y + self.windowSizeY > frame.shape[0]):
+                y = frame.shape[0] - self.windowSizeY
+            for x in range(0, frame.shape[1], stepSize):
+                if (x + self.windowSizeX > frame.shape[1]):
+                    x = frame.shape[1] - self.windowSizeX
+                crop_img = frame[y:y + self.windowSizeY, x:x + self.windowSizeX]
+                predito = self.keras_predict(crop_img)
+                if predito == 1:
+                    bbox = (x, y, self.windowSizeX, self.windowSizeY)
+                    return bbox
+        return None
+
+    def keras_predict(self,windows,threshold=0.7):
+        image = img_to_array(windows)
+        image = image.astype('float32') / 255.0
+        image = np.expand_dims(image, 0)
+        y_predi = self.model.predict(image)[0]
+        print('y_predi',y_predi)
+        if y_predi.argmax() == 0 and y_predi[0] >= threshold:
+            return 1
+        return 0
+    """
+    """
+    def classifier_keras(self, img, class_num=1, threshold=0.5):
+        list_output = []
+        obj_img = Imagem_data(img, keras=True)
+        dici_windows = obj_img.slidingWindows(stepSize=20)
+        for num_image in range(len(dici_windows['windows'])):
+            image = dici_windows['windows'][num_image]
+            image = img_to_array(image)
+            image = image.astype('float32') / 255.0
+            image = np.expand_dims(image, 0)
+            y_predi = self.model.predict(image)
+            if y_predi[0].argmax() == class_num and y_predi[0][class_num] >= threshold:
+                x = dici_windows['x'][num_image]
+                y = dici_windows['y'][num_image]
+                list_output.append({'window': image, 'x': x, 'y': y})
+        return list_output
+    """
+
+
+
+

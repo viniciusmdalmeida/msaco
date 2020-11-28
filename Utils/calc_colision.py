@@ -1,6 +1,7 @@
 import math
 
-def calc_plane_position(angle,radius,collision_point):
+def calc_plane_position(angle,collision_point,time_to_colision,velocity):
+    radius = (time_to_colision+1) * velocity
     plane_angle = abs(90 - angle)
     plane_x =  math.sin(math.radians(angle))/math.sin(90) * radius
     plane_y = math.sin(math.radians(plane_angle))/math.sin(90) * radius
