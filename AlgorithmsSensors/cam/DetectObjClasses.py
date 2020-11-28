@@ -1,4 +1,3 @@
-import airsim  # pip install airsim
 import numpy as np
 import cv2
 from abc import abstractmethod
