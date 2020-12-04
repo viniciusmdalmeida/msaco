@@ -47,11 +47,12 @@ list_algorithms = [
     {"Vision":VisionDetect_MOG}
 ]
 
-list_algorithms = [{"Vision":VisionDetectDepth_SVM}]
+list_algorithms = [{"Vision":VisionSaveAllImage}]
 
 #Configuração testes
 altura = 6
-routePoints = [[0,1,-altura,10],[0,10,-altura,config['test']['time_to_colision']]] #[lateral,frente(negativa),cima,tempo] #em metros
+#routePoints = [[0,1,-altura,10],[0,-10,-altura,config['test']['time_to_colision']]] #[lateral,frente(negativa),cima,tempo] #em metros
+routePoints = [[0,1,-altura,10]]
 colision_point = [260, 260, 920]
 list_angle = [30,20,10,0,-10,-20,-30]
 distance_plane = 5000

@@ -52,71 +52,20 @@ class DetectMog(DetectBase):
         return (x, y, w, h)
 
 class DetectMLBase(DetectBase):
-    def __init__(self, config,nameModel=None,namePrepDataModel=None,train=False):
+    def __init__(self, config,nameModel=None,namePrepDataModel=None):
         print("Detect Base")
         self.config = config
-        self.depth = True
+        self.depth = False
         self.nameModel = nameModel
         self.namePrepDataModel = namePrepDataModel
         self.windowSizeX = self.config['algorithm']['vision']['windowSizeX']
         self.windowSizeY = self.config['algorithm']['vision']['windowSizeY']
-
-        self.dirPositveImagem = self.config['algorithm']['vision']['dirPositveImagem']
-        self.dirNegativeImagem = self.config['algorithm']['vision']['dirNegativeImagem']
+        #load models
         self.dirModel = self.config['algorithm']['vision']['dirModels']+self.nameModel+'.sav'
-        if train:
-            self.train()
-        else:
-            self.load_model()
+        self.model = pickle.load(open(self.dirModel, 'rb'))
         if namePrepDataModel:
             dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
             self.prepData = pickle.load(open(dirModelPrepData, 'rb'))
-
-    def load_model(self):
-        self.model = pickle.load(open(self.dirModel, 'rb'))
-
-    def getDados(self):
-        dim = (self.windowSizeY, self.windowSizeX)
-        imgs = []
-        datas = []
-        target = []
-        listPaths = listdir(self.dirNegativeImagem)
-        # Dados Negativos: Sem o avião
-        for item in listPaths:
-            path = self.dirNegativeImagem + item
-            if isfile(path):
-                image = cv2.imread(path, 0)
-                image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
-                imgs.append(image)
-                datas.append(image.reshape(-1))
-                target.append(0)
-        listPaths = listdir(self.dirPositveImagem)
-        # Dados positivos: Com o avião
-        for item in listPaths:
-            path = self.dirPositveImagem + item
-            if isfile(path):
-                image = cv2.imread(path, 0)
-                image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
-                imgs.append(image)
-                datas.append(image.reshape(-1))
-                target.append(1)
-        dict = {'img': imgs, 'target': target, 'data': datas}
-        return dict
-
-    def train(self):
-        print("Iniciando treino")
-        dicData = self.getDados()
-        data = np.array(dicData['data'])
-        target = dicData['target']
-        if self.namePrepDataModel:
-            data = self.prepData.fit(data).transform(data)
-            dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
-            pickle.dump(self.prepData, open(dirModelPrepData, 'wb'))
-
-        # SVM
-        self.model.fit(data, target)
-        pickle.dump(self.model, open(self.dirModel, 'wb'))
-        print("Fim do treino")
 
     def detect(self, frame, primeiroFrame=None):
         stepSize = 20
@@ -133,36 +82,30 @@ class DetectMLBase(DetectBase):
                 if self.namePrepDataModel :
                     data = self.prepData.transform([data])
                 predito = self.model.predict(data)
-                if predito[0] == 1:
+                if predito[0] == 0:
                     bbox = (x, y, self.windowSizeX, self.windowSizeY)
                     return bbox
         return None
 
-
 class DetectSVM(DetectMLBase):
-    def __init__(self, config,nameModel='svm',namePrepDataModel='pca_depth',train=False):
+    def __init__(self, config,nameModel='lgb',namePrepDataModel='pca'):
         print("Detect SVM")
-        # PCA
-        n_components = 150
-        self.prepData = PCA(n_components=n_components, svd_solver='randomized', whiten=True)
-        # SVM
-        self.model = SVC(C=100, gamma=0.01)
-        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel, train=train)
+        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel)
 
 class DetectNeural(DetectMLBase):
-    def __init__(self, config,nameModel='neural network',namePrepDataModel='pca',train=True):
+    def __init__(self, config,nameModel='neural network',namePrepDataModel='pca'):
         if namePrepDataModel == 'pca':
             # PCA
             n_components = 150
             self.prepData = PCA(n_components=n_components, svd_solver='randomized', whiten=True)
         # SVM
         self.model = MLPClassifier(hidden_layer_sizes=(75,20))
-        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel, train=train)
+        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel)
 
 class DetectKeras(DetectMLBase):
-    def __init__(self, config,nameModel='keras_Xception',namePrepDataModel=None,train=False):
+    def __init__(self, config,nameModel='keras_Xception',namePrepDataModel=None):
         # Keras
-        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel, train=train)
+        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel)
 
     def load_model(self):
         json_path = self.config['algorithm']['vision']['dirModels']+self.nameModel+'.json'

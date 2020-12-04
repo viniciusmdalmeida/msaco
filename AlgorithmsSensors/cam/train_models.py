@@ -103,10 +103,10 @@ img_height = 80
 #get data
 dict_data = get_dict_dados(80,80,negativeImg_path,positiveImg_path)
 #load model
-prep_model = None #PCA(n_components=150, svd_solver='randomized', whiten=True)
+prep_model = PCA(n_components=150, svd_solver='randomized', whiten=True)
 model = lgb.LGBMClassifier()
 #train
-file_name = 'lgb_2.sav'
+file_name = 'lgb.sav'
 model,cross_validade = cross_over_train_model(dict_data,model,prep_model,model_name=file_name,prep_model_name='pca.sav')
 print(cross_validade,":",cross_validade.sum()/len(cross_validade))
 #Save status

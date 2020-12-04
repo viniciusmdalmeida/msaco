@@ -155,7 +155,7 @@ class Imagem_data:
             list_poligon.append(item)
         return list_poligon
 
-    def save_windows(self, path, name, dic_windows, list_poligon, inters_area=0.10, two_labels=False,balance=True):
+    def save_windows(self, path, name, dic_windows, list_poligon, inters_area=0.05):
         cont_windows = 0
         name = name.replace('.jpg', '')
         for n_window in range(len(dic_windows['windows'])):
@@ -171,15 +171,12 @@ class Imagem_data:
                 poligon = Polygon(eixo_poligon['points'])
                 intersection = image_poligon.intersection(poligon)
                 label = eixo_poligon['label']
-                if two_labels and label != 'background':
-                    label = 'eixo'
                 if intersection.area > img_area * inters_area:
                     if not label in listdir(path):
                         mkdir(path + '/' + label)
                     file_path = "{}/{}/{}_{}.jpg".format(path, label, name, cont_windows)
                     cv2.imwrite(file_path, image)
                     isEixo = True
-                    break
             if isEixo == False:
                 if not 'background' in listdir(path):
                     mkdir(path + '/' + 'background')
@@ -368,7 +365,7 @@ class PrepData:
                 file = path_file + file
                 copy(file, save_path + 'train/')
 
-    def save_windows_from_path(self, path, save_path, two_labels=False):
+    def save_windows_from_path(self, path, save_path):
         list_files = listdir(path)
         cont = 0
         print(save_path)
@@ -376,7 +373,7 @@ class PrepData:
             if isdir(path+file):
                 if not file in listdir(save_path):
                     mkdir(save_path + file)
-                self.save_windows_from_path(path +file+'/', save_path + file + '/', two_labels)
+                self.save_windows_from_path(path +file+'/', save_path + file )
             elif 'jpg' in file:
                 name = file.replace('.jpg', '')
                 image_path = path + '/' + file
@@ -387,7 +384,7 @@ class PrepData:
                 dict_windows = data.slidingWindows()
                 json_poligon = Json_Poligon(json_path)
                 list_poligon = json_poligon.get_list_poligons()
-                data.save_windows(save_path, name, dict_windows, list_poligon, two_labels=two_labels)
+                data.save_windows(save_path, name, dict_windows, list_poligon)
             cont += 1
             size = len(list_files)
             percent = cont / len(list_files)*100
@@ -585,7 +582,17 @@ def get_data_dic(self, list_imagens, save=False):
 ###################
 #  Main
 ###################
-image_label_path = '../../data/imagens/RGB/labelme/'
+import os
+from shutil import copyfile
+
+labels_path = '../../data/imagens/RGB/labelme/'
 dest_path = '../../data/imagens/RGB/windows/'
+imagens_path = '../../data/imagens/RGB/voo/'
+list_label = os.listdir(labels_path)
+list_image = os.listdir(labels_path)
+for label in list_label:
+    name_file = label.replace('.json','.jpg')
+    if not name_file in list_image:
+        copyfile(imagens_path+name_file,labels_path+name_file)
 prep_data=PrepData()
-prep_data.save_windows_from_path(image_label_path,dest_path)
+prep_data.save_windows_from_path(labels_path,dest_path)

@@ -2,10 +2,11 @@ test:
   out_put_path: ../data/out_put_test/
   time_to_colision: 30 #10segundos
   plane_velocity: 200
+
 algorithm:
   time_max: 40 #1min30seg
   vision:
-    type: depth
+    type: vision
     min_area: 350
     dirPositveImagem: ../data/imagens/Depth/plane/
     dirNegativeImagem: ../data/imagens/Depth/background/

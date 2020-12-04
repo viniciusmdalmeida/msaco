@@ -36,8 +36,8 @@ class AlgorithmSensor(Thread, ABC):
     def detect(self):
         pass
 
-    def getData(self):
-        pass
+    def getDetectData(self):
+        return self.detectData
 
     def sendresult(self,name=None):
         #Calculando resultado
