@@ -2,14 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="911f39d3-6d91-49ad-b626-aaec9093e896" name="Default" comment="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio.">
-      <change afterPath="$PROJECT_DIR$/Utils/print_windows.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/train_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/train_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionMOG.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionMOG.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTrackerCustom.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionTrackerCustom.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/dict_custons_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Control/DetectionData.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/DetectionData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Detect/Detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Detect/Detect.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal_multi_executions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal_multi_executions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utils/get_windows.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/get_windows.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils/test.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/test.jpg" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -78,7 +84,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.print_windows">
+  <component name="RunManager" selected="Python.Principal_multi_executions">
     <configuration name="Principal" type="PythonConfigurationType" factoryName="Python">
       <module name="SenseAvoid_framework" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -259,8 +265,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.print_windows" />
         <item itemvalue="Python.Principal_multi_executions" />
+        <item itemvalue="Python.print_windows" />
         <item itemvalue="Python.train_models" />
         <item itemvalue="Python.get_windows" />
         <item itemvalue="Python.keras_train" />

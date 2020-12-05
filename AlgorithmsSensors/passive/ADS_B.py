@@ -42,7 +42,7 @@ class ADS_B(AlgorithmSensor):
         my_position_vector = [my_position['x_val'], my_position['y_val'], my_position['z_val']]
         distance = self.cal_distance(intruse_position, my_position_vector)
         #send detect data
-        self.detectData = DetectionData(distance=distance,otherPosition=intruse_position)
+        self.detectData.updateData(distance=distance,otherPosition=intruse_position)
 
     def cal_distance(self,pos1,pos2,p=2):
         distance = ((pos1[0] - pos2[0])**p + (pos1[0] - pos2[0])**p + (pos1[0] - pos2[0])**p)**(1/p)

@@ -16,7 +16,7 @@ class AlgorithmSensor(Thread, ABC):
             self.config = yaml.full_load(file_config)
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
-        self.detectData = None
+        self.detectData = DetectionData()
         self.interval = 0.25
         self._stop_detect = False
 
@@ -47,9 +47,6 @@ class AlgorithmSensor(Thread, ABC):
             name = self.name
         self.detectRoot.receiveData(self.detectData,name)
             # Desvio(self.controle).start()
-
-    def getStatus(self):
-        return self.detectData
 
     def terminate(self):
         self._stop_detect = True

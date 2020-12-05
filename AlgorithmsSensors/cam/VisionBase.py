@@ -12,7 +12,6 @@ class VisionBase(AlgorithmSensor):
 
     def __init__(self, detectRoot):
         AlgorithmSensor.__init__(self, detectRoot)
-        self.detectData = None
         self.depth = False
         self.cont = 0
         self.showVideo = self.config['sensors']['Vision']['show_video']
@@ -66,6 +65,32 @@ class VisionBase(AlgorithmSensor):
     def terminate(self):
         cv2.destroyAllWindows()
         self._stop_detect = True
+
+    def calc_obj_position(self, bbox, fov_angle=120, width_image=1024):
+        # calc x e y camera
+        x_camera = (bbox[0] + bbox[2]) / 2
+        y_camera = (bbox[1] + bbox[3]) / 2
+        # get focal legth
+        angle = float(fov_angle / 2.0)
+        part_width = float(width_image / 2.0)
+        focal_legh = (part_width / np.sin(np.deg2rad(angle))) * np.sin(np.deg2rad(30.0))  # regra seno
+        # calc distance camera
+        distance_camera_x = (x_camera ** 2 + focal_legh ** 2) ** 0.5  # hipotenusa
+        seno_angulo_plane_x =  x_camera / (np.sin(np.deg2rad(90)) * distance_camera_x)  # regra senos
+        distance_camera_y = (y_camera ** 2 + focal_legh ** 2) ** 0.5  # hipotenusa
+        seno_angulo_plane_y =   y_camera / (np.sin(np.deg2rad(90)) * distance_camera_y )   # regra senos
+        print("Seno:",seno_angulo_plane_x)
+        # calc x e y real
+        distance_real = self.calc_distance(bbox)
+        x_real = seno_angulo_plane_x * (distance_real / np.sin(np.deg2rad(90)))
+        y_real = seno_angulo_plane_y * (distance_real / np.sin(np.deg2rad(90)))
+        # Testar o z com regra de 3
+        # Seria nescessario decompor a distancia em x e y
+        z_real = (focal_legh * distance_real) / distance_camera_x
+        relativePosition = (x_real, y_real, z_real)
+        self.detectData.updateData(distance=distance_real, relativePosition=relativePosition)
+        self.detectData.print_data()
+        print("Relativo:",relativePosition,"Camera:",(x_camera,y_camera,distance_camera_x))
 '''
     def terminate(self):
         AlgorithmSensor.terminate(self)

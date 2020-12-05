@@ -1,4 +1,5 @@
 from Interface.Start import Start
+from AlgorithmsSensors.cam.VisionTracker import *
 from AlgorithmsSensors.cam.VisionDepthTracker import *
 from AlgorithmsSensors.cam.VisionDetect import *
 from AlgorithmsSensors.cam_others.Vision_MOG import *
@@ -47,7 +48,7 @@ list_algorithms = [
     {"Vision":VisionDetect_MOG}
 ]
 
-list_algorithms = [{"Vision":VisionSaveAllImage}]
+list_algorithms = [{"Vision":VisionTracker_MIL}]
 
 #Configuração testes
 altura = 6

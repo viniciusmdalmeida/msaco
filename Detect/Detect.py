@@ -47,7 +47,7 @@ class Detect(Thread):
         while not self.stop:
             dict_sensor_data = {}
             for sensorThread in self.sensorsThreads:
-                dict_sensor_data[sensorThread.name] = sensorThread.getStatus()
+                dict_sensor_data[sensorThread.name] = sensorThread.getDetectData()
             #colocar um eval para funsão do algoritmos
             detect_data = self.fusion_data(dict_sensor_data)
             self.sendData(detect_data)

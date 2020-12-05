@@ -62,6 +62,7 @@ class DetectMLBase(DetectBase):
         self.windowSizeY = self.config['algorithm']['vision']['windowSizeY']
         #load models
         self.dirModel = self.config['algorithm']['vision']['dirModels']+self.nameModel+'.sav'
+        print("Load model in path:",self.dirModel)
         self.model = pickle.load(open(self.dirModel, 'rb'))
         if namePrepDataModel:
             dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
@@ -86,6 +87,7 @@ class DetectMLBase(DetectBase):
                     bbox = (x, y, self.windowSizeX, self.windowSizeY)
                     return bbox
         return None
+
 
 class DetectSVM(DetectMLBase):
     def __init__(self, config,nameModel='lgb',namePrepDataModel='pca'):

@@ -48,27 +48,6 @@ class VisionTrackerDepthBase(VisionDepthBase):
             self.printDetection(frame,bbox)
         return bbox,frame
 
-    def mog2_ObjectDetect(self):
-        fgbg = cv2.createBackgroundSubtractorMOG2()
-        while True:
-            frame = self.getImage()
-            fgmask = fgbg.apply(frame)
-
-            thresh = cv2.threshold(fgmask, 25, 255, cv2.THRESH_BINARY)[1]
-            thresh = cv2.dilate(thresh, None, iterations=2)
-            contours,hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-            if type(contours) is None or len(contours) <= 0:
-                continue
-            max = contours[0]
-            for c in contours:
-                if cv2.contourArea(c) >cv2.contourArea(max) :
-                    max = c
-            # (x, y, w, h) = cv2.boundingRect(max)
-            #Desenhando quadrado
-            # cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2, 1)
-            self.printDetection(frame,cv2.boundingRect(max))
-            self.detectRoot.receiveData(self.detectData)
-
     def updateTracker(self):
         frame = self.getImage()
         # Update tracker
@@ -77,8 +56,7 @@ class VisionTrackerDepthBase(VisionDepthBase):
         else:
             status_tracker, bbox = self.tracker.update(frame[:, :, :3])
             distanceMin = self.calc_distance(bbox)
-            self.detectData = DetectionData(distanceMin)
-            self.detectRoot.receiveData(self.detectData)
+            self.detectData.updateData(distance=distanceMin)
             self.printDetection(frame, bbox)
             status = status_tracker and distanceMin
             return status
