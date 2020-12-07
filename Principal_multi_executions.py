@@ -48,7 +48,7 @@ list_algorithms = [
     {"Vision":VisionDetect_MOG}
 ]
 
-list_algorithms = [{"Vision":VisionTracker_MIL}]
+list_algorithms = [{"Vision":VisionDetect_SVM}]
 
 #Configuração testes
 altura = 6

@@ -63,7 +63,7 @@ class DetectionData:
                 file.write(header+'\n')
 
     def print_data(self):
-        timestamp = datetime.timestamp()
+        timestamp = datetime.now().timestamp()
         str_print = f'{timestamp},{self.distance},'
         list_datas = [self.myPosition,self.myDirection,
                       self.relativePosition,self.otherPosition,
@@ -71,7 +71,6 @@ class DetectionData:
         for data in list_datas:
             str_print = self.add_listdata_str(str_print,data)
         if self.file_path :
-            print(self.file_path,':',str_print)
             self.check_have_file(self.file_path)
             with open(self.file_path,'a') as file:
                 file.write(str_print+'\n')

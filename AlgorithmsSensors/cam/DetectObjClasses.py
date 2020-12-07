@@ -83,14 +83,14 @@ class DetectMLBase(DetectBase):
                 if self.namePrepDataModel :
                     data = self.prepData.transform([data])
                 predito = self.model.predict(data)
-                if predito[0] == 0:
+                if predito[0] == 1:
                     bbox = (x, y, self.windowSizeX, self.windowSizeY)
                     return bbox
         return None
 
 
 class DetectSVM(DetectMLBase):
-    def __init__(self, config,nameModel='lgb',namePrepDataModel='pca'):
+    def __init__(self, config,nameModel='lgb_new',namePrepDataModel='pca'):
         print("Detect SVM")
         DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel)
 

@@ -79,7 +79,6 @@ class VisionBase(AlgorithmSensor):
         seno_angulo_plane_x =  x_camera / (np.sin(np.deg2rad(90)) * distance_camera_x)  # regra senos
         distance_camera_y = (y_camera ** 2 + focal_legh ** 2) ** 0.5  # hipotenusa
         seno_angulo_plane_y =   y_camera / (np.sin(np.deg2rad(90)) * distance_camera_y )   # regra senos
-        print("Seno:",seno_angulo_plane_x)
         # calc x e y real
         distance_real = self.calc_distance(bbox)
         x_real = seno_angulo_plane_x * (distance_real / np.sin(np.deg2rad(90)))
@@ -90,15 +89,7 @@ class VisionBase(AlgorithmSensor):
         relativePosition = (x_real, y_real, z_real)
         self.detectData.updateData(distance=distance_real, relativePosition=relativePosition)
         self.detectData.print_data()
-        print("Relativo:",relativePosition,"Camera:",(x_camera,y_camera,distance_camera_x))
-'''
-    def terminate(self):
-        AlgorithmSensor.terminate(self)
-        if self.showVideo:
-            print("Force destroy!")
-            cv2.destroyAllWindows()
-            cv2.waitKey(1)
-'''
+
 class VisionDepthBase(VisionBase):
     def __init__(self,detectRoot):
         VisionBase.__init__(self, detectRoot)

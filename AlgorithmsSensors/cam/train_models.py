@@ -96,8 +96,8 @@ def cross_over_train_model(dict_data,model,prep_model,save_path='../../../data/m
     return model,scores
 
 
-negativeImg_path = '../../../data/imagens/RGB/windows/plane/'
-positiveImg_path = '../../../data/imagens/RGB/windows/background/'
+negativeImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/background/'
+positiveImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/plane/'
 img_width = 80
 img_height = 80
 #get data
@@ -105,14 +105,15 @@ dict_data = get_dict_dados(80,80,negativeImg_path,positiveImg_path)
 #load model
 prep_model = PCA(n_components=150, svd_solver='randomized', whiten=True)
 model = lgb.LGBMClassifier()
+#dict_models = {'svm':SVC(C=100, gamma=0.01),'lgb':lgb.LGBMClassifier(),'rf':RandomForestClassifier()}
 #train
-file_name = 'lgb.sav'
+file_name = 'lgb_new.sav'
 model,cross_validade = cross_over_train_model(dict_data,model,prep_model,model_name=file_name,prep_model_name='pca.sav')
 print(cross_validade,":",cross_validade.sum()/len(cross_validade))
 #Save status
 with open('../../../data/models/models.csv','a') as file:
     model = 'LGBMClassifier'
-    prep_model = 'None'
+    prep_model = 'PCA'
     mean_acu = cross_validade.sum() / len(cross_validade)
     obs = ''
     file.write(f'{model};{prep_model};{file_name};{mean_acu},{obs}\n')

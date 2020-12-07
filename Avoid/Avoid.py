@@ -74,6 +74,8 @@ class Avoid(Thread):
         for data in self.progress_data:
             if data.distance:
                 distance_list.append(data.distance)
+        if len(distance_list)>= 0:
+            return -1
         #verificando se a media de atualizações de distancia é um ponto seguro
         mean_distance = sum(distance_list)/len(distance_list)
         mean_gradient = np.gradient(distance_list).mean()
