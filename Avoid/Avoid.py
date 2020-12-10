@@ -52,7 +52,6 @@ class Avoid(Thread):
                 return
             elif progress == -1:
                 print("Progress:",progress)
-                print("Progress avoid  is negative")
                 self.replanning_route()
         elif self.status == "inactive" and detectionData.distance < self.config['detect']['min_distance']:
             print(f"Start avoid, Distance:{detectionData.distance}")
@@ -75,7 +74,7 @@ class Avoid(Thread):
             if data.distance:
                 distance_list.append(data.distance)
         if len(distance_list)>= 0:
-            return -1
+            return 0
         #verificando se a media de atualizações de distancia é um ponto seguro
         mean_distance = sum(distance_list)/len(distance_list)
         mean_gradient = np.gradient(distance_list).mean()

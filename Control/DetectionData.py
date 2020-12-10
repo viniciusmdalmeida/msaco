@@ -1,9 +1,10 @@
 from  os.path import isfile,isdir
 from os import makedirs
 from datetime import datetime
+import numpy as np
 
 class DetectionData:
-    distance = 0
+    distance = np.inf
     myDirection = (0,0,0)
     otherDirection = (0,0,0)
     relativeDirection = (0,0,0)
@@ -16,6 +17,7 @@ class DetectionData:
 
     def updateData(self,distance=None,myDirection=None,relativePosition=None,
                  otherDirection=None,myPosition=None,otherPosition=None):
+        print("Update Data:",distance,myDirection,relativePosition,otherDirection,myPosition,otherPosition)
         self.distance = distance
         self.myPosition = myPosition
         self.myDirection = myDirection

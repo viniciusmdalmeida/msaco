@@ -5,7 +5,7 @@ import numpy as np
 
 #class VisionRGBDefault(VisionBase):
 class VisionTrackerBase(VisionDepthBase):
-    name = "Vision RGB Default Algorithm"
+    name = "Vision Tracker Base"
 
     def __init__(self,detectRoot,depth_cam=False):
         VisionBase.__init__(self, detectRoot)
@@ -36,12 +36,6 @@ class VisionTrackerBase(VisionDepthBase):
         bbox,frame = self.firstDetect(start_frame)
         self.tracker.init(frame, bbox)
 
-    def detect(self):
-        status = self.updateTracker()
-        if not self.check_status(status):
-            #restart tracker
-            self.start_tracker()
-
     def firstDetect(self,start_frame):
         bbox = None
         while bbox is None:
@@ -49,6 +43,12 @@ class VisionTrackerBase(VisionDepthBase):
             bbox = self.detectObject.detect(frame,start_frame)
             self.printDetection(frame,bbox)
         return bbox,frame
+
+    def detect(self):
+        status = self.updateTracker()
+        if not self.check_status(status):
+            #restart tracker
+            self.start_tracker()
 
     def updateTracker(self):
         frame = self.getImage()
@@ -81,4 +81,28 @@ class VisionTracker_Boosting(VisionTrackerBase):
         VisionTrackerBase.__init__(self, detectRoot)
         self.tracker = cv2.TrackerBoosting_create()
 
+class VisionDetectOnly(VisionTrackerBase):
+    name = "Vision Detect Only"
 
+    def __init__(self,detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot)
+        self.detectObject = DetectGenericModel(self.config,nameModel='lgb_80')
+
+    def start_tracker(self):
+        # Pegando o primeiro frame
+        self.start_frame = self.getImage()
+        while len(np.unique(self.start_frame)) < 20:
+            self.start_frame = self.getImage()
+
+
+    def detect(self):
+        frame = self.getImage()
+        bbox = self.detectObject.detect(frame, self.start_frame)
+        if bbox :
+            self.printDetection(frame, bbox)
+            self.calc_obj_position(bbox)
+            status = True
+        else:
+            status = False
+        if not self.check_status(status):
+            self.start_tracker()

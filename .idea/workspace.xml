@@ -6,10 +6,16 @@
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDetect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/train_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/train_models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Avoid/Avoid.py" beforeDir="false" afterPath="$PROJECT_DIR$/Avoid/Avoid.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Control/Control.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/Control.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Control/DetectionData.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/DetectionData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interface/Communication.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Communication.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interface/Start.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Start.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal_multi_executions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal_multi_executions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils/get_windows.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/get_windows.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

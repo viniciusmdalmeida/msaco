@@ -4,7 +4,7 @@ test:
   plane_velocity: 200
 
 algorithm:
-  time_max: 40 #1min30seg
+  time_max: 30 #1min30seg
   vision:
     type: vision
     min_area: 350
@@ -13,11 +13,12 @@ algorithm:
     dirModels: ../data/models/
     windowSizeX : 80
     windowSizeY : 80
+    stepSize : 70
 
 detect:
   vertical_limit: 20
   horizontal_limit: 25
-  min_distance: 25
+  min_distance: 20
   max_progress_data: 30
   min_progress_data: 10
 

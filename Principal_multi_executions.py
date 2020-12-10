@@ -51,13 +51,14 @@ list_algorithms = [
 list_algorithms = [{"Vision":VisionDetect_SVM}]
 
 #Configuração testes
-altura = 6
-#routePoints = [[0,1,-altura,10],[0,-10,-altura,config['test']['time_to_colision']]] #[lateral,frente(negativa),cima,tempo] #em metros
+altura = 25
+#routePoints = [[0,1,-altura,10],[0,-10,-altura,confiFinalizado move to pointg['test']['time_to_colision']]] #[lateral,frente(negativa),cima,tempo] #em metros
+drone_start_point = [0,1,-25,10]
 routePoints = [[0,1,-altura,10]]
-colision_point = [260, 260, 920]
-list_angle = [30,20,10,0,-10,-20,-30]
+colision_point = [260, 230, 2800]
+list_angle = [20,10,0,-10,-20,-30]
 distance_plane = 5000
-num_repetitions = 3
+num_repetitions = 1
 
 
 #Get Day
@@ -87,7 +88,7 @@ for angle in tqdm(list_angle):
             # Reset avião
             unreal_communication.reset_plane(location, rotation)
             #rodando algoritmo
-            run_simulation = Start(routePoints,algorithm)
+            run_simulation = Start(routePoints,algorithm,start_point=drone_start_point)
             run_simulation.start()
             run_simulation.join()
             #salvando resultado

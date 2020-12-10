@@ -1,12 +1,13 @@
 import numpy as np
 import cv2
 from abc import abstractmethod
-from os import listdir
-from os.path import isfile
+from shapely.geometry import Polygon
+
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import PCA
 import pickle
+
 
 from keras.preprocessing.image import img_to_array
 from keras.models import Model,model_from_json
@@ -68,7 +69,115 @@ class DetectMLBase(DetectBase):
             dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
             self.prepData = pickle.load(open(dirModelPrepData, 'rb'))
 
-    def detect(self, frame, primeiroFrame=None):
+    def check_inteserct_bbox(self,bbox_1,bbox_2):
+        min_x = min([bbox_1[0],bbox_2[0]])
+        max_x = max([bbox_1[0],bbox_2[0]])
+        min_y = min([bbox_1[1], bbox_2[1]])
+        max_y = max([bbox_1[1], bbox_2[1]])
+        if (min_x + bbox_1[2] + bbox_1[2]+1) > max_x and \
+           (min_y + bbox_1[3] + bbox_1[3]+1) > max_y:
+            return True
+        else:
+            return False
+
+
+        """
+        list_bbox = [bbox_1,bbox_2]
+        list_poligons = []
+        for bbox in list_bbox:
+            x = bbox[0]
+            y = bbox[1]
+            w_width = bbox[2]
+            w_height = bbox[3]
+            points = [(x, y), (x, y + w_height), (x + w_width, y + w_height), (x + w_width, y)]
+            list_poligons.append(Polygon(points))
+        intersection_area = list_poligons[0].intersection(list_poligons[1]).area
+        if intersection_area > min_area:
+            return True
+        else:
+            return False
+        """
+    def bbox_union(self,bbox_1,bbox_2,frame_shape):
+        image_heigth,image_width = frame_shape
+        min_x = min([bbox_1[0],bbox_2[0]])
+        min_y = min([bbox_1[1],bbox_2[1]])
+        max_x = max([bbox_1[0] + bbox_1[2], bbox_2[0] + bbox_2[2]])
+        max_y = max([bbox_1[1] + bbox_1[3], bbox_2[1] + bbox_2[3]])
+        width = max_x - min_x
+        heigth = max_y - min_y
+        if (min_x + width) >  image_width:
+            width = image_width - min_x
+        if (min_y + heigth) > image_heigth:
+            heigth = image_heigth - min_y
+        return max([min_x,0]),max([min_y,0]),max([width,0]),max([heigth,0])
+
+    def update_list_bbox(self,bbox,list_bbox_tuple,frame_shape):
+        #list_bbox_tuple contem as uniões de bbox e numeros bbox para aquela união
+        for cont_bbox_tuple in range(len(list_bbox_tuple)):
+            bbox_tuple = list_bbox_tuple[cont_bbox_tuple]
+            bbox_item = bbox_tuple[1]
+            if self.check_inteserct_bbox(bbox,bbox_item):
+                union = self.bbox_union(bbox,bbox_item,frame_shape)
+                bbox_tuple[0] += 1
+                bbox_tuple[1] = union
+                list_bbox_tuple[cont_bbox_tuple] = bbox_tuple
+                return list_bbox_tuple
+        else:
+            list_bbox_tuple.append([1,bbox])
+        return list_bbox_tuple
+
+
+    def detect(self, frame,primeioroFrame=None):
+        stepSize = self.config['algorithm']['vision']['stepSize']
+        list_bbox_tuple = []
+        if not self.depth:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        for y in range(0, frame.shape[0], stepSize):
+            if (y + self.windowSizeY > frame.shape[0]):
+                y = frame.shape[0] - self.windowSizeY
+            for x in range(0, frame.shape[1], stepSize):
+                if (x + self.windowSizeX > frame.shape[1]):
+                    x = frame.shape[1] - self.windowSizeX
+                crop_img = frame[y:y + self.windowSizeY, x:x + self.windowSizeX]
+                data = crop_img.reshape(-1)
+                if self.namePrepDataModel :
+                    data = self.prepData.transform([data])
+                predito = self.model.predict(data)
+                if predito[0] == 1:
+                    bbox = (x, y, self.windowSizeX, self.windowSizeY)
+                    list_bbox_tuple = self.update_list_bbox(bbox,list_bbox_tuple,frame.shape)
+        max_bbox_tuple = [0,None]
+        for bbox_tuple in list_bbox_tuple:
+            if bbox_tuple[0] > max_bbox_tuple[0]:
+                max_bbox_tuple = bbox_tuple
+        return max_bbox_tuple[1]
+
+
+    def detect_matrix(self,frame,primeioroFrame=None):
+        stepSize = 20
+        if not self.depth:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        windows_matrix = np.zeros((int(frame.shape[0]/stepSize)+1,int(frame.shape[1]/stepSize)+1))
+        contX = 0
+        for y in range(0, frame.shape[0], stepSize):
+            if (y + self.windowSizeY > frame.shape[0]):
+                y = frame.shape[0] - self.windowSizeY
+            contY = 0
+            for x in range(0, frame.shape[1], stepSize):
+                if (x + self.windowSizeX > frame.shape[1]):
+                    x = frame.shape[1] - self.windowSizeX
+                crop_img = frame[y:y + self.windowSizeY, x:x + self.windowSizeX]
+                data = crop_img.reshape(-1)
+                if self.namePrepDataModel:
+                    data = self.prepData.transform([data])
+                predito = self.model.predict(data)
+                windows_matrix[contX][contY] = predito
+                contY += 1
+            contX += 1
+        return windows_matrix
+
+    def detect_old(self, frame, primeiroFrame=None):
         stepSize = 20
         if not self.depth:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -89,8 +198,13 @@ class DetectMLBase(DetectBase):
         return None
 
 
+class DetectGenericModel(DetectMLBase):
+    def __init__(self, config,nameModel,namePrepDataModel='pca'):
+        print("Detect SVM")
+        DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel)
+
 class DetectSVM(DetectMLBase):
-    def __init__(self, config,nameModel='lgb_new',namePrepDataModel='pca'):
+    def __init__(self, config,nameModel='svm',namePrepDataModel='pca'):
         print("Detect SVM")
         DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel)
 

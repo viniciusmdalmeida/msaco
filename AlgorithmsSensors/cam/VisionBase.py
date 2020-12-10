@@ -39,7 +39,6 @@ class VisionBase(AlgorithmSensor):
         img_rgba = img_rgba.reshape(response.height, response.width, 3)
         if save:
             cv2.imwrite(f'../data/imagens/RGB/voo/frame_{self.cont}_{self.date_str}.jpg',img_rgba)
-            print(f'../data/imagens/RGB/voo/frame_{self.cont}_{self.date_str}.jpg')
             self.cont += 1
         return img_rgba
 
@@ -102,7 +101,6 @@ class VisionDepthBase(VisionBase):
         img1d = airsim.list_to_2d_float_array(response.image_data_float, response.width, response.height)
         if save:
             cv2.imwrite(f'../data/imagens/Depth/voo/frame_{self.cont_depth}_{self.date_str}.jpg', img1d)
-            print(f'../data/imagens/Depth/voo/frame_{self.cont_depth}_{self.date_str}.jpg')
             self.cont_depth += 1
         if len(img1d) < 1:
             return None
@@ -165,7 +163,7 @@ class VisionCaptureImageDeth(VisionDepthBase):
         self.getDepth(True)
 
 
-class VisionSaveAllImage(VisionDepthBase):
+class VisionCaptureAll(VisionDepthBase):
     name = "Vision Save All Image"
 
     def __init__(self, detectRoot):

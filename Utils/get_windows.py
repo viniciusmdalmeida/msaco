@@ -10,6 +10,7 @@ from keras.preprocessing.image import load_img
 from numpy import Inf
 import pandas as pd
 from shutil import copy
+import yaml
 
 """
 Este codigo é uma segunda tetantiva de separar dados para teste.
@@ -111,7 +112,7 @@ class Imagem_data:
             self.image = image
             self.keras = False
 
-    def slidingWindows(self, stepSize=50, windowSizeX=80, windowSizeY=80):
+    def slidingWindows(self, stepSize=50,config_path='../config.yml'):
         """
         Função para fazer a janela deslizante, ela pecorre a imagem e retorna um dicionario
         pequenas janelas com o tamanho windowSizeX x windowSizeY, no dicionario estão as
@@ -123,6 +124,11 @@ class Imagem_data:
         :return: dict: com três chaves, "windows" : a lista de imagens,
         "x": o ponto x aonde a janela começa, "y": o ponto y aonde a imagem começa
         """
+        with open(config_path, 'r') as file_config:
+            config = yaml.full_load(file_config)
+        windowSizeX = config['algorithm']['vision']['windowSizeX']
+        windowSizeY = config['algorithm']['vision']['windowSizeY']
+
         windows = []
         xs = []
         ys = []
@@ -155,7 +161,7 @@ class Imagem_data:
             list_poligon.append(item)
         return list_poligon
 
-    def save_windows(self, path, name, dic_windows, list_poligon, inters_area=0.05):
+    def save_windows(self, path, name, dic_windows, list_poligon, inters_area=0.1):
         cont_windows = 0
         name = name.replace('.jpg', '')
         for n_window in range(len(dic_windows['windows'])):
@@ -168,15 +174,18 @@ class Imagem_data:
             image_poligon = Polygon([(x, y), (x, y + alt), (x + larg, y + alt), (x + larg, y)])
             isEixo = False
             for eixo_poligon in list_poligon:
-                poligon = Polygon(eixo_poligon['points'])
-                intersection = image_poligon.intersection(poligon)
-                label = eixo_poligon['label']
-                if intersection.area > img_area * inters_area:
-                    if not label in listdir(path):
-                        mkdir(path + '/' + label)
-                    file_path = "{}/{}/{}_{}.jpg".format(path, label, name, cont_windows)
-                    cv2.imwrite(file_path, image)
-                    isEixo = True
+                try:
+                    poligon = Polygon(eixo_poligon['points'])
+                    intersection = image_poligon.intersection(poligon)
+                    label = eixo_poligon['label']
+                    if intersection.area > img_area * inters_area:
+                        if not label in listdir(path):
+                            mkdir(path + '/' + label)
+                        file_path = "{}/{}/{}_{}.jpg".format(path, label, name, cont_windows)
+                        cv2.imwrite(file_path, image)
+                        isEixo = True
+                except Exception as e:
+                    print("ERROR:",e)
             if isEixo == False:
                 if not 'background' in listdir(path):
                     mkdir(path + '/' + 'background')

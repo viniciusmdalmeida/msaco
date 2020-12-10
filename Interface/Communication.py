@@ -128,6 +128,12 @@ class AirSimCommunication(ICommunication):
         '''
         self.client.moveOnPathAsync(path, velocity)
 
+    def moveToPoint(self,point,velocity=10,wait=False):
+        if wait:
+            self.client.moveToPositionAsync(point[0],point[1],point[2],velocity).join()
+        else:
+            self.client.moveToPositionAsync(point[0], point[1], point[2], velocity)
+
     def restart(self):
         pass
 

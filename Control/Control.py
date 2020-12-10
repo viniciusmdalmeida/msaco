@@ -47,6 +47,9 @@ class Control(Thread):
         self.points = points
         self.vehicle.movePath(points, velocity)
 
+    def move_to_point(self,point,wait=False):
+        self.vehicle.moveToPoint(point[:3], point[3],wait)
+
     def updateRota(self,points):
         #print("Update Rota")
         #if not self.avoiding :

@@ -3,11 +3,13 @@ import cv2
 from os import listdir
 from os.path import isfile
 import pickle
+import yaml
 #sklearn
 from sklearn.model_selection import cross_val_score
 #sklearn models
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import PCA
 #lightgbm
@@ -21,11 +23,17 @@ def get_dict_dados(windowSizeY,windowSizeX,negativeImg_path,positiveImg_path):
     imgs = []
     datas = []
     target = []
-    list_paths = [negativeImg_path,positiveImg_path]
     # Dados Negativos: Sem o avião
     num_class = 0
-    for path in list_paths:
-        for file_name in listdir(path):
+    #normalize data
+    list_negative_files = listdir(negativeImg_path)
+    list_positive_files = listdir(positiveImg_path)
+    random.shuffle(list_negative_files)
+    list_negative_files = list_negative_files[:len(list_positive_files)]
+    dict_data = {negativeImg_path:list_negative_files,positiveImg_path:list_positive_files}
+    for path in dict_data:
+        list_files = dict_data[path]
+        for file_name in list_files:
             file_path = path + file_name
             if isfile(file_path):
                 image = cv2.imread(file_path, 0)
@@ -82,7 +90,7 @@ def cross_over_train_model(dict_data,model,prep_model,save_path='../../../data/m
     X = np.array(dict_data['data'])
     y = dict_data['target']
     if prep_model:
-        X,y = normalize_class(X,y)
+        #X,y = normalize_class(X,y)
         X = prep_model.fit(X).transform(X)
         pickle.dump(prep_model, open(save_path + prep_model_name, 'wb'))
     #calc_cross Validade
@@ -98,22 +106,36 @@ def cross_over_train_model(dict_data,model,prep_model,save_path='../../../data/m
 
 negativeImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/background/'
 positiveImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/plane/'
-img_width = 80
-img_height = 80
+config_path='../../config.yml'
+
+with open(config_path, 'r') as file_config:
+    config = yaml.full_load(file_config)
+img_width = config['algorithm']['vision']['windowSizeX']
+img_height = config['algorithm']['vision']['windowSizeY']
+
 #get data
-dict_data = get_dict_dados(80,80,negativeImg_path,positiveImg_path)
+dict_data = get_dict_dados(img_width,img_height,negativeImg_path,positiveImg_path)
 #load model
 prep_model = PCA(n_components=150, svd_solver='randomized', whiten=True)
-model = lgb.LGBMClassifier()
-#dict_models = {'svm':SVC(C=100, gamma=0.01),'lgb':lgb.LGBMClassifier(),'rf':RandomForestClassifier()}
+dict_models = {'svm_80':SVC(C=100, gamma=0.01),
+               'lgb_80':lgb.LGBMClassifier(),
+               'rf_80':RandomForestClassifier(),
+               'naive_80':GaussianNB(),
+               'neural_80':MLPClassifier()}
 #train
-file_name = 'lgb_new.sav'
-model,cross_validade = cross_over_train_model(dict_data,model,prep_model,model_name=file_name,prep_model_name='pca.sav')
-print(cross_validade,":",cross_validade.sum()/len(cross_validade))
+file_name = 'svm_new.sav'
+
 #Save status
-with open('../../../data/models/models.csv','a') as file:
-    model = 'LGBMClassifier'
-    prep_model = 'PCA'
-    mean_acu = cross_validade.sum() / len(cross_validade)
-    obs = ''
-    file.write(f'{model};{prep_model};{file_name};{mean_acu},{obs}\n')
+for model_name in dict_models:
+    file_name = model_name + '.sav'
+    model = dict_models[model_name]
+    model, cross_validade = cross_over_train_model(dict_data, model, prep_model, model_name=file_name,
+                                                   prep_model_name='pca.sav')
+    print(cross_validade, ":", cross_validade.sum() / len(cross_validade))
+    with open('../../../data/models/models.csv','a') as file:
+        model = model.__class__.__name__
+        prep_model_name = 'PCA'
+        mean_acu = cross_validade.sum() / len(cross_validade)
+        obs = 'size:80'
+        file.write(f'{model};{prep_model_name};{file_name};{mean_acu},{obs}\n')
+        print(f'{model};{prep_model_name};{file_name};{mean_acu},{obs}\n')

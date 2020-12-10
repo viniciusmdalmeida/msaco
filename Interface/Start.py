@@ -9,8 +9,9 @@ class Start(Thread):
     avoidThread = None
     detect = None
 
-    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},avoidClass=Avoid,comunication=AirSimCommunication,config_path='config.yml'):
+    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},avoidClass=Avoid,comunication=AirSimCommunication,config_path='config.yml',start_point=None):
         Thread.__init__(self)
+        self.start_point = start_point
         self.status = 'start'
         # vehicleComunication = comunication.getVehicle()
         # Conectando ao simulador AirSim
@@ -32,8 +33,13 @@ class Start(Thread):
     def start_run(self):
         # Start drone
         self.control.takeOff()
-        # Start control
+        # got to start point
+        if self.start_point:
+            print("Start point",self.start_point)
+            self.vehicleComunication.moveToPoint(self.start_point[:3],self.start_point[3],True)
+        # Start move path
         self.control.start()
+        time.sleep(2)
         # Start thread detect
         if self.detect is not None:
             self.detect.start()

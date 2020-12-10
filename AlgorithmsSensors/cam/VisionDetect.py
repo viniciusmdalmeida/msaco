@@ -4,7 +4,7 @@ import time
 
 #class VisionRGBDefault(VisionBase):
 class VisionDetectBase(VisionDepthBase):
-    name = "Vision RGB Default Algorithm"
+    name = "Vision Detect Base"
 
     def __init__(self,detectRoot):
         VisionBase.__init__(self, detectRoot)
