@@ -128,6 +128,7 @@ class Imagem_data:
             config = yaml.full_load(file_config)
         windowSizeX = config['algorithm']['vision']['windowSizeX']
         windowSizeY = config['algorithm']['vision']['windowSizeY']
+        stepSize = config['algorithm']['vision']['stepSize_getImagem']
 
         windows = []
         xs = []
@@ -161,7 +162,7 @@ class Imagem_data:
             list_poligon.append(item)
         return list_poligon
 
-    def save_windows(self, path, name, dic_windows, list_poligon, inters_area=0.1):
+    def save_windows(self, path, name, dic_windows, list_poligon, inters_area=0.3):
         cont_windows = 0
         name = name.replace('.jpg', '')
         for n_window in range(len(dic_windows['windows'])):
@@ -555,7 +556,7 @@ def save_widows(self, list_images, path_name):
         print(path_name + str(i) + ".jpg")
         cv2.imwrite(path_name + "-" + str(i) + ".jpg", list_images[i])
 
-def get_data_dic(self, list_imagens, save=False):
+def get_data_dic(self, list_imagens, save=False,stepSize=50):
     dicData = PrepData().get_data(class_path)
     targets = []
     datas = []
@@ -563,7 +564,7 @@ def get_data_dic(self, list_imagens, save=False):
     for image in list_imagens:
         # Trocar por particionar imagem!
         image_obj = Imagem_data(image)
-        list_windows = image_obj.slidingWindows(stepSize=50)['windows']
+        list_windows = image_obj.slidingWindows(stepSize)['windows']
         for window in list_windows:
             # print(window.shape)
             datas.append(window.reshape(-1))

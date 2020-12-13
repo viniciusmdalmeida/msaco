@@ -1,7 +1,5 @@
 from threading import Thread
 import yaml
-from Control.DetectionData import *
-import time
 import numpy as np
 
 

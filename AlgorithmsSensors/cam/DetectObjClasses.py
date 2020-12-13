@@ -67,6 +67,7 @@ class DetectMLBase(DetectBase):
         self.model = pickle.load(open(self.dirModel, 'rb'))
         if namePrepDataModel:
             dirModelPrepData = self.config['algorithm']['vision']['dirModels'] + self.namePrepDataModel + '.sav'
+            print("DirModel",dirModelPrepData)
             self.prepData = pickle.load(open(dirModelPrepData, 'rb'))
 
     def check_inteserct_bbox(self,bbox_1,bbox_2):
@@ -80,23 +81,6 @@ class DetectMLBase(DetectBase):
         else:
             return False
 
-
-        """
-        list_bbox = [bbox_1,bbox_2]
-        list_poligons = []
-        for bbox in list_bbox:
-            x = bbox[0]
-            y = bbox[1]
-            w_width = bbox[2]
-            w_height = bbox[3]
-            points = [(x, y), (x, y + w_height), (x + w_width, y + w_height), (x + w_width, y)]
-            list_poligons.append(Polygon(points))
-        intersection_area = list_poligons[0].intersection(list_poligons[1]).area
-        if intersection_area > min_area:
-            return True
-        else:
-            return False
-        """
     def bbox_union(self,bbox_1,bbox_2,frame_shape):
         image_heigth,image_width = frame_shape
         min_x = min([bbox_1[0],bbox_2[0]])
@@ -177,29 +161,9 @@ class DetectMLBase(DetectBase):
             contX += 1
         return windows_matrix
 
-    def detect_old(self, frame, primeiroFrame=None):
-        stepSize = 20
-        if not self.depth:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        for y in range(0, frame.shape[0], stepSize):
-            if (y + self.windowSizeY > frame.shape[0]):
-                y = frame.shape[0] - self.windowSizeY
-            for x in range(0, frame.shape[1], stepSize):
-                if (x + self.windowSizeX > frame.shape[1]):
-                    x = frame.shape[1] - self.windowSizeX
-                crop_img = frame[y:y + self.windowSizeY, x:x + self.windowSizeX]
-                data = crop_img.reshape(-1)
-                if self.namePrepDataModel :
-                    data = self.prepData.transform([data])
-                predito = self.model.predict(data)
-                if predito[0] == 1:
-                    bbox = (x, y, self.windowSizeX, self.windowSizeY)
-                    return bbox
-        return None
-
 
 class DetectGenericModel(DetectMLBase):
-    def __init__(self, config,nameModel,namePrepDataModel='pca'):
+    def __init__(self, config,nameModel,namePrepDataModel):
         print("Detect SVM")
         DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel)
 

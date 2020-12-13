@@ -36,7 +36,8 @@ def get_dict_dados(windowSizeY,windowSizeX,negativeImg_path,positiveImg_path):
         for file_name in list_files:
             file_path = path + file_name
             if isfile(file_path):
-                image = cv2.imread(file_path, 0)
+                image = cv2.imread(file_path, 1)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
                 image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
                 imgs.append(image)
                 datas.append(image.reshape(-1))
@@ -104,38 +105,36 @@ def cross_over_train_model(dict_data,model,prep_model,save_path='../../../data/m
     return model,scores
 
 
-negativeImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/background/'
-positiveImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/plane/'
+negativeImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/background/'
+positiveImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/plane/'
 config_path='../../config.yml'
 
 with open(config_path, 'r') as file_config:
     config = yaml.full_load(file_config)
 img_width = config['algorithm']['vision']['windowSizeX']
 img_height = config['algorithm']['vision']['windowSizeY']
+Msufix = config['algorithm']['vision']['model_sufix']
 
 #get data
 dict_data = get_dict_dados(img_width,img_height,negativeImg_path,positiveImg_path)
 #load model
 prep_model = PCA(n_components=150, svd_solver='randomized', whiten=True)
-dict_models = {'svm_80':SVC(C=100, gamma=0.01),
-               'lgb_80':lgb.LGBMClassifier(),
-               'rf_80':RandomForestClassifier(),
-               'naive_80':GaussianNB(),
-               'neural_80':MLPClassifier()}
-#train
-file_name = 'svm_new.sav'
-
+dict_models = {f'svm_{Msufix}':SVC(C=100, gamma=0.01),
+               f'lgb_{Msufix}':lgb.LGBMClassifier(),
+               f'rf_{Msufix}':RandomForestClassifier(),
+               f'naive_{Msufix}':GaussianNB(),
+               f'neural_{Msufix}':MLPClassifier()}
 #Save status
 for model_name in dict_models:
     file_name = model_name + '.sav'
     model = dict_models[model_name]
     model, cross_validade = cross_over_train_model(dict_data, model, prep_model, model_name=file_name,
-                                                   prep_model_name='pca.sav')
+                                                   prep_model_name=f'pca_{Msufix}.sav')
     print(cross_validade, ":", cross_validade.sum() / len(cross_validade))
     with open('../../../data/models/models.csv','a') as file:
         model = model.__class__.__name__
         prep_model_name = 'PCA'
         mean_acu = cross_validade.sum() / len(cross_validade)
-        obs = 'size:80'
+        obs = 'complet_image,size:70'
         file.write(f'{model};{prep_model_name};{file_name};{mean_acu},{obs}\n')
         print(f'{model};{prep_model_name};{file_name};{mean_acu},{obs}\n')

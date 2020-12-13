@@ -3,16 +3,22 @@
   <component name="ChangeListManager">
     <list default="true" id="911f39d3-6d91-49ad-b626-aaec9093e896" name="Default" comment="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/IMU/InertialSensors.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/IMU/InertialSensors.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDetect.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/train_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/train_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionSVM.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionSVM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionSVMTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionSVMTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision_MOG.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision_MOG.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision_RGB_Depth.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/Vision_RGB_Depth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/passive/ADS_B.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Avoid/Avoid.py" beforeDir="false" afterPath="$PROJECT_DIR$/Avoid/Avoid.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Control/Control.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/Control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Control/DetectionData.py" beforeDir="false" afterPath="$PROJECT_DIR$/Control/DetectionData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/Communication.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Communication.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/Start.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Start.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Avoid/StopAvoid.py" beforeDir="false" afterPath="$PROJECT_DIR$/Avoid/StopAvoid.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Control/DetectionData.py" beforeDir="false" afterPath="$PROJECT_DIR$/Detect/DetectionData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Detect/Detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Detect/Detect.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal_multi_executions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal_multi_executions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utils/get_windows.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/get_windows.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
@@ -57,19 +63,19 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Detect" />
+      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\cam_others" />
+      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Others\CloudPoints\arrays\test2020-07-24_01" />
+      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Others\CloudPoints\arrays\test2020-07-22_02" />
+      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\cam" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Utils" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\cam" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\passive" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\ADS_B" />
       <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Others\CloudPoints\arrays\test2020-07-22_02" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\cam_others" />
-      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Others\CloudPoints\arrays\test2020-07-24_01" />
-      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\Others\CloudPoints\arrays\test2020-07-22_02" />
-      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework\AlgorithmsSensors\cam" />
-      <recent name="C:\Users\vinic\OneDrive\Mestrado\Programa\Python\SenseAvoid_framework" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -317,10 +323,6 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Utils/get_windows.py</url>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AlgorithmsSensors/cam/train_models.py</url>
-          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

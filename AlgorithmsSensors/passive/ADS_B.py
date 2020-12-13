@@ -1,8 +1,4 @@
-import airsim  # pip install airsim
 from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
-from AlgorithmsSensors.IMU import InertialSensors
-from Control.DetectionData import DetectionData
-import time
 from datetime import datetime
 
 class ADS_B(AlgorithmSensor):

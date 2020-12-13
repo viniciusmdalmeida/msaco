@@ -1,10 +1,8 @@
 import airsim  # pip install airsim
-import numpy as np
-from Avoid.Avoid import *
-from Control.DetectionData import *
+from Detect.DetectionData import *
 import cv2
 from threading import Thread
-import time
+
 
 class Vision(Thread):
     name = 'vision'

@@ -1,8 +1,10 @@
 from AlgorithmsSensors.cam_others.VisionSVMTracker import *
 from AlgorithmsSensors.Collision_sensor import *
+from AlgorithmsSensors.IMU.InertialSensors import *
+from Detect.FusionData import *
 import time
 
-
+"""
 class IDetect(Thread):
     #Interface de detecção
     def __init__(self,vehicleComunication,sensorsAlgorithm,avoidThread):
@@ -12,6 +14,8 @@ class IDetect(Thread):
         self.sensorsThreads = []
         self.sensorsAlgorithm = sensorsAlgorithm
         self.collisionSensor = Collision_sensor()
+        self.fusionData = FusionData()
+"""
 
 class Detect(Thread):
     stop = False
@@ -22,20 +26,17 @@ class Detect(Thread):
             self.config = yaml.full_load(file_config)
         self.avoidThread = avoidThread
         self.vehicle = vehicleComunication
-        self.sensorsThreads = []
         self.sensorsAlgorithm = sensorsAlgorithm
         self.collisionSensor = Collision_sensor(self)
+        self.inertialSensor = InertialSensor(self)
+        self.sensorsThreads = [self.inertialSensor]
         self.startObj = startObj
+        self.fusionData = FusionData()
 
     def startAlgorithms(self):
         for sensor in self.sensorsAlgorithm:
-            if type(self.sensorsAlgorithm[sensor]) is list:
-                for algorithm in self.sensorsAlgorithm[sensor]:
-                    newAlgorithm = algorithm(self)
-                    self.sensorsThreads.append(newAlgorithm)
-            else:
-                newAlgorithm = self.sensorsAlgorithm[sensor](self)
-                self.sensorsThreads.append(newAlgorithm)
+            newAlgorithm = self.sensorsAlgorithm[sensor](self)
+            self.sensorsThreads.append(newAlgorithm)
 
     def run(self):
         self.startAlgorithms()
@@ -46,10 +47,15 @@ class Detect(Thread):
         #Rodando loop infinito de ler os dados
         while not self.stop:
             dict_sensor_data = {}
+            detect_data = DetectionData()
+            self.fusionData.clearList()
             for sensorThread in self.sensorsThreads:
                 dict_sensor_data[sensorThread.name] = sensorThread.getDetectData()
+                detect_data.updateData(**dict_sensor_data[sensorThread.name].getDictData())
             #colocar um eval para funsão do algoritmos
-            detect_data = self.fusion_data(dict_sensor_data)
+            #detect_data = self.norm_data(dict_sensor_data)
+            #detect_data = self.fusionData.getFusion()
+            detect_data.print_data()
             self.sendData(detect_data)
             #Colisão
             if self.collisionSensor.check_collision():
@@ -60,18 +66,27 @@ class Detect(Thread):
             time_exec = time.time()
         self.end_run()
 
-    def fusion_data(self,dict_sensor_data):
-        sensor_base = list(dict_sensor_data.keys())[0]
-        if type(dict_sensor_data[sensor_base]) == list:
-            dict_data = vars(dict_sensor_data[sensor_base][0])
-            for sensor_data in dict_sensor_data[1:]:
-                dict_sensor = vars(sensor_data)
-                for data in  dict_sensor:
-                    if dict_sensor[data] and (dict_data[data] is None):
-                        dict_data[data] = dict_sensor[data]
-            return dict_data
+    def norm_data(self,dict_sensor_data):
+        dict_data = {}
+        for sensor_key in dict_sensor_data:
+            sensor_data = vars(dict_sensor_data[sensor_key])
+            for data_key in  sensor_data:
+                data = sensor_data[data_key]
+                print(sensor_data,data_key,data)
+                if data_key in dict_data:
+                    dict_data[data_key] = dict_data[data_key].append(data)
+                else:
+                    dict_data[data_key] = [data]
+        for data_key in dict_data:
+            print(data_key,":",dict_data[data_key])
+            dict_data[data_key] = self.fusion_data(dict_data[data_key])
+        return dict_data
+
+    def fusion_data(self,list_data):
+        if type(list_data) == list:
+            return list_data[0]
         else:
-            return dict_sensor_data[sensor_base]
+            return list_data
 
     #Terminar essa função que vai receber os dados dos sensores
     def receiveData(self,detectData,name='vision'):
@@ -87,6 +102,7 @@ class Detect(Thread):
             thread.terminate()
             thread.join()
             print("Thread Terminate",thread.name)
+
 
 
 

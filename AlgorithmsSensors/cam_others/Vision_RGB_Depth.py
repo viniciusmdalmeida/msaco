@@ -1,6 +1,5 @@
 import airsim  # pip install airsim
-import numpy as np
-from Control.DetectionData import *
+from Detect.DetectionData import *
 import cv2
 from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
 from abc import abstractmethod

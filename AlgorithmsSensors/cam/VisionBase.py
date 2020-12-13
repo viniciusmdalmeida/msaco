@@ -1,11 +1,8 @@
 import airsim  # pip install airsim
-import numpy as np
 import cv2
 from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
-import time
-from datetime import datetime
-from Control.DetectionData import *
-from abc import abstractmethod
+from Detect.DetectionData import *
+
 
 class VisionBase(AlgorithmSensor):
     name = 'vision'
@@ -87,8 +84,7 @@ class VisionBase(AlgorithmSensor):
         z_real = (focal_legh * distance_real) / distance_camera_x
         relativePosition = (x_real, y_real, z_real)
         self.detectData.updateData(distance=distance_real, relativePosition=relativePosition)
-        self.detectData.print_data()
-
+        
 class VisionDepthBase(VisionBase):
     def __init__(self,detectRoot):
         VisionBase.__init__(self, detectRoot)

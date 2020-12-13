@@ -1,8 +1,7 @@
 from threading import Thread
 import airsim
 from abc import ABC, abstractmethod
-from Control.DetectionData import DetectionData
-from Utils.Semaphore import *
+from Detect.DetectionData import DetectionData
 import time
 import yaml
 

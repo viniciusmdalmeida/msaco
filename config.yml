@@ -4,16 +4,18 @@ test:
   plane_velocity: 200
 
 algorithm:
-  time_max: 30 #1min30seg
+  time_max: 40 #1min30seg
   vision:
     type: vision
     min_area: 350
-    dirPositveImagem: ../data/imagens/Depth/plane/
-    dirNegativeImagem: ../data/imagens/Depth/background/
+    dirPositveImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/background/
+    dirNegativeImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/plane/
     dirModels: ../data/models/
     windowSizeX : 80
     windowSizeY : 80
-    stepSize : 70
+    stepSize : 40
+    model_sufix: 80c
+    stepSize_getImagem: 30
 
 detect:
   vertical_limit: 20

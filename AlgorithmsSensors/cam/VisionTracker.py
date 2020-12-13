@@ -86,7 +86,8 @@ class VisionDetectOnly(VisionTrackerBase):
 
     def __init__(self,detectRoot):
         VisionTrackerBase.__init__(self, detectRoot)
-        self.detectObject = DetectGenericModel(self.config,nameModel='lgb_80')
+        model_sufix = self.config['algorithm']['vision']['model_sufix']
+        self.detectObject = DetectGenericModel(self.config,nameModel=f'lgb_{model_sufix}',namePrepDataModel=f'pca_{model_sufix}')
 
     def start_tracker(self):
         # Pegando o primeiro frame

@@ -1,5 +1,5 @@
 from threading import Thread
-from Control.DetectionData import *
+
 
 class StopAvoid(Thread):
     detectionData = None

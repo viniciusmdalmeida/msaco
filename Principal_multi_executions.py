@@ -48,7 +48,7 @@ list_algorithms = [
     {"Vision":VisionDetect_MOG}
 ]
 
-list_algorithms = [{"Vision":VisionDetect_SVM}]
+list_algorithms = [{"Vision":VisionDetectOnly}]
 
 #Configuração testes
 altura = 25
