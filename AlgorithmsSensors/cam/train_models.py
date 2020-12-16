@@ -96,7 +96,7 @@ def cross_over_train_model(dict_data,model,prep_model,save_path='../../../data/m
         pickle.dump(prep_model, open(save_path + prep_model_name, 'wb'))
     #calc_cross Validade
     print("Start cross validade")
-    scores = cross_val_score(model, X, y, cv=5)
+    scores = cross_val_score(model, X, y, cv=5,scoring='precision')
     #train
     print("Start train")
     model.fit(X,y)
@@ -135,6 +135,6 @@ for model_name in dict_models:
         model = model.__class__.__name__
         prep_model_name = 'PCA'
         mean_acu = cross_validade.sum() / len(cross_validade)
-        obs = 'complet_image,size:70'
+        obs = 'complet_image,size:80,precision'
         file.write(f'{model};{prep_model_name};{file_name};{mean_acu},{obs}\n')
         print(f'{model};{prep_model_name};{file_name};{mean_acu},{obs}\n')

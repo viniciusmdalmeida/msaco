@@ -15,7 +15,7 @@ class AlgorithmSensor(Thread, ABC):
             self.config = yaml.full_load(file_config)
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
-        self.detectData = DetectionData()
+        self.detectData = DetectionData(algoritmo=self.name)
         self.interval = 0.25
         self._stop_detect = False
 

@@ -78,13 +78,15 @@ class VisionBase(AlgorithmSensor):
         # calc x e y real
         distance_real = self.calc_distance(bbox)
         x_real = seno_angulo_plane_x * (distance_real / np.sin(np.deg2rad(90)))
-        y_real = seno_angulo_plane_y * (distance_real / np.sin(np.deg2rad(90)))
-        # Testar o z com regra de 3
-        # Seria nescessario decompor a distancia em x e y
-        z_real = (focal_legh * distance_real) / distance_camera_x
-        relativePosition = (x_real, y_real, z_real)
+        alt = seno_angulo_plane_y * (distance_real / np.sin(np.deg2rad(90))) #o Y na imagem é o z no unreal
+        # calculando a profundidade regra de 3
+        prof = (focal_legh * x_real) / x_camera #o Y na imagem é o z no unreal
+        #calculando a profundadide pela hipotenusa
+        #hip = (x_real ** 2 + alt ** 2) ** 0.5
+        #prof = (distance_real **2 -  hip ** 2) **0.5
+        relativePosition = (x_real, alt, prof)
         self.detectData.updateData(distance=distance_real, relativePosition=relativePosition)
-        
+
 class VisionDepthBase(VisionBase):
     def __init__(self,detectRoot):
         VisionBase.__init__(self, detectRoot)

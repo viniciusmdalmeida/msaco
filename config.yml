@@ -14,7 +14,7 @@ algorithm:
     windowSizeX : 80
     windowSizeY : 80
     stepSize : 40
-    model_sufix: 80c
+    model_sufix: 80c_new
     stepSize_getImagem: 30
 
 detect:

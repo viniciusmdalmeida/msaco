@@ -12,12 +12,15 @@ class DetectionData:
     myPosition = None#(0,0,0)
     otherPosition = None
 
-    def __init__(self):
+    def __init__(self,algoritmo):
         now_str = datetime.now().strftime('%Y-%m-%d_%H')
         self.file_path = f'../data/logs_voos/sensor_data_{now_str}.csv'
+        self.algoritmo = algoritmo
 
-    def updateData(self,distance=None,relativePosition=None,relativeDirection=None,myDirection=None,
+    def updateData(self,algoritmo=None,distance=None,relativePosition=None,relativeDirection=None,myDirection=None,
                  otherDirection=None,myPosition=None,otherPosition=None):
+        if not algoritmo is None:
+            self.algoritmo = algoritmo
         if not distance is None:
             self.distance = distance
         if not myPosition is None:
@@ -41,12 +44,12 @@ class DetectionData:
             self.otherPosition = otherDirection
 
     def calcOtherPosition(self):
-        print("calcOtherPosition")
         if self.myPosition is not None and self.relativePosition is not None:
-            otherPosition = (self.myPosition[0] + self.relativePosition[0],
-                                   self.myPosition[1] + self.relativePosition[1],
-                                   self.myPosition[2] + self.relativePosition[2])
-            print("otherPosition:",self.otherPosition)
+            x_position = self.myPosition[0] +\
+                         self.relativePosition[0]
+            y_position = self.myPosition[1] - self.relativePosition[1]
+            z_position = self.myPosition[2]*-1
+            otherPosition = (x_position,y_position,z_position)
             return otherPosition
         else:
             return None
@@ -67,8 +70,8 @@ class DetectionData:
             path = file_path.replace(file_name, '')
             if isdir(path) == False:
                 makedirs(path)
-            with open(file_path, 'w') as file:
-                header = 'timestamp,distance,myX,myY,myZ,myDirX,myDirY,myDirZ,' \
+            with open(file_path, 'a') as file:
+                header = 'timestamp,algoritmo,distance,myX,myY,myZ,myDirX,myDirY,myDirZ,' \
                          'relX,relY,relZ,reldirX,reldirY,reldirZ,otherX,otherY,otherZ,' \
                          'otherDirX,otherDirY,otherDirZ'
                 file.write(header+'\n')
@@ -78,7 +81,6 @@ class DetectionData:
         str_print = f'{timestamp},'
         dict_data = self.getDictData()
         for key in dict_data:
-            print(key,":",dict_data[key])
             if dict_data[key] is None:
                 str_data = ',,'
             else:
@@ -88,12 +90,10 @@ class DetectionData:
             self.check_have_file(self.file_path)
             with open(self.file_path,'a') as file:
                 file.write(str_print+'\n')
-        else:
-            print(str_print)
-        print("Update Data:",str_print)
 
     def getDictData(self):
         dict_Data = {}
+        dict_Data['algoritmo'] = self.algoritmo
         dict_Data['distance'] = self.distance
         dict_Data['myPosition'] = self.myPosition
         dict_Data['myDirection'] = self.myDirection

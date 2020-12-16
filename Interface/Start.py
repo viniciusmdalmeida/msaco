@@ -62,6 +62,9 @@ class Start(Thread):
         if self.detect is not None:
             #Wating detect
             self.detect.join()
+        #stop control
+        if self.control is not None:
+            self.control.join()
         #Reset Plane
         self.unrealControl.reset_plane()
         self.vehicleComunication.client.reset()

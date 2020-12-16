@@ -1,7 +1,7 @@
 from Interface.Start import Start
 from AlgorithmsSensors.cam.VisionTracker import *
-from AlgorithmsSensors.cam.VisionDepthTracker import *
-from AlgorithmsSensors.cam.VisionDetect import *
+from AlgorithmsSensors.cam_others.VisionDepthTracker import *
+from AlgorithmsSensors.cam_others.VisionDetect import *
 from AlgorithmsSensors.cam_others.Vision_MOG import *
 from AlgorithmsSensors.passive.ADS_B import *
 from AlgorithmsSensors.Collision_sensor import *
@@ -48,7 +48,13 @@ list_algorithms = [
     {"Vision":VisionDetect_MOG}
 ]
 
-list_algorithms = [{"Vision":VisionDetectOnly}]
+list_algorithms = [
+    {"Vision:": VisionDetectSVM},
+    {"Vision": VisionDetectRF},
+    {"Vision": VisionDetectLGB},
+    {"Vision": VisionDetectNaiveBayes},
+    {"Vision": VisionDetectNeural}
+]
 
 #Configuração testes
 altura = 25

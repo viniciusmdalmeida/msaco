@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from threading import Thread
 import time
 
-class ICommunication(ABC,Thread):
+class ICommunication(ABC):
     #cliente is the source of communication with vehicle
     client = None
     name = "base"
@@ -11,7 +11,7 @@ class ICommunication(ABC,Thread):
         super().__init__()
         print(f"Communication {self.name}")
 
-    def getVehicle():
+    def getVehicle(self):
         pass
         # function to get instance of singleton
 
@@ -49,9 +49,6 @@ class ICommunication(ABC,Thread):
         # function to send a command, in mavLink format, to vehicle to got to a certain point
         # This function return the command response data
         pass
-
-    def run(self):
-        print("Thread")
 
 import airsim
 import numpy as np
