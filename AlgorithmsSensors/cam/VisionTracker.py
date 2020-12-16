@@ -7,11 +7,17 @@ import numpy as np
 class VisionTrackerBase(VisionDepthBase):
     name = "Vision Tracker Base"
 
-    def __init__(self,detectRoot,depth_cam=False):
+    def __init__(self,detectRoot,depth_cam=False,model=None):
         VisionBase.__init__(self, detectRoot)
+        #model
+        model_sufix = self.config['algorithm']['vision']['model_sufix']
+        if model is None:
+            model = self.name
+        model_name = f'{model}_{model_sufix}'
+        prepData_name = f'pca_{model_sufix}'
+        #detect model
+        self.detectObject = DetectGenericModel(self.config,nameModel=model_name,namePrepDataModel=prepData_name)
         self.tracker = None
-        self.detectObject = DetectSVM(self.config)
-        #self.detectObject = DetectMog(self.config)
         self.cont_status = 0
         if depth_cam:
             self.getImage = self.getDepth
@@ -64,10 +70,8 @@ class VisionTrackerBase(VisionDepthBase):
 class VisionDetectOnly(VisionTrackerBase):
     name = "Vision Detect Only"
 
-    def __init__(self,detectRoot,model='lgb'):
+    def __init__(self,detectRoot,model=None):
         VisionTrackerBase.__init__(self, detectRoot)
-        model_sufix = self.config['algorithm']['vision']['model_sufix']
-        self.detectObject = DetectGenericModel(self.config,nameModel=f'{model}_{model_sufix}',namePrepDataModel=f'pca_{model_sufix}')
 
     def start_tracker(self):
         # Pegando o primeiro frame

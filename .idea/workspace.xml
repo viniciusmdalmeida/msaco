@@ -3,20 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="911f39d3-6d91-49ad-b626-aaec9093e896" name="Default" comment="- Criando caminhos com path&#10;- Opções de escolha entre mostrar ou não o video&#10;- Opção de escolha entre não usar o algoritmo de detecção e desvio.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/AlgorithmSensor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/IMU/InertialSensors.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/IMU/InertialSensors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionBase.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionDepthDetect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDepthTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionDepthTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam_others/VisionDetect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/DetectObjClasses.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/VisionTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AlgorithmsSensors/cam/train_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/AlgorithmsSensors/cam/train_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Detect/Detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Detect/Detect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Detect/DetectionData.py" beforeDir="false" afterPath="$PROJECT_DIR$/Detect/DetectionData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/Communication.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Communication.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/Start.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Start.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Principal_multi_executions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Principal_multi_executions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

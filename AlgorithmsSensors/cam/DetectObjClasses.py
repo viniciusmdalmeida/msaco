@@ -164,7 +164,7 @@ class DetectMLBase(DetectBase):
 
 class DetectGenericModel(DetectMLBase):
     def __init__(self, config,nameModel,namePrepDataModel):
-        print("Detect SVM")
+        print(f"Detect {nameModel}")
         DetectMLBase.__init__(self,config, nameModel=nameModel, namePrepDataModel=namePrepDataModel)
 
 class DetectSVM(DetectMLBase):

@@ -35,26 +35,7 @@ list_position = [[[-1700, -5900, 700],[0,71,0]],
                  [[400, -5900, 700],[0,93,0]],
                  [[2650, -5900, 700],[0,113,0]]]
 #Algoritmos
-list_algorithms = [
-    {"ADS_B": ADS_B},
-    {"Vision": VisionTrackerDepth_MIL},
-    {"Vision":VisionTrackerDepth_KFC},
-    {"Vision:":VisionTrackerDepth_Boosting},
-    {"Vision:": VisionTrackerDepth_TLD},
-    {"Vision": VisionTrackerDepth_MIL_MOG},
-    {"Vision": VisionTrackerDepth_KFC_MOG},
-    {"Vision:": VisionTrackerDepth_Boosting_MOG},
-    {"Vision":VisionDetect_SVM},
-    {"Vision":VisionDetect_MOG}
-]
-
-list_algorithms = [
-    {"Vision:": VisionDetectSVM},
-    {"Vision": VisionDetectRF},
-    {"Vision": VisionDetectLGB},
-    {"Vision": VisionDetectNaiveBayes},
-    {"Vision": VisionDetectNeural}
-]
+list_algorithms_name = ['svm','lgb','rf','neural','naive']
 
 #Configuração testes
 altura = 25
@@ -85,7 +66,9 @@ for angle in tqdm(list_angle):
     location,rotation = calc_plane_position(angle,colision_point,time_to_colision,plane_velocity)
     print("Colision:", colision_point)
     print("Plane location:",location,"Plane rotation:",rotation)
-    for algorithm in list_algorithms:
+    for algorithm_name in list_algorithms_name:
+        algorithm = VisionDetectOnly
+        algorithm.name = algorithm_name
         for count in range(num_repetitions):
             #Start simples
             print("\n\n###############")
