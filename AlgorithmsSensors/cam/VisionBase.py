@@ -3,7 +3,6 @@ import cv2
 from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
 from Detect.DetectionData import *
 
-
 class VisionBase(AlgorithmSensor):
     name = 'vision'
 
@@ -44,23 +43,30 @@ class VisionBase(AlgorithmSensor):
             if bbox is not None and len(bbox) >= 4:
                 x1,y1,x2,y2 = self.getPoints(bbox)
                 # Draw Bounding box
-                if min(x1,x2,y1,y2) >= 0:
+                if min(x2-x1,y2-y1) >= 0:
                     p1 = (x1, y1)
                     p2 = (x2, y2)
-                    cv2.rectangle(frame, p1, p2, (255, 0, 0), 2, 1)
+                    if self.depth:
+                        cv2.rectangle(frame, p1, p2, 0, 2, 1)
+                    else:
+                        cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
                     if distance:
                         cv2.putText(frame, "distancia:{}".format(distance), (100, 80),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
                 else:
                     # Tracking failure
+                    print(f"X:{x1-x2},Y:{y1-y2},MIN:{min(x1-x2,y1-y2)}")
                     cv2.putText(frame, "Tracking failure detected", (100, 80),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
             cv2.imshow("Detect", frame)
             cv2.waitKey(1)
 
     def terminate(self):
-        cv2.destroyAllWindows()
+        print("Tentando terminar ",self.name)
         self._stop_detect = True
+        if self.showVideo:
+            cv2.destroyAllWindows()
+        print("Terminando windows")
 
     def calc_obj_position(self, bbox, fov_angle=120, width_image=1024):
         # calc x e y camera
@@ -77,8 +83,10 @@ class VisionBase(AlgorithmSensor):
         seno_angulo_plane_y =   y_camera / (np.sin(np.deg2rad(90)) * distance_camera_y )   # regra senos
         # calc x e y real
         distance_real = self.calc_distance(bbox)
-        x_real = seno_angulo_plane_x * (distance_real / np.sin(np.deg2rad(90)))
-        alt = seno_angulo_plane_y * (distance_real / np.sin(np.deg2rad(90))) #o Y na imagem é o z no unreal
+        if distance_real is None:
+            return
+        x_real = seno_angulo_plane_x * distance_real
+        alt = seno_angulo_plane_y * distance_real  #o Y na imagem é o z no unreal
         # calculando a profundidade regra de 3
         prof = (focal_legh * x_real) / x_camera #o Y na imagem é o z no unreal
         #calculando a profundadide pela hipotenusa
@@ -127,21 +135,24 @@ class VisionDepthBase(VisionBase):
             p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
             cv2.rectangle(image, p1, p2, (255, 0, 0), 2, 1)
         cv2.imshow("Depth", image)
+        cv2.waitKey(1)
 
     def calc_distance(self,bbox):
         x1, y1, x2, y2 = self.getPoints(bbox)
         if x2 < x1:
-            aux = x1
+            aux = x1.copy()
             x1 = x2
             x2 = aux
         elif x2 == x1:
             return None
         if y2 < y1:
-            aux = y1
+            aux = y1.copy()
             y1 = y2
             y2 = aux
         elif y2 == y1:
             return None
+        y1 = max(0,y1)
+        x1 = max(0,x1)
         depthImage = self.getDepth()
         distanceMin = depthImage[y1:y2, x1:x2].min()
         return distanceMin
@@ -169,4 +180,5 @@ class VisionCaptureAll(VisionDepthBase):
 
     def detect(self):
         self.getImage(True)
+        self.getDepth(True)
         self.getDepth(True)

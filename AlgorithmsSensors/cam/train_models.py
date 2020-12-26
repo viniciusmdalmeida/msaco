@@ -18,7 +18,7 @@ import lightgbm as lgb
 import random
 
 
-def get_dict_dados(windowSizeY,windowSizeX,negativeImg_path,positiveImg_path):
+def get_dict_dados(windowSizeY,windowSizeX,negativeImg_path,positiveImg_path,depth=False):
     dim = (windowSizeY, windowSizeX)
     imgs = []
     datas = []
@@ -36,8 +36,11 @@ def get_dict_dados(windowSizeY,windowSizeX,negativeImg_path,positiveImg_path):
         for file_name in list_files:
             file_path = path + file_name
             if isfile(file_path):
-                image = cv2.imread(file_path, 1)
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                if depth:
+                    image = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)
+                else:
+                    image = cv2.imread(file_path, 1)
+                #image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
                 image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
                 imgs.append(image)
                 datas.append(image.reshape(-1))
@@ -92,8 +95,9 @@ def cross_over_train_model(dict_data,model,prep_model,save_path='../../../data/m
     y = dict_data['target']
     if prep_model:
         #X,y = normalize_class(X,y)
-        X = prep_model.fit(X).transform(X)
-        pickle.dump(prep_model, open(save_path + prep_model_name, 'wb'))
+        prep_model.fit(X)
+        X = prep_model.transform(X)
+        pickle.dump(prep_model, open(save_path + prep_model_name + '.sav', 'wb'))
     #calc_cross Validade
     print("Start cross validade")
     scores = cross_val_score(model, X, y, cv=5,scoring='precision')
@@ -105,8 +109,8 @@ def cross_over_train_model(dict_data,model,prep_model,save_path='../../../data/m
     return model,scores
 
 
-negativeImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/background/'
-positiveImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/plane/'
+negativeImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/Depth/windows/background/'
+positiveImg_path = 'C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/Depth/windows/plane/'
 config_path='../../config.yml'
 
 with open(config_path, 'r') as file_config:
@@ -116,7 +120,7 @@ img_height = config['algorithm']['vision']['windowSizeY']
 Msufix = config['algorithm']['vision']['model_sufix']
 
 #get data
-dict_data = get_dict_dados(img_width,img_height,negativeImg_path,positiveImg_path)
+dict_data = get_dict_dados(img_width,img_height,negativeImg_path,positiveImg_path,depth=True)
 #load model
 prep_model = PCA(n_components=150, svd_solver='randomized', whiten=True)
 dict_models = {f'svm_{Msufix}':SVC(C=100, gamma=0.01),
@@ -129,7 +133,7 @@ for model_name in dict_models:
     file_name = model_name + '.sav'
     model = dict_models[model_name]
     model, cross_validade = cross_over_train_model(dict_data, model, prep_model, model_name=file_name,
-                                                   prep_model_name=f'pca_{Msufix}.sav')
+                                                   prep_model_name=f'pca_{Msufix}')
     print(cross_validade, ":", cross_validade.sum() / len(cross_validade))
     with open('../../../data/models/models.csv','a') as file:
         model = model.__class__.__name__

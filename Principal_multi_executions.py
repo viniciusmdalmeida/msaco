@@ -1,8 +1,5 @@
 from Interface.Start import Start
-from AlgorithmsSensors.cam.VisionTracker import *
-from AlgorithmsSensors.cam.VisionDepthTracker import *
-from AlgorithmsSensors.cam.VisionDetect import *
-from AlgorithmsSensors.cam_others.Vision_MOG import *
+from AlgorithmsSensors.cam.TrackersClass import *
 from AlgorithmsSensors.passive.ADS_B import *
 from AlgorithmsSensors.Collision_sensor import *
 import pandas as pd
@@ -10,6 +7,7 @@ from Utils.UnrealCommunication import UnrealCommunication
 from Utils.calc_colision import calc_plane_position
 from datetime import datetime
 from tqdm import tqdm
+import yaml
 
 ## import keras
 #Read Config
@@ -27,28 +25,17 @@ model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
 
-#Posição do avião
-list_position = [[[-1700, -5900, 700],[0,71,0]],
-                 [[750, -5900, 700],[0,95,0]],
-                 [[3600, -5900, 700],[0,120,0]],
-                 [[-2750, -5900, 700],[0,64,0]],
-                 [[400, -5900, 700],[0,93,0]],
-                 [[2650, -5900, 700],[0,113,0]]]
-#Algoritmos
 list_algorithms = [
-    {"ADS_B": ADS_B},
-    {"Vision": VisionTrackerDepth_MIL},
-    {"Vision":VisionTrackerDepth_KFC},
-    {"Vision:":VisionTrackerDepth_Boosting},
-    {"Vision:": VisionTrackerDepth_TLD},
-    {"Vision": VisionTrackerDepth_MIL_MOG},
-    {"Vision": VisionTrackerDepth_KFC_MOG},
-    {"Vision:": VisionTrackerDepth_Boosting_MOG},
-    {"Vision":VisionDetect_SVM},
-    {"Vision":VisionDetect_MOG}
+    {"Vision:": VisionTracker_KFC_SVM_Depth},
+    {"Vision:": VisionTracker_KFC_LGB_Depth},
+    {"Vision:": VisionTracker_TLD_LGB_Depth},
+    {"Vision:": VisionTracker_MIL_LGB_Depth},
+    {"Vision:": VisionTracker_Boosting_LGB_Depth},
+    {"Vision:": VisionTracker_TLD_SVM_Depth},
+    {"Vision:": VisionTracker_MIL_SVM_Depth},
+    {"Vision:": VisionTracker_Boosting_SVM_Depth}
 ]
-
-list_algorithms = [{"Vision":VisionDetectOnly}]
+#Posição do avião
 
 #Configuração testes
 altura = 25
@@ -56,7 +43,7 @@ altura = 25
 drone_start_point = [0,1,-25,10]
 routePoints = [[0,1,-altura,10]]
 colision_point = [260, 230, 2800]
-list_angle = [20,10,0,-10,-20,-30]
+list_angle = [30,20,10,0,-10,-20,-30]
 distance_plane = 5000
 num_repetitions = 1
 
@@ -82,7 +69,7 @@ for angle in tqdm(list_angle):
     for algorithm in list_algorithms:
         for count in range(num_repetitions):
             #Start simples
-            print("\n\n###############")
+            print("\n###############")
             print(f"Iniciando execução Algoritmos:{algorithm}, rota:{routePoints}")
             print("###############")
             # Reset avião
@@ -91,6 +78,7 @@ for angle in tqdm(list_angle):
             run_simulation = Start(routePoints,algorithm,start_point=drone_start_point)
             run_simulation.start()
             run_simulation.join()
+            print("Finish Test",algorithm)
             #salvando resultado
             status = run_simulation.get_status()
             df_result = pd.DataFrame({'algoritmo': [algorithm], 'status': [status],'location_plane':[location],'angle':[angle]})

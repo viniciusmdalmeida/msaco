@@ -7,13 +7,16 @@ import numpy as np
 class VisionTrackerBase(VisionDepthBase):
     name = "Vision Tracker Base"
 
-    def __init__(self,detectRoot,depth_cam=False):
+    def __init__(self,detectRoot,depth=False,model_name='rf',prep_data_name='pca'):
         VisionBase.__init__(self, detectRoot)
         self.tracker = None
-        self.detectObject = DetectSVM(self.config)
-        #self.detectObject = DetectMog(self.config)
+        model_sufix = self.config['algorithm']['vision']['model_sufix']
+        self.mode_name = f'{model_name}_{model_sufix}'
+        prep_data_name = f'{prep_data_name}_{model_sufix}'
+        self.detectObject = DetectMLBase(self.config,nameModel=self.mode_name,namePrepDataModel=prep_data_name)
         self.cont_status = 0
-        if depth_cam:
+        self.depth = depth
+        if self.depth:
             self.getImage = self.getDepth
 
     def check_status(self,status):
@@ -34,11 +37,14 @@ class VisionTrackerBase(VisionDepthBase):
             start_frame = self.getImage()
         #Primeira detecção
         bbox,frame = self.firstDetect(start_frame)
+        if not frame is None and len(frame.shape) < 3:
+            frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
         self.tracker.init(frame, bbox)
 
     def firstDetect(self,start_frame):
         bbox = None
-        while bbox is None:
+        frame = None
+        while bbox is None and self._stop_detect == False:
             frame = self.getImage()
             bbox = self.detectObject.detect(frame,start_frame)
             self.printDetection(frame,bbox)
@@ -54,7 +60,11 @@ class VisionTrackerBase(VisionDepthBase):
         frame = self.getImage()
         # Update tracker
         if frame is not None:
-            ok, bbox = self.tracker.update(frame[:, :, :3])
+            if len(frame.shape) > 2:
+                ok, bbox = self.tracker.update(frame[:, :, :3])
+            else:
+                frame = cv2.cvtColor(frame,cv2.COLOR_GRAY2RGB)
+                ok, bbox = self.tracker.update(frame)
             self.printDetection(frame,bbox)
             self.calc_obj_position(bbox)
             return ok
@@ -64,10 +74,9 @@ class VisionTrackerBase(VisionDepthBase):
 class VisionDetectOnly(VisionTrackerBase):
     name = "Vision Detect Only"
 
-    def __init__(self,detectRoot,model='lgb'):
-        VisionTrackerBase.__init__(self, detectRoot)
-        model_sufix = self.config['algorithm']['vision']['model_sufix']
-        self.detectObject = DetectGenericModel(self.config,nameModel=f'{model}_{model_sufix}',namePrepDataModel=f'pca_{model_sufix}')
+    def __init__(self,detectRoot,model='lgb',depth=False):
+        VisionTrackerBase.__init__(self, detectRoot,model_name=model)
+        self.depth = depth
 
     def start_tracker(self):
         # Pegando o primeiro frame
@@ -86,54 +95,3 @@ class VisionDetectOnly(VisionTrackerBase):
             status = False
         if not self.check_status(status):
             self.start_tracker()
-
-class VisionDetectSVM(VisionDetectOnly):
-    name = 'svm'
-    def __init__(self, detectRoot):
-        VisionDetectOnly.__init__(self, detectRoot,model=self.name)
-
-class VisionDetectLGB(VisionDetectOnly):
-    name = 'lgb'
-    def __init__(self, detectRoot):
-        VisionDetectOnly.__init__(self, detectRoot,model=self.name)
-
-class VisionDetectRF(VisionDetectOnly):
-    name = 'rf'
-    def __init__(self, detectRoot):
-        VisionDetectOnly.__init__(self, detectRoot, model=self.name)
-
-class VisionDetectNeural(VisionDetectOnly):
-    name = 'neural'
-    def __init__(self, detectRoot):
-        VisionDetectOnly.__init__(self, detectRoot, model=self.name)
-
-class VisionDetectNaiveBayes(VisionDetectOnly):
-    name = 'naive'
-    def __init__(self, detectRoot):
-        VisionDetectOnly.__init__(self, detectRoot, model=self.name)
-
-################################
-#Trackers
-################################
-class VisionTracker_KFC(VisionTrackerBase):
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot)
-        self.tracker = cv2.TrackerKCF_create()
-
-class VisionTracker_TLD(VisionTrackerBase):
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot)
-        self.tracker = cv2.TrackerTLD_create()
-
-class VisionTracker_MIL(VisionTrackerBase):
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot)
-        self.tracker = cv2.TrackerMIL_create()
-
-class VisionTracker_Boosting(VisionTrackerBase):
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot)
-        self.tracker = cv2.TrackerBoosting_create()
-
-
-
