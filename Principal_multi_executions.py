@@ -24,17 +24,10 @@ with open(path_model + 'keras_Xception.json', 'r') as json_file:
 model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
-
 list_algorithms = [
-    {"Vision:": VisionTracker_KFC_SVM_Depth},
-    {"Vision:": VisionTracker_KFC_LGB_Depth},
-    {"Vision:": VisionTracker_TLD_LGB_Depth},
-    {"Vision:": VisionTracker_MIL_LGB_Depth},
-    {"Vision:": VisionTracker_Boosting_LGB_Depth},
-    {"Vision:": VisionTracker_TLD_SVM_Depth},
-    {"Vision:": VisionTracker_MIL_SVM_Depth},
-    {"Vision:": VisionTracker_Boosting_SVM_Depth}
+    {"Vision:": VisionTracker_KFC_SVM_Depth,":": VisionTracker_KFC_SVM_Depth},
 ]
+
 #Posição do avião
 
 #Configuração testes

@@ -50,9 +50,9 @@ class Detect(Thread):
             detect_data = DetectionData(None)
             self.fusionData.clearList()
             for sensorThread in self.sensorsThreads:
-                dict_sensor_data[sensorThread.name] = sensorThread.getDetectData()
-                detect_data.updateData(**dict_sensor_data[sensorThread.name].getDictData())
+                detect_data.updateData(**sensorThread.getDetectData().getDictData())
             #colocar um eval para funsão do algoritmos
+            detect_data.finalizeData()
             detect_data.print_data()
             self.sendData(detect_data)
             #Colisão

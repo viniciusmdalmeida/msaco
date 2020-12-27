@@ -92,7 +92,7 @@ class VisionBase(AlgorithmSensor):
         #calculando a profundadide pela hipotenusa
         #hip = (x_real ** 2 + alt ** 2) ** 0.5
         #prof = (distance_real **2 -  hip ** 2) **0.5
-        relativePosition = (x_real, alt, prof)
+        relativePosition = [x_real, alt, prof]
         self.detectData.updateData(distance=distance_real, relativePosition=relativePosition)
 
 class VisionDepthBase(VisionBase):

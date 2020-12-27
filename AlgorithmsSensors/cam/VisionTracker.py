@@ -37,7 +37,7 @@ class VisionTrackerBase(VisionDepthBase):
             start_frame = self.getImage()
         #Primeira detecção
         bbox,frame = self.firstDetect(start_frame)
-        if not frame is None and len(frame.shape) < 3:
+        if (not frame is None) and (len(frame.shape) < 3):
             frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
         self.tracker.init(frame, bbox)
 
