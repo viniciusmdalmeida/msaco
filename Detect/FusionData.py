@@ -19,15 +19,21 @@ class FusionData:
                 else:
                     dict_detect[key] = [detect_data[key]]
         for key in dict_detect:
-            dict_detect[key] = dict_detect[key][0]
-        detect_data = DetectionData()
-        output_detect = detect_data.updateData(**dict_detect)
+            dict_detect[key] = self.fusionLogic(dict_detect[key])
+        output_detect = DetectionData()
+        output_detect.updateData(**dict_detect)
         return output_detect
-    '''
-    def fusionLogic(self,list_data,key):
-        if key == 'distance':
-            return sum(list_data)/len(list_data)
+
+    def fusionLogic(self,list_data):
+        list_data_np = np.array(list_data)
+        if np.issubdtype(list_data_np.dtype, np.number):  # check is numeric
+            if len(list_data_np.shape) > 1:
+                list_data_np = list_data_np.mean(axis=0)
+            else:
+                list_data_np = list_data_np.mean()
         else:
-            return_data = []
-            for item in 
-    '''
+            list_data_np = list_data_np[0]
+        if type(list_data_np) == np.ndarray:
+            return tuple(list_data_np)
+        else:
+            return list_data_np

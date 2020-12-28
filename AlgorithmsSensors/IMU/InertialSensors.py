@@ -16,7 +16,7 @@ class InertialSensor(AlgorithmSensor):
 
     def detect(self):
         data = self.getData()
-        self.detectData.updateData(myPosition=list(data['position'].values()))
+        self.detectData.updateData(myPosition=tuple(data['position'].values()))
 
     def getData(self):
         dict_data = {}

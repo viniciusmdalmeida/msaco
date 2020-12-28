@@ -25,7 +25,14 @@ model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
 list_algorithms = [
-    {"Vision:": VisionTracker_KFC_SVM_Depth,":": VisionTracker_KFC_SVM_Depth},
+    {"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
+    #{"ADS-B":None}
+    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
+    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
+    #{"ADS-B":None,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
+    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
+    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
+    #{"ADS-B":None,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
 ]
 
 #Posição do avião

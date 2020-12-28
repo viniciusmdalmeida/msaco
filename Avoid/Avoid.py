@@ -38,6 +38,7 @@ class Avoid(Thread):
 
     def update_detect_data(self, detectionData):
         self.update_progress(detectionData)
+        print("detectionData",detectionData.distance)
         if detectionData is None or detectionData.distance is None:
             #invalit data
             return
