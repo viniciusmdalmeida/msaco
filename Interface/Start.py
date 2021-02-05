@@ -9,9 +9,11 @@ class Start(Thread):
     avoidThread = None
     detect = None
 
-    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},avoidClass=Avoid,comunication=AirSimCommunication,config_path='config.yml',start_point=None):
+    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},
+                 avoidClass=Avoid,comunication=AirSimCommunication,fusionAlgorithm=FusionData_Mean,
+                 configPath='config.yml',startPoint=None):
         Thread.__init__(self)
-        self.start_point = start_point
+        self.start_point = startPoint
         self.status = 'start'
         # vehicleComunication = comunication.getVehicle()
         # Conectando ao simulador AirSim
@@ -20,13 +22,13 @@ class Start(Thread):
         self.unrealControl = UnrealCommunication()
         self.stop = False
 
-        with open(config_path, 'r') as file_config:
+        with open(configPath, 'r') as file_config:
             self.config = yaml.full_load(file_config)
 
         if avoidClass is not None:
             self.avoidThread  = avoidClass(self,self.control)
         if sensorsAlgorithms is not None:
-            self.detect = Detect(self,self.vehicleComunication,sensorsAlgorithms,self.avoidThread)
+            self.detect = Detect(self,self.vehicleComunication,sensorsAlgorithms,self.avoidThread,fusionAlgorithm=fusionAlgorithm)
 
         #self.start()
 

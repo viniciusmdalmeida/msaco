@@ -20,9 +20,9 @@ class IDetect(Thread):
 class Detect(Thread):
     stop = False
 
-    def __init__(self,startObj,vehicleComunication,sensorsAlgorithm,avoidThread,config_path='config.yml'):
+    def __init__(self,startObj,vehicleComunication,sensorsAlgorithm,avoidThread,configPath='config.yml',fusionAlgorithm=FusionData_Mean):
         Thread.__init__(self)
-        with open(config_path, 'r') as file_config:
+        with open(configPath, 'r') as file_config:
             self.config = yaml.full_load(file_config)
         self.avoidThread = avoidThread
         self.vehicle = vehicleComunication
@@ -31,7 +31,7 @@ class Detect(Thread):
         self.inertialSensor = InertialSensor(self)
         self.sensorsThreads = [self.inertialSensor]
         self.startObj = startObj
-        self.fusionData = FusionData()
+        self.fusionData = fusionAlgorithm()
 
     def startAlgorithms(self):
         for sensor in self.sensorsAlgorithm:

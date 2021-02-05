@@ -1,0 +1,4 @@
+ADS_B: 0.99
+VisionDetectRF: 0.5
+VisionTracker_KFC_SVM_Depth: 0.5
+VisionDetectSVM: 0.5

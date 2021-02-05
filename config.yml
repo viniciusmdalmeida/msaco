@@ -14,13 +14,15 @@ algorithm:
     windowSizeX : 80
     windowSizeY : 80
     stepSize : 40
-    model_sufix: 80c_depth
+    model_sufix: 80c
+
+
     stepSize_getImagem: 30
 
 detect:
-  vertical_limit: 20
-  horizontal_limit: 25
-  min_distance: 20
+  vertical_limit: 40
+  horizontal_limit: 40
+  min_distance: 40
   max_progress_data: 30
   min_progress_data: 10
 
@@ -54,4 +56,4 @@ sensors:
     save_file_prefix: test
 
   Vision:
-    show_video: true
+    show_video: false

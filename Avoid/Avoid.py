@@ -18,7 +18,7 @@ class Avoid(Thread):
 
 
     def avoid_strategy(self):
-        route = [[0,1, -25]]
+        route = [[0,1, -40]]
         velocity = 8
         return route,velocity
 
@@ -38,7 +38,6 @@ class Avoid(Thread):
 
     def update_detect_data(self, detectionData):
         self.update_progress(detectionData)
-        print("detectionData",detectionData.distance)
         if detectionData is None or detectionData.distance is None:
             #invalit data
             return

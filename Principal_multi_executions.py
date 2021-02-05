@@ -2,6 +2,7 @@ from Interface.Start import Start
 from AlgorithmsSensors.cam.TrackersClass import *
 from AlgorithmsSensors.passive.ADS_B import *
 from AlgorithmsSensors.Collision_sensor import *
+from Detect.FusionData import *
 import pandas as pd
 from Utils.UnrealCommunication import UnrealCommunication
 from Utils.calc_colision import calc_plane_position
@@ -24,17 +25,10 @@ with open(path_model + 'keras_Xception.json', 'r') as json_file:
 model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
-list_algorithms = [
-    {"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
-    #{"ADS-B":None}
-    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
-    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
-    #{"ADS-B":None,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
-    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
-    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
-    #{"ADS-B":None,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
-]
 
+list_algorithms = [
+    {"ADS-B":ADS_B,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionDetectRF},
+]
 #Posição do avião
 
 #Configuração testes
@@ -75,7 +69,7 @@ for angle in tqdm(list_angle):
             # Reset avião
             unreal_communication.reset_plane(location, rotation)
             #rodando algoritmo
-            run_simulation = Start(routePoints,algorithm,start_point=drone_start_point)
+            run_simulation = Start(routePoints,algorithm,startPoint=drone_start_point,fusionAlgorithm=FusionData_Mean)
             run_simulation.start()
             run_simulation.join()
             print("Finish Test",algorithm)
