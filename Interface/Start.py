@@ -10,7 +10,7 @@ class Start(Thread):
     detect = None
 
     def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},
-                 avoidClass=Avoid,comunication=AirSimCommunication,fusionAlgorithm=FusionData_Mean,
+                 avoidClass=FixAvoid,comunication=AirSimCommunication,fusionAlgorithm=FusionData_Mean,
                  configPath='config.yml',startPoint=None):
         Thread.__init__(self)
         self.start_point = startPoint

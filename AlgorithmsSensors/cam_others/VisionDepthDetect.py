@@ -24,7 +24,7 @@ class VisionDepthDetectBase(VisionDepthBase):
         if bbox:
             # Se detectado enviar dados
             distanceMin = self.calc_distance(bbox)
-            self.detectData = DetectionData(distanceMin)
+            self.detectData = DetectionData.updateData(distance=distanceMin)
             #Atualizar os frame base e o status
             self.base_frame = self.getDepth()
             self.status = 'detect'

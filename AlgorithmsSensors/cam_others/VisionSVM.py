@@ -98,7 +98,7 @@ class VisionSVM(AlgorithmSensor):
 
                 depthImage = self.getDepth()
                 distanceMin = depthImage[bbox[2]:bbox[3], bbox[0]:bbox[1]].min()
-                self.detectData = DetectionData(distanceMin)
+                self.detectData = DetectionData.updateData(distance=distanceMin)
                 self.desvioThread.detectionData = self.detectData
                 cv2.putText(frameatual, "distancia:{}".format(distanceMin), (100, 80),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)

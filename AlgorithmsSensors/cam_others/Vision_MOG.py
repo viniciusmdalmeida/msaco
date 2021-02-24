@@ -97,8 +97,7 @@ class VisionMOG(AlgorithmSensor):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2, 1)
                 cv2.putText(frame, "distancia:{}".format(distanceMin), (100, 80),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-                self.detectData = DetectionData(distanceMin)
-                self.detectData = DetectionData(distanceMin)
+                self.detectData = DetectionData.updateData(distance=distanceMin)
             #Apresentando a imagem
             cv2.imshow('frame', frame)
             k = cv2.waitKey(30) & 0xff

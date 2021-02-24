@@ -152,7 +152,7 @@ class VisionSVMTracker(AlgorithmSensor):
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
 
             #Enviar dados recebidos
-            detectData = DetectionData(distanceMin)
+            detectData = DetectionData.updateData(distance=distanceMin)
             self.desvioThread.detectionData = detectData
 
         else:

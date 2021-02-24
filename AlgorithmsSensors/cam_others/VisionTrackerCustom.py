@@ -85,7 +85,7 @@ class VisionTrackerCustom(VisionDepthBase):
         else:
             status_tracker, bbox = self.tracker.update(frame[:, :, :3])
             distanceMin = self.calc_distance(bbox)
-            self.detectData = DetectionData(distanceMin)
+            self.detectData = DetectionData.updateData(distance=distanceMin)
             self.detectRoot.receiveData(self.detectData)
             self.printDetection(frame, bbox)
             status = status_tracker and distanceMin

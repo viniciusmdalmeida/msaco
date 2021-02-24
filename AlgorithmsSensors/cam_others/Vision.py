@@ -131,7 +131,7 @@ class Vision(Thread):
         # Display resultado
         cv2.imshow("Tracking", frame)
         #Calculando resultado
-        self.detectData = DetectionData(distanceMin)
+        self.detectData = DetectionData.updateData(distance=distanceMin)
         #self.desvioThread.detectionData = self.detectData
             # Desvio(self.controle).start()
         return self.detectData

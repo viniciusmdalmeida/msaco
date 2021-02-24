@@ -12,7 +12,6 @@ class InertialSensor(AlgorithmSensor):
     def __init__(self,detectRoot):
         AlgorithmSensor.__init__(self, detectRoot)
         self.path_file = None
-        self.detectData = DetectionData(None)
 
     def detect(self):
         data = self.getData()

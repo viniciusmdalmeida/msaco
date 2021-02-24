@@ -1,9 +1,10 @@
 from threading import Thread
 import yaml
 import numpy as np
+from abc import ABC, abstractmethod
 
 
-class Avoid(Thread):
+class BaseAvoid(Thread,ABC):
     detectionData = None
     avoiding = False
 
@@ -16,11 +17,9 @@ class Avoid(Thread):
             self.config = yaml.full_load(file_config)
         self.status = "inactive"
 
-
-    def avoid_strategy(self):
-        route = [[0,1, -40]]
-        velocity = 8
-        return route,velocity
+    @abstractmethod
+    def avoid_strategy(self,detection_data):
+        pass
 
     def run(self):
         pass
@@ -32,8 +31,8 @@ class Avoid(Thread):
         self.status = "Finalizado"
         '''
 
-    def replanning_route(self):
-        route, velocity = self.avoid_strategy()
+    def replanning_route(self,detectionData):
+        route, velocity = self.avoid_strategy(detectionData)
         self.control.updatePath(route, velocity)
 
     def update_detect_data(self, detectionData):
@@ -50,10 +49,10 @@ class Avoid(Thread):
                 return
             elif progress == -1:
                 print("Progress:",progress)
-                self.replanning_route()
+                self.replanning_route(detectionData)
         elif self.status == "inactive" and detectionData.distance < self.config['detect']['min_distance']:
             print(f"Start avoid, Distance:{detectionData.distance}")
-            self.replanning_route()
+            self.replanning_route(detectionData)
             self.status = "avoiding"
 
     def update_progress(self,detectionData):
@@ -90,3 +89,22 @@ class Avoid(Thread):
             #Reinicia a lista de progresso e retorna erro
             self.progress_data = []
             return -1
+
+class FixAvoid(BaseAvoid):
+    def avoid_strategy(self,detection_data):
+        route = [[0, 1, -40]]
+        velocity = 8
+        return route, velocity
+
+class VerticalAvoid(BaseAvoid):
+    def avoid_strategy(self,detection_data):
+        my_position = detection_data.getDictData()['myPosition']
+        other_position = detection_data.getDictData()['otherPosition']
+        if my_position[2] and other_position[2]:
+            high_diference = my_position[2] - other_position[2]
+            print('high_diference:',high_diference)
+        return [],10
+
+class HorizontalAvoid(BaseAvoid):
+    def avoid_strategy(self,detection_data):
+        pass

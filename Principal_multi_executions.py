@@ -3,6 +3,7 @@ from AlgorithmsSensors.cam.TrackersClass import *
 from AlgorithmsSensors.passive.ADS_B import *
 from AlgorithmsSensors.Collision_sensor import *
 from Detect.FusionData import *
+from Avoid.Avoid import *
 import pandas as pd
 from Utils.UnrealCommunication import UnrealCommunication
 from Utils.calc_colision import calc_plane_position
@@ -69,7 +70,7 @@ for angle in tqdm(list_angle):
             # Reset avião
             unreal_communication.reset_plane(location, rotation)
             #rodando algoritmo
-            run_simulation = Start(routePoints,algorithm,startPoint=drone_start_point,fusionAlgorithm=FusionData_Mean)
+            run_simulation = Start(routePoints,algorithm,startPoint=drone_start_point,fusionAlgorithm=FusionData_MeanWeighted,avoidClass=FixAvoid)
             run_simulation.start()
             run_simulation.join()
             print("Finish Test",algorithm)

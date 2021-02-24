@@ -15,7 +15,7 @@ class AlgorithmSensor(Thread, ABC):
             self.config = yaml.full_load(file_config)
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
-        self.detectData = DetectionData(algoritmo=self.name)
+        self.detectData = DetectionData(algoritmo=self.__class__.__name__)
         self.interval = 0.5
         self._stop_detect = False
 
@@ -41,7 +41,7 @@ class AlgorithmSensor(Thread, ABC):
     def sendresult(self,name=None):
         #Calculando resultado
         if self.detectData is None:
-            self.detectData = DetectionData()
+            self.detectData = DetectionData(algoritmo=self.__class__.__name__)
         if name == None:
             name = self.name
         self.detectRoot.receiveData(self.detectData,name)

@@ -150,7 +150,7 @@ class VisionRDDefault(Vision_RGB_Depth):
         # calculando Frames por segundo
         distanceMin = self.printDetection(frame,bbox)
         #Calculando resultado
-        self.detectData = DetectionData(distanceMin)
+        self.detectData = DetectionData.updateData(distance=distanceMin)
         self.detectRoot.receiveData(self.detectData)
             # Desvio(self.controle).start()
         return self.detectData

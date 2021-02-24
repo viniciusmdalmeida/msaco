@@ -2,7 +2,7 @@ from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
 from datetime import datetime
 
 class ADS_B(AlgorithmSensor):
-    name = "ADS_B Base"
+    name = "ADS_B_Base"
 
     def __init__(self,detectRoot):
         AlgorithmSensor.__init__(self, detectRoot)
