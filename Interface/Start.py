@@ -1,7 +1,8 @@
+from threading import Thread
+from AlgorithmsSensors.cam.TrackersClass import VisionDetectSVM
 from Control.Control import *
 from Avoid.Avoid import *
 from Detect.Detect import *
-from AlgorithmsSensors.cam_others.Vision_RGB_Depth import *
 from Interface.Communication import AirSimCommunication
 from Utils.UnrealCommunication import UnrealCommunication
 
@@ -9,7 +10,7 @@ class Start(Thread):
     avoidThread = None
     detect = None
 
-    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionRDSVMTracker]},
+    def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionDetectSVM]},
                  avoidClass=FixAvoid,comunication=AirSimCommunication,fusionAlgorithm=FusionData_Mean,
                  configPath='config.yml',startPoint=None):
         Thread.__init__(self)
