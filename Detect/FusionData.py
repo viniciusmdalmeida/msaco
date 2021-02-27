@@ -29,6 +29,21 @@ class BaseFusionData(ABC):
         output_detect.updateData(**self.dict_detect)
         return output_detect
 
+    def cleanMean(self,list):
+        if len(list.shape) < 2:
+            list = [x for x in list if np.isfinite(x) and (not np.isnan(x))] #list[np.isfinite(list)]
+            if len(list) == 0:
+                return np.inf
+            return sum(list)/len(list)
+        else:
+            output_list = []
+            for colun in range(list.shape[1]):
+                colun_data = [x for x in list[:,colun] if np.isfinite(x) and (not np.isnan(x))] #list[np.isfinite(list[:,colun])]
+                if len(colun_data) == 0:
+                    output_list.append(np.inf)
+                else:
+                    output_list.append(sum(colun_data)/len(colun_data))
+            return output_list
     @abstractmethod
     def fusionLogic(self,list_data):
         pass
@@ -38,9 +53,9 @@ class FusionData_Mean(BaseFusionData):
         list_data_np = np.array(list_data)
         if np.issubdtype(list_data_np.dtype, np.number):  # check is numeric
             if len(list_data_np.shape) > 1:
-                list_data_np = list_data_np.mean(axis=0)
+                list_data_np = self.cleanMean(list_data_np)
             else:
-                list_data_np = list_data_np.mean()
+                list_data_np = self.cleanMean(list_data_np)
         else:
             list_data_np = list_data_np[0]
         if type(list_data_np) == np.ndarray:

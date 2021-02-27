@@ -48,7 +48,6 @@ class BaseAvoid(Thread,ABC):
             elif progress == 0:
                 return
             elif progress == -1:
-                print("Progress:",progress)
                 self.replanning_route(detectionData)
         elif self.status == "inactive" and detectionData.distance < self.config['detect']['min_distance']:
             print(f"Start avoid, Distance:{detectionData.distance}")
@@ -58,9 +57,9 @@ class BaseAvoid(Thread,ABC):
     def update_progress(self,detectionData):
         if not detectionData:
             return
-        self.progress_data.insert(0, detectionData)
+        self.progress_data.append(detectionData)
         if len(self.progress_data) > self.config['detect']['max_progress_data']:
-            self.progress_data.pop()
+            self.progress_data.pop(0)
 
     def check_progress(self):
         if len(self.progress_data) < self.config['detect']['min_progress_data']:
@@ -70,14 +69,16 @@ class BaseAvoid(Thread,ABC):
         for data in self.progress_data:
             if data.distance:
                 distance_list.append(data.distance)
-        if len(distance_list)>= 0:
+        if len(distance_list)<= 0:
             return 0
         #verificando se a media de atualizações de distancia é um ponto seguro
         mean_distance = sum(distance_list)/len(distance_list)
         mean_gradient = np.gradient(distance_list).mean()
         if mean_distance > self.config['detect']['min_distance'] \
                 and len(distance_list) >= self.config['detect']['max_progress_data']\
-                and mean_gradient >= 0:
+                and mean_gradient > 0:
+            print(f'mean_distance:{mean_distance}, len(distance_list):{len(distance_list)},mean_gradient:{mean_gradient}')
+            print('distance list',distance_list)
             #se é seguro retorna  1 (significa sucesso)
             return 1
         #calculando a inclinação media da curva de distancia, ou seja para que ponto ela aponta em media
@@ -98,13 +99,37 @@ class FixAvoid(BaseAvoid):
 
 class VerticalAvoid(BaseAvoid):
     def avoid_strategy(self,detection_data):
+        print('detection_data',detection_data.getDictData())
+        my_position = detection_data.getDictData()['myPosition']
+        other_position = detection_data.getDictData()['otherPosition']
+        if my_position and other_position and my_position[2] and other_position[2]:
+            high_diference = my_position[2] - other_position[2]
+            print('high_diference',high_diference)
+            if high_diference > 0:
+                #sobe
+                my_position[2] += 10
+            elif my_position[2] < 10:
+                #desce
+                my_position[2] -= 10
+            else:
+                #vai para o ponto mais baixo
+                my_position[2] = 1
+        print('new my_position:',[list(my_position)],8)
+        return [list(my_position)],8
+
+class HorizontalAvoid(BaseAvoid):
+    def avoid_strategy(self,detection_data):
         my_position = detection_data.getDictData()['myPosition']
         other_position = detection_data.getDictData()['otherPosition']
         if my_position[2] and other_position[2]:
             high_diference = my_position[2] - other_position[2]
-            print('high_diference:',high_diference)
-        return [],10
-
-class HorizontalAvoid(BaseAvoid):
-    def avoid_strategy(self,detection_data):
-        pass
+            if high_diference > 0:
+                #sobe
+                my_position[2] -= 10
+            elif my_position[2] < 10:
+                #desce
+                my_position[2] += 10
+            else:
+                #vai para o ponto mais baixo
+                my_position[2] = 1
+        return my_position,8
