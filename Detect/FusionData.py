@@ -50,12 +50,9 @@ class BaseFusionData(ABC):
 
 class FusionData_Mean(BaseFusionData):
     def fusionLogic(self,list_data):
-        list_data_np = np.array(list_data)
+        list_data_np = np.array([x for x in list_data if not x is None])
         if np.issubdtype(list_data_np.dtype, np.number):  # check is numeric
-            if len(list_data_np.shape) > 1:
-                list_data_np = self.cleanMean(list_data_np)
-            else:
-                list_data_np = self.cleanMean(list_data_np)
+            list_data_np = self.cleanMean(list_data_np)
         else:
             list_data_np = list_data_np[0]
         if type(list_data_np) == np.ndarray:
@@ -65,35 +62,47 @@ class FusionData_Mean(BaseFusionData):
 
 class FusionData_MeanWeighted(BaseFusionData):
     def fusionLogic(self,list_data):
-        list_data_np = np.array(list_data)
+        #remove None
+        list_valid = [x != None for x in list_data]
+        list_data_np = np.array([x for x in list_data if  not x is None])
         if np.issubdtype(list_data_np.dtype, np.number):
             path_algorithm = 'algorithm_metric.yml'
             with open(path_algorithm, 'r') as file_config:
                 config_algorithm = yaml.full_load(file_config)
             # buscando peso a partir do arquivo de configuração e nomes dos algoritmos
             list_name = [algorithm_name for algorithm_name in self.dict_detect['algoritmo']]
-            list_weight = [config_algorithm[algorithm_name] for algorithm_name in list_name]
-            #retirando infinitos
-            list_data_np,list_weight = self.check_invalid(list_data_np,list_weight)
+            list_weight = np.array([config_algorithm[algorithm_name] for algorithm_name in list_name])[list_valid]
+            #retirando infinitos e calculando a media
+            list_data_np = self.cleanMean(list_data_np,list_weight)
             # normalizando o peso
-            list_weight = np.array([weigth/sum(list_weight) for weigth in list_weight])
+            #list_weight = np.array([weigth/sum(list_weight) for weigth in list_weight])
             # calculando media ponderada
-            list_data_np = np.nansum([list_data_np[cont] * list_weight[cont] for cont in range(len(list_weight))],axis=0)
-        if type(list_data_np) == np.ndarray:
+            #list_data_np = np.sum([list_data_np[cont] * list_weight[cont] for cont in range(len(list_weight))],axis=0)
+        if type(list_data_np) == np.ndarray and len(list_data_np)>0:
             return tuple(list_data_np)
         else:
             return list_data_np
 
-    def check_invalid(self,list_data,list_weight):
-        list_weight_aux = []
-        list_data_aux = []
-        for cont in range(len(list_data)):
-            data = list_data[cont]
-            if isinstance(data, numbers.Number):
-                if np.isfinite(data) and (not np.isnan(data)):
-                    list_data_aux.append(list_data[cont])
-                    list_weight_aux.append(list_weight[cont])
-            elif all(np.isfinite(data)) and (not all(np.isnan(data))):
-                list_data_aux.append(list_data[cont])
-                list_weight_aux.append(list_weight[cont])
-        return list_data_aux,list_weight_aux
+    def cleanMean(self,list_data,list_weight):
+        output_list = []
+        if len(list_data.shape) < 2:
+            list_valid = [np.isfinite(x) and (not np.isnan(x)) for x in list_data]
+            list_data = np.array(list_data[list_valid])
+            list_weight = list_weight[list_valid]
+            #normalizando peso
+            list_weight = np.array([weigth / sum(list_weight) for weigth in list_weight])
+            if len(list_data) <= 0:
+                return np.inf
+            output_list = sum(list_data*list_weight)
+        else:
+            for colun in range(list_data.shape[1]):
+                list_valid = [np.isfinite(x) and (not np.isnan(x)) for x in list_data[:, colun]]
+                list_data_norm = np.array(list_data[:, colun][list_valid])
+                list_weight_norm = list_weight[list_valid]
+                # normalizando peso
+                list_weight_norm = np.array([weigth / sum(list_weight_norm) for weigth in list_weight_norm])
+                if len(list_data_norm) <= 0:
+                    output_list.append(np.inf)
+                else:
+                    output_list.append(sum(list_data_norm*list_weight_norm))
+        return output_list

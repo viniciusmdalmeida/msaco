@@ -63,17 +63,18 @@ class BaseAvoid(Thread,ABC):
 
     def check_progress(self):
         if len(self.progress_data) < self.config['detect']['min_progress_data']:
-            print("Dados insuficiente para calcular progresso do desvio")
             return 0
         distance_list = []
         for data in self.progress_data:
             if data.distance:
                 distance_list.append(data.distance)
         if len(distance_list)<= 0:
+            print("distance list pequneo")
             return 0
         #verificando se a media de atualizações de distancia é um ponto seguro
         mean_distance = sum(distance_list)/len(distance_list)
         mean_gradient = np.gradient(distance_list).mean()
+        print("Gradiente:",mean_gradient)
         if mean_distance > self.config['detect']['min_distance'] \
                 and len(distance_list) >= self.config['detect']['max_progress_data']\
                 and mean_gradient > 0:
@@ -103,17 +104,17 @@ class VerticalAvoid(BaseAvoid):
         my_position = detection_data.getDictData()['myPosition']
         other_position = detection_data.getDictData()['otherPosition']
         if my_position and other_position and my_position[2] and other_position[2]:
-            high_diference = my_position[2] - other_position[2]
+            high_diference = (my_position[2]*-1) - other_position[2]
             print('high_diference',high_diference)
             if high_diference > 0:
                 #sobe
-                my_position[2] += 10
-            elif my_position[2] < 10:
-                #desce
                 my_position[2] -= 10
+            elif my_position[2] > -10:
+                #desce
+                my_position[2] += 10
             else:
                 #vai para o ponto mais baixo
-                my_position[2] = 1
+                my_position[2] = -2
         print('new my_position:',[list(my_position)],8)
         return [list(my_position)],8
 
@@ -121,15 +122,12 @@ class HorizontalAvoid(BaseAvoid):
     def avoid_strategy(self,detection_data):
         my_position = detection_data.getDictData()['myPosition']
         other_position = detection_data.getDictData()['otherPosition']
-        if my_position[2] and other_position[2]:
-            high_diference = my_position[2] - other_position[2]
-            if high_diference > 0:
-                #sobe
-                my_position[2] -= 10
-            elif my_position[2] < 10:
-                #desce
-                my_position[2] += 10
+        if my_position[1] and other_position[1]:
+            horizontal_diference = my_position[1] - other_position[1]
+            if horizontal_diference > 0:
+                #direita
+                my_position[1] -= 60
             else:
                 #vai para o ponto mais baixo
-                my_position[2] = 1
-        return my_position,8
+                my_position[1] += 60
+        return [list(my_position)],8
