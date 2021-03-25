@@ -10,6 +10,7 @@ from Utils.calc_colision import calc_plane_position
 from datetime import datetime
 from tqdm import tqdm
 import yaml
+import os
 
 ## import keras
 #Read Config
@@ -18,6 +19,22 @@ with open(config_path, 'r') as file_config:
     config = yaml.full_load(file_config)
 
 #Para iniciar o keras
+list_algorithms = [
+    {"ADS-B":ADS_B},
+    {"Vision Depth": VisionTracker_KFC_SVM_Depth},
+    {"Vision Depth": VisionTracker_KFC_SVM_Depth},
+    {"Vision Depth": VisionTracker_KFC_LGB_Depth},
+    {"Vision Depth": VisionTracker_Boosting_SVM_Depth},
+    {"Vision RGB": VisionDetectRF},
+    {"Vision RGB": VisionTracker_KFC},
+    {"Vision RGB": VisionDetectSVM},
+    #{"ADS-B":ADS_B,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionDetectRF},
+    #{"ADS-B":ADS_B,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
+    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
+    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionDetectRF},
+    #{"Vision Depth": VisionTracker_KFC_LGB_Depth,"Vision RGB": VisionDetectRF},
+    #{"Vision Depth": VisionTracker_Boosting_SVM_Depth,"Vision RGB": VisionDetectSVM},
+]
 """
 from keras.models import Model,model_from_json
 path_model = '../data/models/'
@@ -27,20 +44,18 @@ model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
 
-list_algorithms = [
-    {"ADS-B":ADS_B,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionDetectRF},
-]
-list_fusion_algorithms = [FusionData_Mean]
-list_avoid_algorithms = [HorizontalAvoid]
+list_fusion_algorithms = [FusionData_Mean]#[FusionData_MeanWeighted, FusionData_Mean]
+list_avoid_algorithms = [HorizontalAvoid]#[HorizontalAvoid,VerticalAvoid]
 #Posição do avião
 
 #Configuração testes
-altura = 28
+altura = 27
 #routePoints = [[0,1,-altura,10],[0,-10,-altura,confiFinalizado move to pointg['test']['time_to_colision']]] #[lateral,frente(negativa),cima,tempo] #em metros
 drone_start_point = [0,1,-altura,10]
 routePoints = [[0,1,-altura,10]]
 colision_point = [260, 230, 2800]
-list_angle = [30,20,10,0,-10,-20,-30]
+list_angle = [30]
+#list_angle = [30,20,10,0,-10,-20,-30]
 distance_plane = 5000
 num_repetitions = 1
 
@@ -91,3 +106,4 @@ for angle in tqdm(list_angle):
                     time.sleep(2.5)
                     del run_simulation
 print("Finalizado")
+#os.system('shutdown -s')

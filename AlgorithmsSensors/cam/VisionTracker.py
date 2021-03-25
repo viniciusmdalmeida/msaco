@@ -1,6 +1,5 @@
 from AlgorithmsSensors.cam.VisionBase import *
 from AlgorithmsSensors.cam.DetectObjClasses import *
-import time
 import numpy as np
 
 #class VisionRGBDefault(VisionBase):

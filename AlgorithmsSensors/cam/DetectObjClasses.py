@@ -3,7 +3,6 @@ import cv2
 from abc import abstractmethod
 import pickle
 
-
 from keras.preprocessing.image import img_to_array
 from keras.models import Model,model_from_json
 

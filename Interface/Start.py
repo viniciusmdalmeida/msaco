@@ -29,7 +29,8 @@ class Start(Thread):
         if avoidClass is not None:
             self.avoidThread  = avoidClass(self,self.control)
         if sensorsAlgorithms is not None:
-            self.detect = Detect(self,self.vehicleComunication,sensorsAlgorithms,self.avoidThread,fusionAlgorithm=fusionAlgorithm)
+            self.detect = Detect(self,self.vehicleComunication,sensorsAlgorithms,
+                                 self.avoidThread,fusionAlgorithm=fusionAlgorithm)
 
         #self.start()
 

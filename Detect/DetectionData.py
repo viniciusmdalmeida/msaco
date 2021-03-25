@@ -22,12 +22,12 @@ class DetectionData:
         args_functions = locals()
         for arg_name in args_functions:
             value = args_functions[arg_name]
-            if value is None and arg_name == 'otherPosition':
-                value = self.calcOtherPosition()
-            if value is None and arg_name == 'otherDirection':
-                value = self.calcOtherDirection()
             if not value is None:
                 self.__dict__[arg_name] = value
+        if self.otherPosition is None:
+            self.__dict__['otherPosition'] = self.calcOtherPosition()
+        if self.otherDirection is None:
+            self.__dict__['otherDirection'] = self.calcOtherDirection()
 
     def calcOtherPosition(self):
         if self.myPosition is not None and self.relativePosition is not None:
@@ -67,7 +67,9 @@ class DetectionData:
         str_print = f'{timestamp},'
         dict_data = self.getDictData()
         for key in dict_data:
-            if dict_data[key] is None:
+            if key == 'distance' and key == 'algoritmo':
+                str_data += str(dict_data[key])
+            elif dict_data[key] is None:
                 str_data = ',,'
             else:
                 str_data = str(dict_data[key]).replace(')', '').replace('(', '')

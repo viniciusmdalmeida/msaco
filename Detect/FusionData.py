@@ -24,7 +24,11 @@ class BaseFusionData(ABC):
                 else:
                     self.dict_detect[key] = [detect_data[key]]
         for key in self.dict_detect:
-            self.dict_detect[key] = self.fusionLogic(self.dict_detect[key])
+            #TODO: Trocar isso pq ta feio
+            if  key != 'algoritmo':
+                self.dict_detect[key] = self.fusionLogic(self.dict_detect[key])
+            else:
+                self.dict_detect[key] = self.dict_detect[key]
         output_detect = DetectionData()
         output_detect.updateData(**self.dict_detect)
         return output_detect
@@ -33,7 +37,7 @@ class BaseFusionData(ABC):
         if len(list.shape) < 2:
             list = [x for x in list if np.isfinite(x) and (not np.isnan(x))] #list[np.isfinite(list)]
             if len(list) == 0:
-                return np.inf
+                return None
             return sum(list)/len(list)
         else:
             output_list = []
@@ -92,7 +96,7 @@ class FusionData_MeanWeighted(BaseFusionData):
             #normalizando peso
             list_weight = np.array([weigth / sum(list_weight) for weigth in list_weight])
             if len(list_data) <= 0:
-                return np.inf
+                return None
             output_list = sum(list_data*list_weight)
         else:
             for colun in range(list_data.shape[1]):

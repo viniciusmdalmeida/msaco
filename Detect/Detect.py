@@ -46,23 +46,25 @@ class Detect(Thread):
 
         #Rodando loop infinito de ler os dados
         while not self.stop:
-            dict_sensor_data = {}
             detect_data = DetectionData(None)
             self.fusionData.clearList()
             for sensorThread in self.sensorsThreads:
                 detect_data.updateData(**sensorThread.getDetectData().getDictData())
                 self.fusionData.addDetect(detect_data)
             detect_data_final = self.fusionData.getFusion()
-            #colocar um eval para funsão do algoritmos
+            # TODO: Remover isso!
+            algoritmos = '|'.join(detect_data_final.algoritmo)
+            detect_data_final.algoritmo = f'detect: "{algoritmos}"@'\
+                                          f'avoid: "{self.avoidThread.__class__.__name__}"@'\
+                                          f'fusion: "{self.fusionData.__class__.__name__}"'
+            # TODO: Remover ate aqui
             detect_data_final.print_data()
             self.sendData(detect_data_final)
-            #Colisão
+            # Colisão
             if self.collisionSensor.check_collision():
                 self.startObj.set_status('collision')
                 break
             time.sleep(0.1)
-            #Observando tempo de execução
-            time_exec = time.time()
         self.end_run()
 
     def norm_data(self,dict_sensor_data):

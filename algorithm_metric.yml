@@ -1,5 +1,8 @@
 InertialSensor: 0
 ADS_B: 0.99
-VisionDetectRF: 0.5
-VisionTracker_KFC_SVM_Depth: 0.5
-VisionDetectSVM: 0.5
+VisionDetectRF: 0.91
+VisionTracker_KFC_SVM_Depth: 0.65
+VisionDetectSVM: 0.68
+VisionTracker_KFC: 0.5
+VisionTracker_KFC_LGB_Depth: 0.91
+VisionTracker_Boosting_SVM_Depth: 0.66

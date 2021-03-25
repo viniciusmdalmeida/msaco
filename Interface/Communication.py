@@ -116,7 +116,6 @@ class AirSimCommunication(ICommunication):
     def movePath(self,points,velocity=10):
         path = []
         for point in points:
-            print(f"Move to points:{points} velocity:{velocity}")
             path.append(airsim.Vector3r(int(point[0]), int(point[1]), int(point[2])))
         '''
         if not self.client.getMultirotorState().rc_data.is_initialized:

@@ -74,7 +74,6 @@ class BaseAvoid(Thread,ABC):
         #verificando se a media de atualizações de distancia é um ponto seguro
         mean_distance = sum(distance_list)/len(distance_list)
         mean_gradient = np.gradient(distance_list).mean()
-        print("Gradiente:",mean_gradient)
         if mean_distance > self.config['detect']['min_distance'] \
                 and len(distance_list) >= self.config['detect']['max_progress_data']\
                 and mean_gradient > 0:
@@ -122,7 +121,7 @@ class HorizontalAvoid(BaseAvoid):
     def avoid_strategy(self,detection_data):
         my_position = detection_data.getDictData()['myPosition']
         other_position = detection_data.getDictData()['otherPosition']
-        if my_position[1] and other_position[1]:
+        if my_position and other_position and my_position[1] and other_position[1]:
             horizontal_diference = my_position[1] - other_position[1]
             if horizontal_diference > 0:
                 #direita
