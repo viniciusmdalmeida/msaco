@@ -114,8 +114,8 @@ class VerticalAvoid(BaseAvoid):
             else:
                 #vai para o ponto mais baixo
                 my_position[2] = -2
-        print('new my_position:',[list(my_position)],8)
-        return [list(my_position)],8
+        print('new my_position:',[list(my_position)],15)
+        return [list(my_position)],15
 
 class HorizontalAvoid(BaseAvoid):
     def avoid_strategy(self,detection_data):
@@ -129,4 +129,4 @@ class HorizontalAvoid(BaseAvoid):
             else:
                 #vai para o ponto mais baixo
                 my_position[1] += 60
-        return [list(my_position)],8
+        return [list(my_position)],15

@@ -14,6 +14,13 @@ class BaseFusionData(ABC):
     def addDetect(self,detect_data):
         self.detectionList.append(copy.deepcopy(detect_data))
 
+    def get_my_position(self):
+        my_position_data = None
+        for detect_data in self.detectionList:
+            if detect_data.myPosition != None:
+                my_position_data = detect_data.myPosition
+        return my_position_data
+
     def getFusion(self):
         self.dict_detect = {}
         for detect in self.detectionList:

@@ -20,10 +20,10 @@ algorithm:
     stepSize_getImagem: 30
 
 detect:
-  vertical_limit: 40
-  horizontal_limit: 40
-  min_distance: 40
-  max_progress_data: 30
+  vertical_limit: 70
+  horizontal_limit: 80
+  min_distance: 80
+  max_progress_data: 50
   min_progress_data: 10
 
 unreal:

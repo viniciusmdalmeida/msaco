@@ -17,7 +17,7 @@ class DetectionData:
         self.myPosition = None  # (0,0,0)
         self.otherPosition = None
 
-    def updateData(self,algoritmo=None,distance=np.inf,relativePosition=None,relativeDirection=None,myDirection=None,
+    def updateData(self,algoritmo=None,distance=None,relativePosition=None,relativeDirection=None,myDirection=None,
                  otherDirection=None,myPosition=None,otherPosition=None):
         args_functions = locals()
         for arg_name in args_functions:

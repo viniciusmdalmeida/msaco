@@ -46,10 +46,12 @@ class Detect(Thread):
 
         #Rodando loop infinito de ler os dados
         while not self.stop:
-            detect_data = DetectionData(None)
             self.fusionData.clearList()
             for sensorThread in self.sensorsThreads:
+                detect_data = DetectionData()
                 detect_data.updateData(**sensorThread.getDetectData().getDictData())
+                if detect_data.myPosition is None:
+                    detect_data.updateData(myPosition=self.fusionData.get_my_position())
                 self.fusionData.addDetect(detect_data)
             detect_data_final = self.fusionData.getFusion()
             # TODO: Remover isso!

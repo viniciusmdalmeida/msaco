@@ -21,19 +21,11 @@ with open(config_path, 'r') as file_config:
 #Para iniciar o keras
 list_algorithms = [
     {"ADS-B":ADS_B},
-    {"Vision Depth": VisionTracker_KFC_SVM_Depth},
-    {"Vision Depth": VisionTracker_KFC_SVM_Depth},
-    {"Vision Depth": VisionTracker_KFC_LGB_Depth},
-    {"Vision Depth": VisionTracker_Boosting_SVM_Depth},
-    {"Vision RGB": VisionDetectRF},
-    {"Vision RGB": VisionTracker_KFC},
-    {"Vision RGB": VisionDetectSVM},
-    #{"ADS-B":ADS_B,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionDetectRF},
-    #{"ADS-B":ADS_B,"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
-    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionTracker_KFC},
-    #{"Vision Depth": VisionTracker_KFC_SVM_Depth,"Vision RGB": VisionDetectRF},
-    #{"Vision Depth": VisionTracker_KFC_LGB_Depth,"Vision RGB": VisionDetectRF},
-    #{"Vision Depth": VisionTracker_Boosting_SVM_Depth,"Vision RGB": VisionDetectSVM},
+    {"Vision Depth": VisionTracker_KFC_LGB_Depth,"Vision RGB": VisionDetectRF},
+    {"Vision Depth": VisionTracker_Boosting_SVM_Depth,"Vision RGB": VisionDetectSVM},
+    {"ADS-B": ADS_B, "Vision Depth": VisionTracker_KFC_SVM_Depth, "Vision RGB": VisionDetectRF},
+    {"ADS-B": ADS_B, "Vision Depth": VisionTracker_Boosting_SVM_Depth, "Vision RGB": VisionDetectSVM},
+
 ]
 """
 from keras.models import Model,model_from_json
@@ -44,18 +36,18 @@ model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
 
-list_fusion_algorithms = [FusionData_Mean]#[FusionData_MeanWeighted, FusionData_Mean]
-list_avoid_algorithms = [HorizontalAvoid]#[HorizontalAvoid,VerticalAvoid]
+list_fusion_algorithms = [FusionData_MeanWeighted, FusionData_Mean]
+list_avoid_algorithms = [HorizontalAvoid,VerticalAvoid]
 #Posição do avião
 
 #Configuração testes
-altura = 27
+altura = 26
 #routePoints = [[0,1,-altura,10],[0,-10,-altura,confiFinalizado move to pointg['test']['time_to_colision']]] #[lateral,frente(negativa),cima,tempo] #em metros
 drone_start_point = [0,1,-altura,10]
 routePoints = [[0,1,-altura,10]]
 colision_point = [260, 230, 2800]
-list_angle = [30]
-#list_angle = [30,20,10,0,-10,-20,-30]
+#list_angle = [30]
+list_angle = [30,10,0,-10,-30]
 distance_plane = 5000
 num_repetitions = 1
 
