@@ -31,6 +31,7 @@ class VisionTrackerBase(VisionDepthBase):
 
     def start_tracker(self):
         # Pegando o primeiro frame
+        print(f"Start or Restart Tracker {self.name}")
         start_frame = self.getImage()
         while len(np.unique(start_frame)) < 20:
             start_frame = self.getImage()
@@ -38,15 +39,22 @@ class VisionTrackerBase(VisionDepthBase):
         bbox,frame = self.firstDetect(start_frame)
         if (not frame is None) and (len(frame.shape) < 3):
             frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
-        self.tracker.init(frame, bbox)
+        if bbox:
+            self.calc_obj_position(bbox)
+            print(f"Start Tracker {self.name}, with bbox: {bbox}")
+            self.tracker.init(frame, bbox)
+        else:
+            print("Target not detect!")
 
     def firstDetect(self,start_frame):
         bbox = None
         frame = None
+        print(f"Get First Detect {self.name}")
         while bbox is None and self._stop_detect == False:
             frame = self.getImage()
             bbox = self.detectObject.detect(frame,start_frame)
             self.printDetection(frame,bbox)
+        print(f"First Detect ok, bbox:{bbox}")
         return bbox,frame
 
     def detect(self):

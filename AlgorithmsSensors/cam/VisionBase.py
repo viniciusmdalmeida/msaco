@@ -69,6 +69,7 @@ class VisionBase(AlgorithmSensor):
         print("Terminando windows")
 
     def calc_obj_position(self, bbox, fov_angle=120, width_image=1024):
+        print("Calc Obj Position")
         # calc x e y camera
         x_camera = (bbox[0] + bbox[2]) / 2
         y_camera = (bbox[1] + bbox[3]) / 2
@@ -101,6 +102,7 @@ class VisionDepthBase(VisionBase):
         self.cont_depth = 0
 
     def getDepth(self,save=False):
+        print("Get detpth Image")
         response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
         response = response[0]
         # get numpy array
@@ -108,6 +110,7 @@ class VisionDepthBase(VisionBase):
         if save:
             cv2.imwrite(f'../data/imagens/Depth/voo/frame_{self.cont_depth}_{self.date_str}.jpg', img1d)
             self.cont_depth += 1
+        print("Get detpth Image --- OK")
         if len(img1d) < 1:
             return None
         return img1d
