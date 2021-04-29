@@ -20,12 +20,7 @@ with open(config_path, 'r') as file_config:
 
 #Para iniciar o keras
 list_algorithms = [
-    {"ADS-B":ADS_B},
-    {"Vision Depth": VisionTracker_KFC_LGB_Depth,"Vision RGB": VisionDetectRF},
-    {"Vision Depth": VisionTracker_Boosting_SVM_Depth,"Vision RGB": VisionDetectSVM},
-    {"ADS-B": ADS_B, "Vision Depth": VisionTracker_KFC_SVM_Depth, "Vision RGB": VisionDetectRF},
-    {"ADS-B": ADS_B, "Vision Depth": VisionTracker_Boosting_SVM_Depth, "Vision RGB": VisionDetectSVM},
-
+    {"Vision Depth": VisionTracker_MIL_RF},
 ]
 """
 from keras.models import Model,model_from_json

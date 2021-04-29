@@ -13,32 +13,65 @@ class Start(Thread):
     def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionDetectSVM]},
                  avoidClass=FixAvoid,comunication=AirSimCommunication,fusionAlgorithm=FusionData_Mean,
                  configPath='config.yml',startPoint=None):
+        print("--------------------------------------")
+        print("      Start Simulation Config ")
         Thread.__init__(self)
-        self.start_point = startPoint
+        # Iniciando variaveis
         self.status = 'start'
-        # vehicleComunication = comunication.getVehicle()
-        # Conectando ao simulador AirSim
-        self.vehicleComunication = AirSimCommunication()
-        self.control = Control(self.vehicleComunication,routePoints)
-        self.unrealControl = UnrealCommunication()
         self.stop = False
+        self.start_point = startPoint
 
+        # Buscando configuração
         with open(configPath, 'r') as file_config:
             self.config = yaml.full_load(file_config)
 
+        # Conectando ao simulador AirSim e Unreal
+        self.vehicleComunication = comunication()
+        self.control = Control(self.vehicleComunication,routePoints)
+        self.unrealControl = UnrealCommunication()
+
+        # Iniciando funções (threads)
         if avoidClass is not None:
             self.avoidThread  = avoidClass(self,self.control)
         if sensorsAlgorithms is not None:
             self.detect = Detect(self,self.vehicleComunication,sensorsAlgorithms,
                                  self.avoidThread,fusionAlgorithm=fusionAlgorithm)
-
+        print("Simulation Config Finish")
+        print("--------------------------------------")
         #self.start()
+
+    def run(self):
+        sep = "\n--------------------------------------"
+
+        # Start Execution
+        print("Starting Drone...")
+        self.start_run()
+        print(f"Drone Started!{sep}")
+
+        #Wating from  time or collision
+        print("Start Detection Simulation")
+        self.main_loop()
+        print(f"Detection Simulation Finish{sep}")
+
+        #Reset Plane
+        print("Ending Simulation")
+        self.end_run()
+        print(f"Finish Simulation {sep}")
+
+    def main_loop(self):
+        max_time = time.time() + self.config['algorithm']['time_max']
+        while not self.stop:
+            time.sleep(1)
+            if time.time() >= max_time:
+                print("Max time execution")
+                break
 
     def start_run(self):
         # Start drone
+
         self.control.takeOff()
-        # got to start point
         if self.start_point:
+            # got to start point
             print("Start point",self.start_point)
             self.vehicleComunication.moveToPoint(self.start_point[:3],self.start_point[3],True)
         # Start move path
@@ -47,18 +80,6 @@ class Start(Thread):
         # Start thread detect
         if self.detect is not None:
             self.detect.start()
-
-    def run(self):
-        self.start_run()
-        #Wating from  time or collision
-        max_time = time.time() + self.config['algorithm']['time_max']
-        while not self.stop:
-            time.sleep(1)
-            if time.time() >= max_time:
-                print("Max time execution")
-                break
-        #Reset Plane
-        self.end_run()
 
     def end_run(self):
         #stop detect

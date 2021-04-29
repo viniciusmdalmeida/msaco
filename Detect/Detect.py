@@ -22,6 +22,7 @@ class Detect(Thread):
 
     def __init__(self,startObj,vehicleComunication,sensorsAlgorithm,avoidThread,configPath='config.yml',fusionAlgorithm=FusionData_Mean):
         Thread.__init__(self)
+        print("Start Detect Class")
         with open(configPath, 'r') as file_config:
             self.config = yaml.full_load(file_config)
         self.avoidThread = avoidThread
@@ -35,6 +36,7 @@ class Detect(Thread):
 
     def startAlgorithms(self):
         for sensor in self.sensorsAlgorithm:
+            print("Create Algoritmo Obj:",self.sensorsAlgorithm[sensor])
             newAlgorithm = self.sensorsAlgorithm[sensor](self)
             self.sensorsThreads.append(newAlgorithm)
 

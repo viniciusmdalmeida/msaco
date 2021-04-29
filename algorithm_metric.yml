@@ -6,3 +6,4 @@ VisionDetectSVM: 0.68
 VisionTracker_KFC: 0.5
 VisionTracker_KFC_LGB_Depth: 0.91
 VisionTracker_Boosting_SVM_Depth: 0.66
+VisionTracker_MIL_RF: 0.95

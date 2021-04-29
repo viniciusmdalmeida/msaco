@@ -20,8 +20,8 @@ class AlgorithmSensor(Thread, ABC):
         self._stop_detect = False
 
     def run(self):
+        print("Start Algorithm Thread",self.name)
         self.start_tracker()
-        print("Start Algorithm",self.name)
         while True:
             if self._stop_detect:
                 break
