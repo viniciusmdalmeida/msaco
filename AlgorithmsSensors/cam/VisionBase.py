@@ -102,7 +102,6 @@ class VisionDepthBase(VisionBase):
         self.cont_depth = 0
 
     def getDepth(self,save=False):
-        print("Get detpth Image")
         response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.DepthPlanner, True)])
         response = response[0]
         # get numpy array
@@ -110,7 +109,9 @@ class VisionDepthBase(VisionBase):
         if save:
             cv2.imwrite(f'../data/imagens/Depth/voo/frame_{self.cont_depth}_{self.date_str}.jpg', img1d)
             self.cont_depth += 1
-        print("Get detpth Image --- OK")
+        #resize image
+        if img1d.shape != (1024, 580):
+            img1d = cv2.resize(img1d, dsize=(1024, 580), interpolation=cv2.INTER_AREA)
         if len(img1d) < 1:
             return None
         return img1d
