@@ -68,104 +68,281 @@ class VisionTracker_KFC_RF(VisionTrackerBase):
         VisionTrackerBase.__init__(self, detectRoot,model_name='rf')
         self.tracker = cv2.TrackerKCF_create()
 
-class VisionTracker_TLD_RF(VisionTrackerBase):
-    name = "TLD Random Forest"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='rf')
-        self.tracker = cv2.TrackerTLD_create()
-
-class VisionTracker_MIL_RF(VisionTrackerBase):
-    name = "MIL Random Forest"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='rf')
-        self.tracker = cv2.TrackerMIL_create()
-
-class VisionTracker_Boosting_RF(VisionTrackerBase):
-    name = "Boosting Random Forest"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='rf')
-        self.tracker = cv2.TrackerBoosting_create()
-
-class VisionTracker_KFC(VisionTrackerBase):
-    name = "KFC Random Forest"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='svm')
+class VisionTracker_KFC_LGB(VisionTrackerBase):
+    name = "KFC LGB"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='lgb')
         self.tracker = cv2.TrackerKCF_create()
 
-class VisionTracker_TLD(VisionTrackerBase):
-    name = "TLD SVM"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='svm')
-        self.tracker = cv2.TrackerTLD_create()
+class VisionTracker_KFC_SVM(VisionTrackerBase):
+    name = "KFC SVM"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='svm')
+        self.tracker = cv2.TrackerKCF_create()
 
-class VisionTracker_MIL(VisionTrackerBase):
-    name = "MIL SVM"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='svm')
+class VisionTracker_KFC_Naive(VisionTrackerBase):
+    name = "KFC Naive"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='naive')
+        self.tracker = cv2.TrackerKCF_create()
+
+class VisionTracker_KFC_RN(VisionTrackerBase):
+    name = "KFC RN"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='neural')
+        self.tracker = cv2.TrackerKCF_create()
+
+
+class VisionTracker_MIL_RF(VisionTrackerBase):
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='rf')
         self.tracker = cv2.TrackerMIL_create()
 
-class VisionTracker_Boosting(VisionTrackerBase):
-    name = "Boosting SVM"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='svm')
+
+class VisionTracker_MIL_LGB(VisionTrackerBase):
+    name = "KFC LGB"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='lgb')
+        self.tracker = cv2.TrackerMIL_create()
+
+
+class VisionTracker_MIL_SVM(VisionTrackerBase):
+    name = "KFC SVM"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='svm')
+        self.tracker = cv2.TrackerMIL_create()
+
+
+class VisionTracker_MIL_Naive(VisionTrackerBase):
+    name = "KFC Naive"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='naive')
+        self.tracker = cv2.TrackerMIL_create()
+
+
+class VisionTracker_MIL_RN(VisionTrackerBase):
+    name = "KFC RN"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='neural')
+        self.tracker = cv2.TrackerMIL_create()
+
+
+class VisionTracker_TLD_RF(VisionTrackerBase):
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='rf')
+        self.tracker = cv2.TrackerTLD_create()
+
+
+class VisionTracker_TLD_LGB(VisionTrackerBase):
+    name = "KFC LGB"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='lgb')
+        self.tracker = cv2.TrackerTLD_create()
+
+
+class VisionTracker_TLD_SVM(VisionTrackerBase):
+    name = "KFC SVM"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='svm')
+        self.tracker = cv2.TrackerTLD_create()
+
+
+class VisionTracker_TLD_Naive(VisionTrackerBase):
+    name = "KFC Naive"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='naive')
+        self.tracker = cv2.TrackerTLD_create()
+
+
+class VisionTracker_TLD_RN(VisionTrackerBase):
+    name = "KFC RN"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='neural')
+        self.tracker = cv2.TrackerTLD_create()
+
+class VisionTracker_Boosting_RF(VisionTrackerBase):
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='rf')
+        self.tracker = cv2.TrackerBoosting_create()
+
+
+class VisionTracker_Boosting_LGB(VisionTrackerBase):
+    name = "KFC LGB"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='lgb')
+        self.tracker = cv2.TrackerBoosting_create()
+
+
+class VisionTracker_Boosting_SVM(VisionTrackerBase):
+    name = "KFC SVM"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='svm')
+        self.tracker = cv2.TrackerBoosting_create()
+
+
+class VisionTracker_Boosting_Naive(VisionTrackerBase):
+    name = "KFC Naive"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='naive')
+        self.tracker = cv2.TrackerBoosting_create()
+
+
+class VisionTracker_Boosting_RN(VisionTrackerBase):
+    name = "KFC RN"
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='neural')
         self.tracker = cv2.TrackerBoosting_create()
 
 #################################
 #   Depth Tracker
 #################################
-
-class VisionTrackerBase_Depth(VisionTrackerBase):
-    def getImage(self, save=False):
-        img = self.getDepth(save)
-        img = img / img.max()
-        img = img * 255
-        return img
-
-class VisionTracker_KFC_LGB_Depth(VisionTrackerBase_Depth):
-    name = 'KFC LGB'
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='lgb')
+class VisionTracker_KFC_RF_Depth(VisionTrackerBase):
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='rf')
         self.tracker = cv2.TrackerKCF_create()
 
 
-class VisionTracker_TLD_LGB_Depth(VisionTrackerBase_Depth):
-    name = "TLD LGB"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='lgb')
-        self.tracker = cv2.TrackerTLD_create()
+class VisionTracker_KFC_LGB_Depth(VisionTrackerBase):
+    name = "KFC LGB"
 
-class VisionTracker_MIL_LGB_Depth(VisionTrackerBase_Depth):
-    name = "MIL LGB"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='lgb')
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='lgb')
+        self.tracker = cv2.TrackerKCF_create()
+
+
+class VisionTracker_KFC_SVM_Depth(VisionTrackerBase):
+    name = "KFC SVM"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='svm')
+        self.tracker = cv2.TrackerKCF_create()
+
+
+class VisionTracker_KFC_Naive_Depth(VisionTrackerBase):
+    name = "KFC Naive"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='naive')
+        self.tracker = cv2.TrackerKCF_create()
+
+
+class VisionTracker_KFC_RN_Depth(VisionTrackerBase):
+    name = "KFC RN"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='neural')
+        self.tracker = cv2.TrackerKCF_create()
+
+
+class VisionTracker_MIL_RF_Depth(VisionTrackerBase):
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='rf')
         self.tracker = cv2.TrackerMIL_create()
 
-class VisionTracker_Boosting_LGB_Depth(VisionTrackerBase_Depth):
-    name = "Boosting LGB"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='lgb')
+
+class VisionTracker_MIL_LGB_Depth(VisionTrackerBase):
+    name = "KFC LGB"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='lgb')
+        self.tracker = cv2.TrackerMIL_create()
+
+
+class VisionTracker_MIL_SVM_Depth(VisionTrackerBase):
+    name = "KFC SVM"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='svm')
+        self.tracker = cv2.TrackerMIL_create()
+
+
+class VisionTracker_MIL_Naive_Depth(VisionTrackerBase):
+    name = "KFC Naive"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='naive')
+        self.tracker = cv2.TrackerMIL_create()
+
+
+class VisionTracker_MIL_RN_Depth(VisionTrackerBase):
+    name = "KFC RN"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='neural')
+        self.tracker = cv2.TrackerMIL_create()
+
+
+class VisionTracker_TLD_RF_Depth(VisionTrackerBase):
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='rf')
+        self.tracker = cv2.TrackerTLD_create()
+
+
+class VisionTracker_TLD_LGB_Depth(VisionTrackerBase):
+    name = "KFC LGB"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='lgb')
+        self.tracker = cv2.TrackerTLD_create()
+
+
+class VisionTracker_TLD_SVM_Depth(VisionTrackerBase):
+    name = "KFC SVM"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='svm')
+        self.tracker = cv2.TrackerTLD_create()
+
+
+class VisionTracker_TLD_Naive_Depth(VisionTrackerBase):
+    name = "KFC Naive"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='naive')
+        self.tracker = cv2.TrackerTLD_create()
+
+
+class VisionTracker_TLD_RN_Depth(VisionTrackerBase):
+    name = "KFC RN"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='neural')
+        self.tracker = cv2.TrackerTLD_create()
+
+
+class VisionTracker_Boosting_RF_Depth(VisionTrackerBase):
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='rf')
         self.tracker = cv2.TrackerBoosting_create()
 
-class VisionTracker_KFC_SVM_Depth(VisionTrackerBase_Depth):
-    name = "KFC svm"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='svm')
-        self.tracker = cv2.TrackerKCF_create()
 
-class VisionTracker_TLD_SVM_Depth(VisionTrackerBase_Depth):
-    name = "TLD svm"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='svm')
-        self.tracker = cv2.TrackerTLD_create()
+class VisionTracker_Boosting_LGB_Depth(VisionTrackerBase):
+    name = "KFC LGB"
 
-class VisionTracker_MIL_SVM_Depth(VisionTrackerBase_Depth):
-    name = "MIL svm"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='svm')
-        self.tracker = cv2.TrackerMIL_create()
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='lgb')
+        self.tracker = cv2.TrackerBoosting_create()
 
-class VisionTracker_Boosting_SVM_Depth(VisionTrackerBase_Depth):
-    name = "Boosting svm"
-    def __init__(self,detectRoot):
-        VisionTrackerBase.__init__(self, detectRoot,model_name='svm')
+
+class VisionTracker_Boosting_SVM_Depth(VisionTrackerBase):
+    name = "KFC SVM"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='svm')
+        self.tracker = cv2.TrackerBoosting_create()
+
+
+class VisionTracker_Boosting_Naive_Depth(VisionTrackerBase):
+    name = "KFC Naive"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='naive')
+        self.tracker = cv2.TrackerBoosting_create()
+
+
+class VisionTracker_Boosting_RN_Depth(VisionTrackerBase):
+    name = "KFC RN"
+
+    def __init__(self, detectRoot):
+        VisionTrackerBase.__init__(self, detectRoot, model_name='neural')
         self.tracker = cv2.TrackerBoosting_create()

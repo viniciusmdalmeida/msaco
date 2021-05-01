@@ -20,7 +20,65 @@ with open(config_path, 'r') as file_config:
 
 #Para iniciar o keras
 list_algorithms = [
-    {"Vision Depth": VisionTracker_MIL_RF},
+    {'Vision': ADS_B},
+    {'Vision': VisionDetectNaiveBayes},
+    {'Vision': VisionDetectSVM},
+    {'Vision': VisionDetectLGB},
+    {'Vision': VisionDetectNeural},
+    {'Vision': VisionDetectRF},
+    {'Vision': VisionDetectNaive_Depth},
+    {'Vision': VisionDetectSVM_Depth},
+    {'Vision': VisionDetectLGB_Depth},
+    {'Vision': VisionDetectNeural_Depth},
+    {'Vision': VisionDetectRF_Depth},
+
+    {'Vision': VisionTracker_KFC_RF},
+    {'Vision': VisionTracker_KFC_LGB},
+    {'Vision': VisionTracker_KFC_SVM},
+    {'Vision': VisionTracker_KFC_Naive},
+    {'Vision': VisionTracker_KFC_RN},
+
+    {'Vision': VisionTracker_KFC_RF_Depth},
+    {'Vision': VisionTracker_KFC_LGB_Depth},
+    {'Vision': VisionTracker_KFC_SVM_Depth},
+    {'Vision': VisionTracker_KFC_Naive_Depth},
+    {'Vision': VisionTracker_KFC_RN_Depth},
+    {'Vision': VisionTracker_MIL_RF},
+    {'Vision': VisionTracker_MIL_LGB},
+    {'Vision': VisionTracker_MIL_SVM},
+    {'Vision': VisionTracker_MIL_Naive},
+    {'Vision': VisionTracker_MIL_RN},
+
+    {'Vision': VisionTracker_MIL_RF_Depth},
+    {'Vision': VisionTracker_MIL_LGB_Depth},
+    {'Vision': VisionTracker_MIL_SVM_Depth},
+    {'Vision': VisionTracker_MIL_Naive_Depth},
+    {'Vision': VisionTracker_MIL_RN_Depth},
+
+    {'Vision': VisionTracker_TLD_RF},
+    {'Vision': VisionTracker_TLD_LGB},
+    {'Vision': VisionTracker_TLD_SVM},
+    {'Vision': VisionTracker_TLD_Naive},
+    {'Vision': VisionTracker_TLD_RN},
+
+    {'Vision': VisionTracker_TLD_RF_Depth},
+    {'Vision': VisionTracker_TLD_LGB_Depth},
+    {'Vision': VisionTracker_TLD_SVM_Depth},
+    {'Vision': VisionTracker_TLD_Naive_Depth},
+    {'Vision': VisionTracker_TLD_RN_Depth},
+
+    {'Vision': VisionTracker_Boosting_RF},
+    {'Vision': VisionTracker_Boosting_LGB},
+    {'Vision': VisionTracker_Boosting_SVM},
+    {'Vision': VisionTracker_Boosting_Naive},
+    {'Vision': VisionTracker_Boosting_RN},
+
+    {'Vision': VisionTracker_Boosting_RF_Depth},
+    {'Vision': VisionTracker_Boosting_LGB_Depth},
+    {'Vision': VisionTracker_Boosting_SVM_Depth},
+    {'Vision': VisionTracker_Boosting_Naive_Depth},
+    {'Vision': VisionTracker_Boosting_RN_Depth},
+
 ]
 """
 from keras.models import Model,model_from_json
@@ -31,7 +89,7 @@ model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
 
-list_fusion_algorithms = [FusionData_MeanWeighted, FusionData_Mean]
+list_fusion_algorithms = [FusionData_Mean]
 list_avoid_algorithms = [HorizontalAvoid,VerticalAvoid]
 #Posição do avião
 
@@ -42,7 +100,7 @@ drone_start_point = [0,1,-altura,10]
 routePoints = [[0,1,-altura,10]]
 colision_point = [260, 230, 2800]
 #list_angle = [30]
-list_angle = [30,10,0,-10,-30]
+list_angle = [30,20,10,0,-10,-20,-30]
 distance_plane = 5000
 num_repetitions = 1
 
@@ -87,7 +145,8 @@ for angle in tqdm(list_angle):
                     df_result = pd.DataFrame({'algoritmo': [algorithm], 'status': [status],'location_plane':[location],
                                               'angle':[angle], 'fusion_algo':fusion_algorithm,
                                               'avoid_algo':avoid_algorithm})
-                    df_out_put = df_out_put.append(df_result,ignore_index=True)
+                    df_out_put = df_out_put.append(df_result,ignore_index=True,
+                                                   sort=False)
                     df_out_put.to_csv(f"{config['test']['out_put_path']}status_out_{date_str}.csv")
                     #Finalizando simulação
                     time.sleep(2.5)

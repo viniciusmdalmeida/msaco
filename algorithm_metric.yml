@@ -1,9 +1,69 @@
 InertialSensor: 0
 ADS_B: 0.99
-VisionDetectRF: 0.91
-VisionTracker_KFC_SVM_Depth: 0.65
-VisionDetectSVM: 0.68
-VisionTracker_KFC: 0.5
-VisionTracker_KFC_LGB_Depth: 0.91
-VisionTracker_Boosting_SVM_Depth: 0.66
-VisionTracker_MIL_RF: 0.95
+
+#--- Detect ----
+#RGB
+VisionDetectNaiveBayes: 67.3
+VisionDetectSVM: 73.7
+VisionDetectLGB: 66.2
+VisionDetectNeural: 67.9
+VisionDetectRF: 81.1
+#Depth
+VisionDetectNaive_Depth: 61.4
+VisionDetectSVM_Depth: 66.9
+VisionDetectLGB_Depth: 86.9
+VisionDetectNeural_Depth: 64.5
+VisionDetectRF_Depth: 70.8
+
+#--- Tracker ----
+#KFC
+VisionTracker_KFC_RF: 81.1
+VisionTracker_KFC_LGB:
+VisionTracker_KFC_SVM:
+VisionTracker_KFC_Naive:
+VisionTracker_KFC_RN:
+
+VisionTracker_KFC_RF_Depth:
+VisionTracker_KFC_LGB_Depth:
+VisionTracker_KFC_SVM_Depth:
+VisionTracker_KFC_Naive_Depth:
+VisionTracker_KFC_RN_Depth:
+
+#MIL
+VisionTracker_MIL_RF: 92.11
+VisionTracker_MIL_LGB:
+VisionTracker_MIL_SVM:
+VisionTracker_MIL_Naive:
+VisionTracker_MIL_RN:
+
+VisionTracker_MIL_RF_Depth:
+VisionTracker_MIL_LGB_Depth:
+VisionTracker_MIL_SVM_Depth:
+VisionTracker_MIL_Naive_Depth:
+VisionTracker_MIL_RN_Depth:
+
+#TLD
+VisionTracker_TLD_RF: 86.2
+VisionTracker_TLD_LGB:
+VisionTracker_TLD_SVM:
+VisionTracker_TLD_Naive:
+VisionTracker_TLD_RN:
+
+VisionTracker_TLD_RF_Depth:
+VisionTracker_TLD_LGB_Depth:
+VisionTracker_TLD_SVM_Depth:
+VisionTracker_TLD_Naive_Depth:
+VisionTracker_TLD_RN_Depth:
+
+#BOOST
+VisionTracker_Boosting_RF: 91.5
+VisionTracker_Boosting_LGB:
+VisionTracker_Boosting_SVM:
+VisionTracker_Boosting_Naive:
+VisionTracker_Boosting_RN:
+
+VisionTracker_Boosting_RF_Depth:
+VisionTracker_Boosting_LGB_Depth:
+VisionTracker_Boosting_SVM_Depth:
+VisionTracker_Boosting_Naive_Depth:
+VisionTracker_Boosting_RN_Depth:
