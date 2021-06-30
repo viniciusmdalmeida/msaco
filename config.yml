@@ -15,22 +15,21 @@ algorithm:
     windowSizeY : 80
     stepSize : 40
     model_sufix: 80c
-
-
     stepSize_getImagem: 30
 
 detect:
   vertical_limit: 70
   horizontal_limit: 80
   min_distance: 80
-  max_progress_data: 50
-  min_progress_data: 10
+  max_progress_data: 100
+  min_progress_data: 80
 
 unreal:
   path:  C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/control
   file: control.txt
 
 sensors:
+  interval: 0.25
   ADS-B:
     reader_path: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/log_aviao
     reader_file_prefix: log_voo

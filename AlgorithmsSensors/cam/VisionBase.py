@@ -69,7 +69,6 @@ class VisionBase(AlgorithmSensor):
         print("Terminando windows")
 
     def calc_obj_position(self, bbox, fov_angle=120, width_image=1024):
-        print("Calc Obj Position")
         # calc x e y camera
         x_camera = (bbox[0] + bbox[2]) / 2
         y_camera = (bbox[1] + bbox[3]) / 2
@@ -87,7 +86,7 @@ class VisionBase(AlgorithmSensor):
         if distance_real is None:
             return
         x_real = seno_angulo_plane_x * distance_real
-        alt = seno_angulo_plane_y * distance_real  #o Y na imagem é o z no unreal
+        alt = seno_angulo_plane_y * distance_real  #o Z na imagem é o z no unreal
         # calculando a profundidade regra de 3
         prof = (focal_legh * x_real) / x_camera #o Y na imagem é o z no unreal
         #calculando a profundadide pela hipotenusa

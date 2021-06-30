@@ -1,5 +1,6 @@
 from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
 from datetime import datetime
+import subprocess
 
 class ADS_B(AlgorithmSensor):
     name = "ADS_B_Base"
@@ -12,9 +13,10 @@ class ADS_B(AlgorithmSensor):
     def getData(self,to_str=True):
         date_str = datetime.now().strftime('%#d_%#m_%Y').replace("_0","_")
         file_path = f'{self.file_path}/{self.file_prefix}_{date_str}.txt'
-        with open(file_path, 'r') as f:
-            lines = f.read().splitlines()
-            last_adsb = lines[-1]
+        #with open(file_path, 'r') as f:
+        #    lines = f.read().splitlines()
+        #    last_adsb = lines[-1]
+        last_adsb = subprocess.getoutput(['powershell', 'Get-Content',file_path,'-tail', '1'])
         adsb_header = self.config['sensors']['ADS-B']['ADS-B_header']
         dict_data = dict(zip(adsb_header,last_adsb.split(',')))
         return dict_data
@@ -30,7 +32,6 @@ class ADS_B(AlgorithmSensor):
         x_distance = abs((float(intruse_data['x_position'])/100) - my_position['x_val'])
         y_distance = abs((float(intruse_data['y_position'])/100) - my_position['y_val'])
         z_distance = abs((float(intruse_data['geo_altitude'])/100) - my_position['z_val'])
-        distanceMin = min([x_distance,y_distance,z_distance])
         #calc distance
         intruse_position = [float(intruse_data['x_position']) / 100,
                             float(intruse_data['y_position']) / 100,

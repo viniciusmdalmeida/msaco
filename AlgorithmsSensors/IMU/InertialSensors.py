@@ -26,6 +26,8 @@ class InertialSensor(AlgorithmSensor):
 
         dict_data['gps'] = vars(gps_location)
         dict_data['position'] = vars(position)
+        #Corigindo o z
+        dict_data['position']['z_val'] = dict_data['position']['z_val'] * -1
         dict_data['orientation'] = vars(orientation)
         dict_data['velocity'] = vars(velocity)
         dict_data['time'] = str(datetime.now().timestamp())

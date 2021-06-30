@@ -121,12 +121,23 @@ class HorizontalAvoid(BaseAvoid):
     def avoid_strategy(self,detection_data):
         my_position = detection_data.getDictData()['myPosition']
         other_position = detection_data.getDictData()['otherPosition']
+        print(f"Other_position:{other_position}, my_position{my_position}")
         if my_position and other_position and my_position[1] and other_position[1]:
-            horizontal_diference = my_position[1] - other_position[1]
+            horizontal_diference = (my_position[1] * -1) - other_position[1]
             if horizontal_diference > 0:
+                print(f"Update Path || OtherPosition: {other_position}, my position:{my_position}, new X:{my_position[1] - 60}")
                 #direita
                 my_position[1] -= 60
             else:
+                print(f"Update Path || OtherPosition: {other_position}, my position:{my_position}, new X:{my_position[1] + 60}")
                 #vai para o ponto mais baixo
                 my_position[1] += 60
+        print(f"New position: {my_position}")
         return [list(my_position)],15
+
+
+class NotAvoid(BaseAvoid):
+    def avoid_strategy(self,detection_data):
+        return None
+
+

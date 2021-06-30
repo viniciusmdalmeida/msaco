@@ -30,11 +30,11 @@ class DetectionData:
             self.__dict__['otherDirection'] = self.calcOtherDirection()
 
     def calcOtherPosition(self):
+        print(f"calcOtherPosition:: my:{self.myPosition}, relative: {self.relativePosition}")
         if self.myPosition is not None and self.relativePosition is not None:
-            x_position = self.myPosition[0] +\
-                         self.relativePosition[0]
-            y_position = self.myPosition[1] - self.relativePosition[1]
-            z_position = self.myPosition[2]*-1
+            x_position = (self.myPosition[0]) - self.relativePosition[0]
+            y_position = (self.myPosition[1]) - self.relativePosition[1]
+            z_position = (self.myPosition[2]) - self.relativePosition[2]
             otherPosition = (x_position,y_position,z_position)
             return otherPosition
         else:

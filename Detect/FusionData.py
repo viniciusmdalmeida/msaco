@@ -95,6 +95,7 @@ class FusionData_MeanWeighted(BaseFusionData):
             return list_data_np
 
     def cleanMean(self,list_data,list_weight):
+        print(f"list_data = {list_data}, list_weigth= {list_weight}")
         output_list = []
         if len(list_data.shape) < 2:
             list_valid = [np.isfinite(x) and (not np.isnan(x)) for x in list_data]
@@ -108,12 +109,13 @@ class FusionData_MeanWeighted(BaseFusionData):
         else:
             for colun in range(list_data.shape[1]):
                 list_valid = [np.isfinite(x) and (not np.isnan(x)) for x in list_data[:, colun]]
-                list_data_norm = np.array(list_data[:, colun][list_valid])
-                list_weight_norm = list_weight[list_valid]
+                list_data_valid = np.array(list_data[:, colun][list_valid])
+                list_weight_valid = list_weight[list_valid]
                 # normalizando peso
-                list_weight_norm = np.array([weigth / sum(list_weight_norm) for weigth in list_weight_norm])
-                if len(list_data_norm) <= 0:
+                list_weight_norm = list_weight_valid / sum(list_weight_valid)
+                if len(list_data_valid) <= 0:
                     output_list.append(np.inf)
                 else:
-                    output_list.append(sum(list_data_norm*list_weight_norm))
+                    output_list.append(sum(list_data_valid*list_weight_norm)/list_data.shape[0])
+        print(f"output = {output_list}")
         return output_list

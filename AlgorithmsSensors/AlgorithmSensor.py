@@ -16,7 +16,7 @@ class AlgorithmSensor(Thread, ABC):
         self.client = airsim.MultirotorClient()
         self.detectRoot = detectRoot
         self.detectData = DetectionData(algoritmo=self.__class__.__name__)
-        self.interval = 0.5
+        self.interval =  self.config['sensors']['interval']
         self._stop_detect = False
 
     def run(self):
