@@ -68,6 +68,12 @@ class VisionBase(AlgorithmSensor):
             cv2.destroyAllWindows()
         print("Terminando windows")
 
+    def get_calc_pos(self):
+        file_type_calc = open('type_calc.txt', 'r')
+        type = file_type_calc.read()
+        file_type_calc.close()
+        return type.strip()
+
     def calc_obj_position(self, bbox, fov_angle=120, width_image=1024):
         # calc x e y camera
         x_camera = (bbox[0] + bbox[2]) / 2
@@ -77,22 +83,26 @@ class VisionBase(AlgorithmSensor):
         part_width = float(width_image / 2.0)
         focal_legh = (part_width / np.sin(np.deg2rad(angle))) * np.sin(np.deg2rad(30.0))  # regra seno
         # calc distance camera
-        distance_camera_x = (x_camera ** 2 + focal_legh ** 2) ** 0.5  # hipotenusa
-        seno_angulo_plane_x =  x_camera / (np.sin(np.deg2rad(90)) * distance_camera_x)  # regra senos
-        distance_camera_y = (y_camera ** 2 + focal_legh ** 2) ** 0.5  # hipotenusa
-        seno_angulo_plane_y =   y_camera / (np.sin(np.deg2rad(90)) * distance_camera_y )   # regra senos
-        # calc x e y real
+        distance_camera = (x_camera ** 2 + focal_legh ** 2) ** 0.5  # hipotenusa
+        seno_angulo_plane_x =  x_camera / (np.sin(np.deg2rad(90)) * distance_camera)  # regra senos
+        aux_camera = (y_camera ** 2 + focal_legh ** 2) ** 0.5  # hipotenusa
+        seno_angulo_plane_y =   y_camera / (np.sin(np.deg2rad(90)) * aux_camera )   # regra senos
+        # calc x real
         distance_real = self.calc_distance(bbox)
         if distance_real is None:
             return
         x_real = seno_angulo_plane_x * distance_real
-        alt = seno_angulo_plane_y * distance_real  #o Z na imagem é o z no unreal
+        # calc aux real
+        seno_aux = aux_camera / distance_camera
+        aux = (x_real/seno_angulo_plane_x)* seno_aux
+        # calc y real
+        y_real = seno_angulo_plane_y * aux  #o Z na imagem é o z no unreal
         # calculando a profundidade regra de 3
-        prof = (focal_legh * x_real) / x_camera #o Y na imagem é o z no unreal
+        prof = ((aux ** 2) - y_real**2)**0.5  #o Y na imagem é o z no unreal
         #calculando a profundadide pela hipotenusa
         #hip = (x_real ** 2 + alt ** 2) ** 0.5
         #prof = (distance_real **2 -  hip ** 2) **0.5
-        relativePosition = (x_real, alt, prof)
+        relativePosition = (prof, x_real, y_real)
         self.detectData.updateData(distance=distance_real, relativePosition=relativePosition)
 
 class VisionDepthBase(VisionBase):

@@ -19,18 +19,24 @@ with open(config_path, 'r') as file_config:
     config = yaml.full_load(file_config)
 
 #Para iniciar o keras
+
+list_algorithms = [{"ADSB":VisionTracker_Boosting_RF},
+                   {"RGB": VisionDetectLGB},
+                   {"DEPTH": VisionTracker_Boosting_RF_Depth},
+                   {"DEPTH": VisionDetectNeural_Depth}]
+"""
 list_algorithms = [
-    #{"ADSB":ADS_B},
-    #{"RGB":VisionTracker_Boosting_RF},
-    #{"RGB":VisionDetectLGB},
-    #{"DEPTH":VisionTracker_Boosting_RF_Depth},
-    #{"DEPTH":VisionDetectNeural_Depth},
-    #{'RGB':VisionTracker_Boosting_RF, 'DEPTH':VisionTracker_Boosting_RF_Depth},
-    #{'RGB':VisionTracker_Boosting_RF, 'DEPTH':VisionDetectNeural_Depth},
-    #{'RGB':VisionDetectLGB, 'DEPTH':VisionTracker_Boosting_RF_Depth},
-    #{'RGB':VisionDetectLGB, 'DEPTH':VisionDetectNeural_Depth},
-    #{'RGB':VisionTracker_Boosting_RF, 'DEPTH':VisionTracker_Boosting_RF_Depth, 'ADSB':ADS_B},
-    #{'RGB':VisionDetectLGB, 'DEPTH':VisionDetectNeural_Depth, 'ADSB':ADS_B},
+    {"ADSB":ADS_B},
+    {"RGB":VisionTracker_Boosting_RF},
+    {"RGB":VisionDetectLGB},
+    {"DEPTH":VisionTracker_Boosting_RF_Depth},
+    {"DEPTH":VisionDetectNeural_Depth},
+    {'RGB':VisionTracker_Boosting_RF, 'DEPTH':VisionTracker_Boosting_RF_Depth},
+    {'RGB':VisionTracker_Boosting_RF, 'DEPTH':VisionDetectNeural_Depth},
+    {'RGB':VisionDetectLGB, 'DEPTH':VisionTracker_Boosting_RF_Depth},
+    {'RGB':VisionDetectLGB, 'DEPTH':VisionDetectNeural_Depth},
+    {'RGB':VisionTracker_Boosting_RF, 'DEPTH':VisionTracker_Boosting_RF_Depth, 'ADSB':ADS_B},
+    {'RGB':VisionDetectLGB, 'DEPTH':VisionDetectNeural_Depth, 'ADSB':ADS_B},
 ]
 
 list_algorithms = [
@@ -40,8 +46,6 @@ list_algorithms = [
     {"Vision": VisionDetectNaiveBayes },
     {"Vision": VisionDetectNaive_Depth },
     {"Vision": VisionDetectNeural },
-]
-'''
     {"Vision": VisionDetectNeural_Depth },
     {"Vision": VisionDetectRF },
     {"Vision": VisionDetectRF_Depth },
@@ -88,7 +92,7 @@ list_algorithms = [
     {"Vision": VisionTracker_TLD_SVM },
     {"Vision": VisionTracker_TLD_SVM_Depth },
 ]
-'''
+"""
 """
 from keras.models import Model,model_from_json
 path_model = '../data/models/'
@@ -98,6 +102,8 @@ model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
 
+#list_fusion_algorithms = [FusionData_Mean, FusionData_MeanWeighted]
+#list_avoid_algorithms = [HorizontalAvoid, VerticalAvoid]
 list_fusion_algorithms = [FusionData_Mean]
 list_avoid_algorithms = [HorizontalAvoid]
 #Posição do avião
@@ -108,8 +114,8 @@ altura = 47
 drone_start_point = [0,1,altura,10]
 routePoints = [[0,1,altura,10]]
 colision_point = [260, 230, 4900]
-list_angle = [30]
 #list_angle = [30,20,10,0,-10,-20,-30]
+list_angle = [30,0,-30]
 distance_plane = 5000
 num_repetitions = 1
 
@@ -127,6 +133,7 @@ list_status = []
 unreal_communication = UnrealCommunication()
 time_to_colision = config['test']['time_to_colision']
 plane_velocity = config['test']['plane_velocity']
+
 for angle in tqdm(list_angle):
     location,rotation = calc_plane_position(angle,colision_point,time_to_colision,plane_velocity)
     print("Colision:", colision_point)
@@ -153,12 +160,14 @@ for angle in tqdm(list_angle):
                     status = run_simulation.get_status()
                     df_result = pd.DataFrame({'algoritmo': [algorithm], 'status': [status],'location_plane':[location],
                                               'angle':[angle], 'fusion_algo':fusion_algorithm,
-                                              'avoid_algo':avoid_algorithm})
+                                              'avoid_algo':avoid_algorithm,
+                                              'timestamp':datetime.now().timestamp()})
                     df_out_put = df_out_put.append(df_result,ignore_index=True,
                                                    sort=False)
                     #Finalizando simulação
                     time.sleep(2.5)
                     del run_simulation
+
 df_out_put.to_csv(f"{config['test']['out_put_path']}status_out_{date_str}.csv")
 print("Finalizado")
 #os.system('shutdown -s')
