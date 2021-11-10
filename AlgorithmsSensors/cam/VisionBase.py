@@ -74,35 +74,29 @@ class VisionBase(AlgorithmSensor):
         file_type_calc.close()
         return type.strip()
 
-    def calc_obj_position(self, bbox, fov_angle=120, width_image=1024):
+    def calc_obj_position(self, bbox, fov_angle=120, width_image=1024, alt_image = 580):
+        distance_real = self.calc_distance(bbox)
         # calc x e y camera
-        x_camera = (bbox[0] + bbox[2]) / 2
-        y_camera = (bbox[1] + bbox[3]) / 2
+        y_camera = (bbox[0] + bbox[2]) / 2  # largura (y) camera
+        z_camera = ((bbox[1] + bbox[3]) / 2) - alt_image   # altura (z) camera
         # get focal legth
         angle = float(fov_angle / 2.0)
         part_width = float(width_image / 2.0)
-        focal_legh = (part_width / np.sin(np.deg2rad(angle))) * np.sin(np.deg2rad(30.0))  # regra seno
-        # calc distance camera
-        distance_camera = (x_camera ** 2 + focal_legh ** 2) ** 0.5  # hipotenusa
-        seno_angulo_plane_x =  x_camera / (np.sin(np.deg2rad(90)) * distance_camera)  # regra senos
-        aux_camera = (y_camera ** 2 + focal_legh ** 2) ** 0.5  # hipotenusa
-        seno_angulo_plane_y =   y_camera / (np.sin(np.deg2rad(90)) * aux_camera )   # regra senos
-        # calc x real
-        distance_real = self.calc_distance(bbox)
-        if distance_real is None:
-            return
-        x_real = seno_angulo_plane_x * distance_real
-        # calc aux real
-        seno_aux = aux_camera / distance_camera
-        aux = (x_real/seno_angulo_plane_x)* seno_aux
-        # calc y real
-        y_real = seno_angulo_plane_y * aux  #o Z na imagem é o z no unreal
-        # calculando a profundidade regra de 3
-        prof = ((aux ** 2) - y_real**2)**0.5  #o Y na imagem é o z no unreal
-        #calculando a profundadide pela hipotenusa
-        #hip = (x_real ** 2 + alt ** 2) ** 0.5
-        #prof = (distance_real **2 -  hip ** 2) **0.5
-        relativePosition = (prof, x_real, y_real)
+        focal_legh = (part_width / np.sin(np.deg2rad(angle))) * np.sin(np.deg2rad(30.0))  # regra seno: x camera
+        x_camera = focal_legh
+        #Caculando valor Aux
+        aux_linha = (y_camera**2 + x_camera**2)**(1/2)
+        distance_linha = (aux_linha**2 + z_camera**2)**(1/2)
+        seno_Z = z_camera  / distance_linha # (z_camera * seno(90º)) / distancia_linha
+        AUX = distance_real * seno_Z  # (distancia_real / seno(90º)) * seno(angle_Z)
+        #Calculando Z
+        Z = (distance_real**2 - AUX**2) ** (1/2) ### ca^2 = hip^2 - co^2
+        #Calculando Y
+        seno_Y = y_camera / AUX  #(y_camera * seno(90º)) / AUX
+        Y = AUX * seno_Y # (AUX / seno(90º)) * seno(angle_Y)
+        X = (AUX**2 - Y**2) ** (1/2) ### ca^2 = hip^2 - co^2
+        print(f"y_camera:{y_camera}, x_camera:{x_camera}, focal_legh: {focal_legh}, aux_linha: {aux_linha}, senoZ:{seno_Z}, AUX:{AUX}, senoY:{seno_Y}, distance: {distance_real}")
+        relativePosition = (X, Y, Z)
         self.detectData.updateData(distance=distance_real, relativePosition=relativePosition)
 
 class VisionDepthBase(VisionBase):
