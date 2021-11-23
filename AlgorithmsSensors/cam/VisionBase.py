@@ -2,6 +2,9 @@ import airsim  # pip install airsim
 import cv2
 from AlgorithmsSensors.AlgorithmSensor import AlgorithmSensor
 from Detect.DetectionData import *
+import math
+from scipy.spatial.transform import Rotation
+
 
 class VisionBase(AlgorithmSensor):
     name = 'vision'
@@ -74,29 +77,39 @@ class VisionBase(AlgorithmSensor):
         file_type_calc.close()
         return type.strip()
 
-    def calc_obj_position(self, bbox, fov_angle=120, width_image=1024, alt_image = 580):
-        distance_real = self.calc_distance(bbox)
-        # calc x e y camera
+
+    def calc_extrinsics_matrix(self):
+        quaternion_angles = self.client.simGetGroundTruthKinematics().orientation #get quaternoin anglers
+        drone_location = quaternion_angles = self.client.simGetGroundTruthKinematics().position #get position of drone
+        #Convert rotation to roll pitch yaw
+        #Link: https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.as_euler.html
+        rotation_obj = Rotation.from_quat(quaternion_angles['x_val'],quaternion_angles['y_val'],quaternion_angles['z_val'],
+                                 quaternion_angles['w_val'])
+        (roll,pitch,yaw) = rotation_obj.as_euler('xyz', degrees=True)
+        # calcule rotation matrix
+        rotation_matrix = rotation_obj.as_matrix()
+        translation_matrix = drone_location.to_numpy_array()
+        return rotation_matrix, translation_matrix
+
+    def calc_obj_position(self, bbox, fov_angle=120, width_image=1024, alt_image = 580, focal_lengh_x=571, focal_lengh_y=571):
         y_camera = (bbox[0] + bbox[2]) / 2  # largura (y) camera
         z_camera = ((bbox[1] + bbox[3]) / 2) - alt_image   # altura (z) camera
-        # get focal legth
-        angle = float(fov_angle / 2.0)
-        part_width = float(width_image / 2.0)
-        focal_legh = (part_width / np.sin(np.deg2rad(angle))) * np.sin(np.deg2rad(30.0))  # regra seno: x camera
-        x_camera = focal_legh
-        #Caculando valor Aux
-        aux_linha = (y_camera**2 + x_camera**2)**(1/2)
-        distance_linha = (aux_linha**2 + z_camera**2)**(1/2)
-        seno_Z = z_camera  / distance_linha # (z_camera * seno(90º)) / distancia_linha
-        AUX = distance_real * seno_Z  # (distancia_real / seno(90º)) * seno(angle_Z)
-        #Calculando Z
-        Z = (distance_real**2 - AUX**2) ** (1/2) ### ca^2 = hip^2 - co^2
-        #Calculando Y
-        seno_Y = y_camera / AUX  #(y_camera * seno(90º)) / AUX
-        Y = AUX * seno_Y # (AUX / seno(90º)) * seno(angle_Y)
-        X = (AUX**2 - Y**2) ** (1/2) ### ca^2 = hip^2 - co^2
-        print(f"y_camera:{y_camera}, x_camera:{x_camera}, focal_legh: {focal_legh}, aux_linha: {aux_linha}, senoZ:{seno_Z}, AUX:{AUX}, senoY:{seno_Y}, distance: {distance_real}")
-        relativePosition = (X, Y, Z)
+        position_cam_matrix = np.array([y_camera, z_camera]).T
+
+        px = width_image/2
+        py = alt_image/2
+        #https://www.cs.cmu.edu/~16385/s17/Slides/11.1_Camera_matrix.pdf
+        rotation_matrix, translation_matrix = self.calc_extrinsics_matrix()
+        intrinsics_matrix = np.array([[focal_lengh_x, 0, px],
+                                      [0, focal_lengh_y, py],
+                                      [0,             0,  1]])
+
+        #link: https://www.fdxlabs.com/calculate-x-y-z-real-world-coordinates-from-a-single-camera-using-opencv/
+        XYZ = np.dot((np.dot(position_cam_matrix, np.linalg.inv(intrinsics_matrix)) - translation_matrix), np.linalg.inv(rotation_matrix))
+        relativePosition = np.array(XYZ)
+
+        #Real distance
+        distance_real = self.calc_distance(bbox)
         self.detectData.updateData(distance=distance_real, relativePosition=relativePosition)
 
 class VisionDepthBase(VisionBase):
