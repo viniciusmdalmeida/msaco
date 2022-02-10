@@ -16,9 +16,11 @@ class DetectionData:
         self.relativeDirection = None  # (0,0,0)
         self.myPosition = None  # (0,0,0)
         self.otherPosition = None
+        self.myRotation = None
+        self.bbox = None
 
     def updateData(self,algoritmo=None,distance=None,relativePosition=None,relativeDirection=None,myDirection=None,
-                 otherDirection=None,myPosition=None,otherPosition=None):
+                 otherDirection=None,myPosition=None,otherPosition=None, myRotation=None, bbox=None):
         args_functions = locals()
         for arg_name in args_functions:
             value = args_functions[arg_name]
@@ -30,7 +32,7 @@ class DetectionData:
             self.__dict__['otherDirection'] = self.calcOtherDirection()
 
     def calcOtherPosition(self):
-        print(f"calcOtherPosition:: my:{self.myPosition}, relative: {self.relativePosition}")
+        #print(f"calcOtherPosition:: my:{self.myPosition}, relative: {self.relativePosition}")
         if self.myPosition is not None and self.relativePosition is not None:
             x_position = (self.myPosition[0]) - self.relativePosition[0]
             y_position = (self.myPosition[1]) - self.relativePosition[1]
@@ -59,7 +61,8 @@ class DetectionData:
             with open(file_path, 'a') as file:
                 header = 'timestamp,algoritmo,distance,myX,myY,myZ,myDirX,myDirY,myDirZ,' \
                          'relX,relY,relZ,reldirX,reldirY,reldirZ,otherX,otherY,otherZ,' \
-                         'otherDirX,otherDirY,otherDirZ'
+                         'otherDirX,otherDirY,otherDirZ,rotationX,rotationY,rotationZ,rotationW,' \
+                         'bbox1,bbox2,bbox3,bbox4'
                 file.write(header+'\n')
 
     def print_data(self):
@@ -89,5 +92,7 @@ class DetectionData:
         dict_Data['relativeDirection'] = self.relativeDirection
         dict_Data['otherPosition'] = self.otherPosition
         dict_Data['otherDirection'] = self.otherDirection
+        dict_Data['myRotation'] = self.myRotation
+        dict_Data['bbox'] = self.bbox
         return dict_Data
 

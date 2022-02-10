@@ -56,3 +56,4 @@ sensors:
 
   Vision:
     show_video: false
+    save_vision_detect: true

@@ -14,6 +14,7 @@ class VisionBase(AlgorithmSensor):
         self.depth = False
         self.cont = 0
         self.showVideo = self.config['sensors']['Vision']['show_video']
+        self.save_vision_detect = self.config['sensors']['Vision']['save_vision_detect']
         #get data
         date_now = datetime.now()
         self.date_str = f"{date_now.day}-{date_now.month}_{date_now.hour}-{date_now.minute}-{date_now.second}"
@@ -37,12 +38,12 @@ class VisionBase(AlgorithmSensor):
             return None
         img_rgba = img_rgba.reshape(response.height, response.width, 3)
         if save:
-            cv2.imwrite(f'../data/imagens/RGB/voo/frame_{self.cont}_{self.date_str}.jpg',img_rgba)
+            cv2.imwrite(f'../data/imagens/RGB/voo/frame_{self.cont}_{datetime.now().timestamp()}.jpg',img_rgba)
             self.cont += 1
         return img_rgba
 
     def printDetection(self, frame, bbox=None,distance=None):
-        if self.showVideo:
+        if self.showVideo or self.save_vision_detect:
             if bbox is not None and len(bbox) >= 4:
                 x1,y1,x2,y2 = self.getPoints(bbox)
                 # Draw Bounding box
@@ -61,8 +62,11 @@ class VisionBase(AlgorithmSensor):
                     print(f"X:{x1-x2},Y:{y1-y2},MIN:{min(x1-x2,y1-y2)}")
                     cv2.putText(frame, "Tracking failure detected", (100, 80),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
-            cv2.imshow("Detect", frame)
-            cv2.waitKey(1)
+            if self.save_vision_detect:
+                cv2.imwrite(f'../data/imagens/detect/voo/frame_{self.cont}_{datetime.now().timestamp()}.jpg',frame)
+            if self.showVideo:
+                cv2.imshow("Detect", frame)
+                cv2.waitKey(1)
 
     def terminate(self):
         print("Tentando terminar ",self.name)
@@ -80,21 +84,25 @@ class VisionBase(AlgorithmSensor):
 
     def calc_extrinsics_matrix(self):
         quaternion_angles = self.client.simGetGroundTruthKinematics().orientation #get quaternoin anglers
-        drone_location = quaternion_angles = self.client.simGetGroundTruthKinematics().position #get position of drone
+        drone_location = self.client.simGetGroundTruthKinematics().position #get position of drone
+        print("drone_location:",drone_location)
+        drone_location.z_val = drone_location.z_val * -1 # Corigindo o Z
         #Convert rotation to roll pitch yaw
         #Link: https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.as_euler.html
-        rotation_obj = Rotation.from_quat(quaternion_angles['x_val'],quaternion_angles['y_val'],quaternion_angles['z_val'],
-                                 quaternion_angles['w_val'])
+        rotation_obj = Rotation.from_quat([quaternion_angles.x_val,quaternion_angles.y_val,quaternion_angles.z_val,
+                                 quaternion_angles.w_val])
         (roll,pitch,yaw) = rotation_obj.as_euler('xyz', degrees=True)
         # calcule rotation matrix
         rotation_matrix = rotation_obj.as_matrix()
         translation_matrix = drone_location.to_numpy_array()
         return rotation_matrix, translation_matrix
 
-    def calc_obj_position(self, bbox, fov_angle=120, width_image=1024, alt_image = 580, focal_lengh_x=571, focal_lengh_y=571):
+    def calc_obj_position(self, bbox, fov_angle=120, width_image=1024, alt_image = 580, focal_lengh_x=179.53, focal_lengh_y=179.17):
+        #Link para descobrir focal length https://github.com/microsoft/AirSim/issues/2396
+        #Formula para focal length (Horizontal FoV = 2 * arctan( width / 2f ) )
         y_camera = (bbox[0] + bbox[2]) / 2  # largura (y) camera
         z_camera = ((bbox[1] + bbox[3]) / 2) - alt_image   # altura (z) camera
-        position_cam_matrix = np.array([y_camera, z_camera]).T
+        position_cam_matrix = np.array([y_camera, z_camera, 1]).T
 
         px = width_image/2
         py = alt_image/2
@@ -106,11 +114,17 @@ class VisionBase(AlgorithmSensor):
 
         #link: https://www.fdxlabs.com/calculate-x-y-z-real-world-coordinates-from-a-single-camera-using-opencv/
         XYZ = np.dot((np.dot(position_cam_matrix, np.linalg.inv(intrinsics_matrix)) - translation_matrix), np.linalg.inv(rotation_matrix))
-        relativePosition = np.array(XYZ)
+        relativePosition = tuple(XYZ)
+
+        #Escrevendo parametros
+        file_path = f'../data/camera_data/camera_{datetime.now().strftime("%Y_%m_%d")}.csv'
+        with open(file_path,'a') as file:
+            file.write(f"{datetime.now().timestamp()},{focal_lengh_y},{focal_lengh_x},{px},{py},{rotation_matrix.tolist()},{translation_matrix.tolist()}\n")
 
         #Real distance
         distance_real = self.calc_distance(bbox)
-        self.detectData.updateData(distance=distance_real, relativePosition=relativePosition)
+        print(f"calcule position: {relativePosition}")
+        self.detectData.updateData(distance=distance_real, relativePosition=relativePosition, bbox=bbox)
 
 class VisionDepthBase(VisionBase):
     def __init__(self,detectRoot):
