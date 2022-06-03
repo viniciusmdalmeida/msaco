@@ -73,7 +73,8 @@ class Start(Thread):
         if self.start_point:
             # got to start point
             print("Start point",self.start_point)
-            self.vehicleComunication.moveToPoint(self.start_point[:3],self.start_point[3],True)
+            move_point = self.start_point.copy()
+            self.vehicleComunication.moveToPoint(move_point[:3],move_point[3],True)
         # Start move path
         self.control.start()
         time.sleep(2)

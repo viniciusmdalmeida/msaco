@@ -116,22 +116,23 @@ class AirSimCommunication(ICommunication):
     def movePath(self,points,velocity=10):
         path = []
         for point in points:
-            point[2] = -1 * int(point[2])
-            path.append(airsim.Vector3r(int(point[0]), int(point[1]), point[2]))
+            point_move = point.copy()
+            path.append(airsim.Vector3r(int(point_move[0]), int(point_move[1]), point_move[2]))
         '''
         if not self.client.getMultirotorState().rc_data.is_initialized:
             print("ReArm drone")
             self.client.enableApiControl(True)
             self.client.armDisarm(True)
         '''
+        print("mote to path:", path)
         self.client.moveOnPathAsync(path, velocity)
 
     def moveToPoint(self,point,velocity=10,wait=False):
-        point[2] = -1 * point[2]
+        point_move = point.copy()
         if wait:
-            self.client.moveToPositionAsync(point[0],point[1],point[2],velocity).join()
+            self.client.moveToPositionAsync(point_move[0],point_move[1],point_move[2],velocity).join()
         else:
-            self.client.moveToPositionAsync(point[0], point[1], point[2], velocity)
+            self.client.moveToPositionAsync(point_move[0], point_move[1], point_move[2], velocity)
 
     def restart(self):
         pass
