@@ -29,10 +29,6 @@ class ADS_B(AlgorithmSensor):
         intruse_data = self.getData()
         my_position = vars(self.client.simGetGroundTruthKinematics().position)
         #calc distance
-        x_distance = abs((float(intruse_data['x_position'])/100) - my_position['x_val'])
-        y_distance = abs((float(intruse_data['y_position'])/100) - my_position['y_val'])
-        z_distance = abs((float(intruse_data['geo_altitude'])/100) - my_position['z_val'])
-        #calc distance
         intruse_position = [float(intruse_data['x_position']) / 100,
                             float(intruse_data['y_position']) / 100,
                             float(intruse_data['geo_altitude']) / 100]

@@ -5,7 +5,6 @@ from Detect.DetectionData import *
 import math
 from scipy.spatial.transform import Rotation
 
-
 class VisionBase(AlgorithmSensor):
     name = 'vision'
 
@@ -42,6 +41,14 @@ class VisionBase(AlgorithmSensor):
             self.cont += 1
         return img_rgba
 
+    def print_two_imagems(self):
+        response = self.client.simGetImages([airsim.ImageRequest("front_left", airsim.ImageType.Scene, False, False),
+                                        airsim.ImageRequest("front_right", airsim.ImageType.Scene, False, False)])
+        img1 = np.fromstring(response[0].image_data_uint8, dtype=np.uint8).reshape(response[0].height, response[0].width, 3)
+        img2 = np.fromstring(response[1].image_data_uint8, dtype=np.uint8).reshape(response[1].height, response[1].width, 3)
+        cv2.imwrite(f'../data/imagens/detect/voo/frame_{self.cont}_{datetime.now().timestamp()}_left.jpg', img1)
+        cv2.imwrite(f'../data/imagens/detect/voo/frame_{self.cont}_{datetime.now().timestamp()}_rigth.jpg', img2)
+
     def printDetection(self, frame, bbox=None,distance=None):
         if self.showVideo or self.save_vision_detect:
             if bbox is not None and len(bbox) >= 4:
@@ -64,6 +71,7 @@ class VisionBase(AlgorithmSensor):
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
             if self.save_vision_detect:
                 cv2.imwrite(f'../data/imagens/detect/voo/frame_{self.cont}_{datetime.now().timestamp()}.jpg',frame)
+                self.print_two_imagems()
             if self.showVideo:
                 cv2.imshow("Detect", frame)
                 cv2.waitKey(1)
@@ -86,7 +94,7 @@ class VisionBase(AlgorithmSensor):
         quaternion_angles = self.client.simGetGroundTruthKinematics().orientation #get quaternoin anglers
         drone_location = self.client.simGetGroundTruthKinematics().position #get position of drone
         print("drone_location:",drone_location)
-        drone_location.z_val = drone_location.z_val * -1 # Corigindo o Z
+        drone_location.z_val = drone_location.z_val# Corigindo o Z
         #Convert rotation to roll pitch yaw
         #Link: https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.as_euler.html
         rotation_obj = Rotation.from_quat([quaternion_angles.x_val,quaternion_angles.y_val,quaternion_angles.z_val,
