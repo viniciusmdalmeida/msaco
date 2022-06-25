@@ -54,7 +54,7 @@ class Start(Thread):
         print(f"Detection Simulation Finish{sep}")
 
         #Reset Plane
-        print("Ending Simulation")
+        print(f"Ending Simulation, date:{datetime.now().isoformat()}")
         self.end_run()
         print(f"Finish Simulation {sep}")
 

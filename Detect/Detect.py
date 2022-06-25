@@ -22,7 +22,7 @@ class Detect(Thread):
 
     def __init__(self,startObj,vehicleComunication,sensorsAlgorithm,avoidThread,configPath='config.yml',fusionAlgorithm=FusionData_Mean):
         Thread.__init__(self)
-        print("Start Detect Class")
+        print("Start Detect Class","data:",datetime.now().isoformat())
         with open(configPath, 'r') as file_config:
             self.config = yaml.full_load(file_config)
         self.avoidThread = avoidThread
@@ -54,8 +54,12 @@ class Detect(Thread):
                 detect_data.updateData(**sensorThread.getDetectData().getDictData())
                 if detect_data.myPosition is None:
                     detect_data.updateData(myPosition=self.fusionData.get_my_position())
+                #if detect_data.bbox != None:
+                #    print(f"--detect_data:{detect_data.bbox}")
                 self.fusionData.addDetect(detect_data)
             detect_data_final = self.fusionData.getFusion()
+            #if detect_data_final.bbox != None:
+            #    print(f"detect_data:{detect_data.bbox}")
             # TODO: Remover isso!
             algoritmos = '|'.join(detect_data_final.algoritmo)
             detect_data_final.algoritmo = f'detect: "{algoritmos}"@'\
@@ -102,11 +106,11 @@ class Detect(Thread):
         self.avoidThread.update_detect_data(detectData)
 
     def end_run(self):
-        print("End Detect")
+        print("End Detect","data:",datetime.now().isoformat())
         for thread in self.sensorsThreads:
             thread.terminate()
             thread.join()
-            print("Thread Terminate",thread.name)
+            print("Thread Terminate",thread.name,"data:",datetime.now().isoformat())
 
 
 

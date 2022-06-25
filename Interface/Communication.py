@@ -124,7 +124,7 @@ class AirSimCommunication(ICommunication):
             self.client.enableApiControl(True)
             self.client.armDisarm(True)
         '''
-        print("mote to path:", path)
+        #print("mote to path:", path)
         self.client.moveOnPathAsync(path, velocity)
 
     def moveToPoint(self,point,velocity=10,wait=False):

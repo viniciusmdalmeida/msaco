@@ -41,15 +41,9 @@ class VisionBase(AlgorithmSensor):
             self.cont += 1
         return img_rgba
 
-    def print_two_imagems(self):
-        response = self.client.simGetImages([airsim.ImageRequest("front_left", airsim.ImageType.Scene, False, False),
-                                        airsim.ImageRequest("front_right", airsim.ImageType.Scene, False, False)])
-        img1 = np.fromstring(response[0].image_data_uint8, dtype=np.uint8).reshape(response[0].height, response[0].width, 3)
-        img2 = np.fromstring(response[1].image_data_uint8, dtype=np.uint8).reshape(response[1].height, response[1].width, 3)
-        cv2.imwrite(f'../data/imagens/detect/voo/frame_{self.cont}_{datetime.now().timestamp()}_left.jpg', img1)
-        cv2.imwrite(f'../data/imagens/detect/voo/frame_{self.cont}_{datetime.now().timestamp()}_rigth.jpg', img2)
-
-    def printDetection(self, frame, bbox=None,distance=None):
+    def printDetection(self, frame, bbox=None,distance=None, timestamp=None):
+        if timestamp == None:
+            timestamp = datetime.now().timestamp()
         if self.showVideo or self.save_vision_detect:
             if bbox is not None and len(bbox) >= 4:
                 x1,y1,x2,y2 = self.getPoints(bbox)
@@ -57,10 +51,12 @@ class VisionBase(AlgorithmSensor):
                 if min(x2-x1,y2-y1) >= 0:
                     p1 = (x1, y1)
                     p2 = (x2, y2)
-                    if self.depth:
-                        cv2.rectangle(frame, p1, p2, 0, 2, 1)
-                    else:
-                        cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+                    cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+                    h,w,l = frame.shape
+                    cv2.putText(frame, f"p1:{p1}, p2:{p2}, w:{w}, h:{h}", (100, 80),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
+                    cv2.putText(frame, f"bbox:{bbox}, timestamp:{timestamp}", (200, 160),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
                     if distance:
                         cv2.putText(frame, "distancia:{}".format(distance), (100, 80),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
@@ -70,8 +66,8 @@ class VisionBase(AlgorithmSensor):
                     cv2.putText(frame, "Tracking failure detected", (100, 80),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
             if self.save_vision_detect:
-                cv2.imwrite(f'../data/imagens/detect/voo/frame_{self.cont}_{datetime.now().timestamp()}.jpg',frame)
-                self.print_two_imagems()
+                cv2.imwrite(f'../data/imagens/detect/voo/frame_{self.cont}_{timestamp}.jpg',frame)
+
             if self.showVideo:
                 cv2.imshow("Detect", frame)
                 cv2.waitKey(1)
@@ -89,11 +85,10 @@ class VisionBase(AlgorithmSensor):
         file_type_calc.close()
         return type.strip()
 
-
     def calc_extrinsics_matrix(self):
         quaternion_angles = self.client.simGetGroundTruthKinematics().orientation #get quaternoin anglers
         drone_location = self.client.simGetGroundTruthKinematics().position #get position of drone
-        print("drone_location:",drone_location)
+        #print("drone_location:",drone_location)
         drone_location.z_val = drone_location.z_val# Corigindo o Z
         #Convert rotation to roll pitch yaw
         #Link: https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.as_euler.html
@@ -103,25 +98,27 @@ class VisionBase(AlgorithmSensor):
         # calcule rotation matrix
         rotation_matrix = rotation_obj.as_matrix()
         translation_matrix = drone_location.to_numpy_array()
-        return rotation_matrix, translation_matrix
+
+        return rotation_matrix,translation_matrix
 
     def calc_obj_position(self, bbox, fov_angle=120, width_image=1024, alt_image = 580, focal_lengh_x=179.53, focal_lengh_y=179.17):
         #Link para descobrir focal length https://github.com/microsoft/AirSim/issues/2396
         #Formula para focal length (Horizontal FoV = 2 * arctan( width / 2f ) )
         y_camera = (bbox[0] + bbox[2]) / 2  # largura (y) camera
         z_camera = ((bbox[1] + bbox[3]) / 2) - alt_image   # altura (z) camera
-        position_cam_matrix = np.array([y_camera, z_camera, 1]).T
+        position_cam_matrix = np.array([y_camera, z_camera, 1, 1])
 
         px = width_image/2
         py = alt_image/2
         #https://www.cs.cmu.edu/~16385/s17/Slides/11.1_Camera_matrix.pdf
-        rotation_matrix, translation_matrix = self.calc_extrinsics_matrix()
+        rotation_matrix,translation_matrix = self.calc_extrinsics_matrix()
+        extrinsics_matrix = np.c_[rotation_matrix, translation_matrix]
         intrinsics_matrix = np.array([[focal_lengh_x, 0, px],
                                       [0, focal_lengh_y, py],
                                       [0,             0,  1]])
 
         #link: https://www.fdxlabs.com/calculate-x-y-z-real-world-coordinates-from-a-single-camera-using-opencv/
-        XYZ = np.dot((np.dot(position_cam_matrix, np.linalg.inv(intrinsics_matrix)) - translation_matrix), np.linalg.inv(rotation_matrix))
+        XYZ = np.dot(extrinsics_matrix, position_cam_matrix)
         relativePosition = tuple(XYZ)
 
         #Escrevendo parametros
@@ -131,7 +128,7 @@ class VisionBase(AlgorithmSensor):
 
         #Real distance
         distance_real = self.calc_distance(bbox)
-        print(f"calcule position: {relativePosition}")
+        #print(f"calcule position: {relativePosition}")
         self.detectData.updateData(distance=distance_real, relativePosition=relativePosition, bbox=bbox)
 
 class VisionDepthBase(VisionBase):
@@ -196,7 +193,11 @@ class VisionDepthBase(VisionBase):
         y1 = max(0,y1)
         x1 = max(0,x1)
         depthImage = self.getDepth()
-        distanceMin = depthImage[y1:y2, x1:x2].min()
+        shape_depth = depthImage.shape
+        y_proporcion = shape_depth[0] / 1080
+        x_proporcion = shape_depth[1] / 1920
+        distanceMin = depthImage[int(y1*y_proporcion):int(y2*y_proporcion),
+                                 int(x1*x_proporcion):int(x2*x_proporcion)].min()
         return distanceMin
 
 class VisionCaptureImage(VisionBase):

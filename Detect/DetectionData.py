@@ -18,9 +18,10 @@ class DetectionData:
         self.otherPosition = None
         self.myRotation = None
         self.bbox = None
+        self.timestamp = None
 
     def updateData(self,algoritmo=None,distance=None,relativePosition=None,relativeDirection=None,myDirection=None,
-                 otherDirection=None,myPosition=None,otherPosition=None, myRotation=None, bbox=None):
+                 otherDirection=None,myPosition=None,otherPosition=None, myRotation=None, bbox=None, timestamp=None):
         args_functions = locals()
         for arg_name in args_functions:
             value = args_functions[arg_name]
@@ -30,6 +31,8 @@ class DetectionData:
             self.__dict__['otherPosition'] = self.calcOtherPosition()
         if self.otherDirection is None:
             self.__dict__['otherDirection'] = self.calcOtherDirection()
+        #if not args_functions['bbox'] is None:
+        #    print(f"updateData/DetectionData data:{datetime.now().isoformat()} atualizado: {args_functions}")
 
     def calcOtherPosition(self):
         #print(f"calcOtherPosition:: my:{self.myPosition}, relative: {self.relativePosition}")
@@ -66,14 +69,18 @@ class DetectionData:
                 file.write(header+'\n')
 
     def print_data(self):
-        timestamp = datetime.now().timestamp()
-        str_print = f'{timestamp},'
+        if self.timestamp == None:
+            self.timestamp = datetime.now().timestamp()
+        str_print = f'{self.timestamp},'
         dict_data = self.getDictData()
         for key in dict_data:
             if key == 'distance' and key == 'algoritmo':
                 str_data += str(dict_data[key])
             elif dict_data[key] is None:
-                str_data = ',,'
+                if key == 'bbox':
+                    str_data = ',,,'
+                else:
+                    str_data = ',,'
             else:
                 str_data = str(dict_data[key]).replace(')', '').replace('(', '')
             str_print += str_data+","
@@ -94,5 +101,6 @@ class DetectionData:
         dict_Data['otherDirection'] = self.otherDirection
         dict_Data['myRotation'] = self.myRotation
         dict_Data['bbox'] = self.bbox
+        dict_Data['timestamp'] = self.timestamp
         return dict_Data
 

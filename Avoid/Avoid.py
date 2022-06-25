@@ -132,7 +132,7 @@ class HorizontalAvoid(BaseAvoid):
                 print(f"Update Path || OtherPosition: {other_position}, my position:{my_position}, new X:{my_position[1] + 60}")
                 #vai para o ponto mais baixo
                 my_position[1] += 60
-        print(f"New position: {my_position}")
+        #print(f"New position: {my_position}")
         return [list(my_position)],15
 
 

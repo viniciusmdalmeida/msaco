@@ -93,7 +93,7 @@ class VisionDetectOnly(VisionTrackerBase):
 
     def detect(self):
         frame = self.getImage()
-        bbox = self.detectObject.detect(frame, self.start_frame)
+        bbox = self.detectObject.detect(frame)
         if bbox :
             self.printDetection(frame, bbox)
             self.calc_obj_position(bbox)

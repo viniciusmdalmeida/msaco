@@ -43,7 +43,7 @@ class Control(Thread):
         self.vehicle.movePath(self.points,velocity)
 
     def updatePath(self,points,velocity):
-        print("Start update Path:",points,velocity)
+        #print("Start update Path:",points,velocity)
         self.points = points
         self.vehicle.movePath(points, velocity)
 

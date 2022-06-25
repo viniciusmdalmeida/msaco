@@ -110,7 +110,9 @@ class DetectMLBase(DetectBase):
         list_bbox_tuple = []
         if len(frame.shape) > 2:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        cont = 1
         for y in range(0, frame.shape[0], stepSize):
+            cont += 1
             if (y + self.windowSizeY > frame.shape[0]):
                 y = frame.shape[0] - self.windowSizeY
             for x in range(0, frame.shape[1], stepSize):

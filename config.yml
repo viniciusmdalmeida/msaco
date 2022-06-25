@@ -1,10 +1,10 @@
 test:
   out_put_path: ../data/out_put_test/
-  time_to_colision: 30 #10segundos
+  time_to_colision: 50 #10segundos
   plane_velocity: 200
 
 algorithm:
-  time_max: 40 #1min30seg
+  time_max: 70 #1min10seg
   vision:
     type: vision
     min_area: 350
@@ -57,3 +57,4 @@ sensors:
   Vision:
     show_video: false
     save_vision_detect: true
+    save_path: ../data/imagens/detect/voo

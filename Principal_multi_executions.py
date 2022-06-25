@@ -1,5 +1,6 @@
 from Interface.Start import Start
 from AlgorithmsSensors.cam.TrackersClass import *
+from AlgorithmsSensors.cam.StereoClass import *
 from AlgorithmsSensors.passive.ADS_B import *
 from AlgorithmsSensors.Collision_sensor import *
 from Detect.FusionData import *
@@ -20,10 +21,7 @@ with open(config_path, 'r') as file_config:
 
 #Para iniciar o keras
 
-list_algorithms = [{"ADSB":VisionTracker_Boosting_RF},
-                   {"RGB": VisionDetectLGB},
-                   {"DEPTH": VisionTracker_Boosting_RF_Depth},
-                   {"DEPTH": VisionDetectNeural_Depth}]
+list_algorithms = [{"Vision": VisionStereoRF}]
 """
 list_algorithms = [
     {"ADSB":ADS_B},
@@ -93,6 +91,7 @@ list_algorithms = [
     {"Vision": VisionTracker_TLD_SVM_Depth },
 ]
 """
+
 """
 from keras.models import Model,model_from_json
 path_model = '../data/models/'
@@ -109,11 +108,11 @@ list_avoid_algorithms = [HorizontalAvoid]
 #Posição do avião
 
 #Configuração testes
-altura = 47
+altura = 49
 #routePoints = [[0,1,-altura,10],[0,-10,-altura,confiFinalizado move to pointg['test']['time_to_colision']]] #[lateral,frente(negativa),cima,tempo] #em metros
-drone_start_point = [0,1,altura,10]
-routePoints = [[0,1,altura,10]]
-colision_point = [260, 230, 4900]
+drone_start_point = [1,1,altura*-1,10]
+routePoints = [[1,1,altura*-1,10]]
+colision_point = [100, 100, 4900]
 #list_angle = [30,20,10,0,-10,-20,-30]
 list_angle = [30,0,-30]
 distance_plane = 5000
