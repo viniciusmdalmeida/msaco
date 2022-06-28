@@ -16,3 +16,13 @@ class VisionStereoNeural(VisionStereoBase):
     def __init__(self, detectRoot):
         VisionStereoBase.__init__(self, detectRoot, model_name=self.name)
 
+class VisionStereoNaiveBayes(VisionStereoBase):
+    name = 'naive'
+    def __init__(self, detectRoot):
+        VisionStereoBase.__init__(self, detectRoot, model_name=self.name)
+
+class VisionStereoSVM(VisionStereoBase):
+    name = 'svm'
+    def __init__(self, detectRoot):
+        VisionStereoBase.__init__(self, detectRoot, model_name=self.name)
+

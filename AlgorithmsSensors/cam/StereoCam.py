@@ -43,7 +43,9 @@ class VisionStereoBase(VisionBase):
     def template_matching(self, img_left, img_rigth, bbox):
         img = img_rigth.copy()
         # Cortando a imagem para otimizar o algoritmo
-        img = img[int(bbox[1] - bbox[3] / 2):int(bbox[1] + (bbox[3] * 2)), :]
+        min_x = (bbox[2] / 2) if  (bbox[0] > bbox[2]/2) else 0
+        max_x = (bbox[3] * 1.5) if  (bbox[1] + (bbox[3] * 1.5) < img_left.shape[0]) else 1
+        img = img[int(bbox[1] - min_x):int(bbox[1] + (bbox[3] * max_x)), :]
         method = eval(self.template_matching_method)
         template = img_left[int(bbox[1]):int(bbox[1] + bbox[3]), int(bbox[0]):int(bbox[0] + bbox[2])]
 

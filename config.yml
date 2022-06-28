@@ -12,7 +12,7 @@ algorithm:
     dirModels: ../data/models/
     windowSizeX : 80
     windowSizeY : 80
-    stepSize : 40
+    stepSize : 60
     model_sufix: 80c
     resize_width: 1024
     resize_height: 580

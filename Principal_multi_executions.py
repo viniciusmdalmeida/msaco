@@ -21,8 +21,11 @@ with open(config_path, 'r') as file_config:
 
 #Para iniciar o keras
 
-list_algorithms = [{"Vision": VisionStereoRF },
-                   {"Vision": VisionDetectRF }]
+list_algorithms = [{"Binocular": VisionStereoRF},
+                   {"Binocular": VisionStereoLGB},
+                   {"Binocular": VisionStereoNeural},
+                   {"Binocular": VisionStereoNaiveBayes},
+                   {"Binocular": VisionStereoSVM}]
 """
 list_algorithms = [
     {"ADSB":ADS_B},

@@ -5,6 +5,7 @@ import pickle
 
 from keras.preprocessing.image import img_to_array
 from keras.models import Model,model_from_json
+from datetime import datetime
 
 class DetectBase:
     def __init__(self,config):
@@ -134,6 +135,8 @@ class DetectMLBase(DetectBase):
         perc_width = frame.shape[1] / width
         perc_height = frame.shape[0] / height
 
+        detect_list = []
+        transf_list = []
         for windows in list_windows:
             x = windows[0]
             y = windows[1]
@@ -144,6 +147,9 @@ class DetectMLBase(DetectBase):
             if predito[0] == 1:
                 bbox = (int(x*perc_width), int(y*perc_height), self.windowSizeX, self.windowSizeY)
                 list_bbox_tuple = self.update_list_bbox(bbox,list_bbox_tuple,frame.shape)
+            cont += 1
+
+
         max_bbox_tuple = [0,None]
         for bbox_tuple in list_bbox_tuple:
             if bbox_tuple[0] > max_bbox_tuple[0]:
