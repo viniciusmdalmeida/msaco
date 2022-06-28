@@ -2,11 +2,10 @@ from Control.Route import *
 from Utils.ThreadKillable import *
 from Utils.UnrealCommunication import UnrealCommunication
 
-class Control(Thread):
+class Control():
     #avoiding = False
     moving = False
     def __init__(self,vehicleComunication,points,tempo = 0):
-        Thread.__init__(self)
         self.vehicle = vehicleComunication
         self.route = Route(points)
         self.tempo = tempo
@@ -22,7 +21,7 @@ class Control(Thread):
         self.vehicle.takeOff()
         print("Take Off")
 
-    def run(self):
+    def start(self):
         print("### Control Thread: Start")
         self.moving =True
         self.unrealControl.start_plane()
