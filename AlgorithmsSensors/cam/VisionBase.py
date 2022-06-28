@@ -73,11 +73,10 @@ class VisionBase(AlgorithmSensor):
                 cv2.waitKey(1)
 
     def terminate(self):
-        print("Tentando terminar ",self.name)
         self._stop_detect = True
         if self.showVideo:
             cv2.destroyAllWindows()
-        print("Terminando windows")
+        print(f"Terminando algoritmo:{self.name}")
 
     def get_calc_pos(self):
         file_type_calc = open('type_calc.txt', 'r')

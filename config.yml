@@ -1,12 +1,11 @@
 test:
   out_put_path: ../data/out_put_test/
-  time_to_colision: 50 #10segundos
+  time_to_colision: 40 #10segundos
   plane_velocity: 200
 
 algorithm:
-  time_max: 70 #1min10seg
+  time_max: 50 #1min10seg
   vision:
-    type: vision
     min_area: 350
     dirPositveImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/background/
     dirNegativeImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/plane/
@@ -15,7 +14,9 @@ algorithm:
     windowSizeY : 80
     stepSize : 40
     model_sufix: 80c
-    stepSize_getImagem: 30
+    resize_width: 1024
+    resize_height: 580
+
 
 detect:
   vertical_limit: 70

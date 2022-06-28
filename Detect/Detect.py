@@ -41,6 +41,7 @@ class Detect(Thread):
             self.sensorsThreads.append(newAlgorithm)
 
     def run(self):
+        print("### ** Detect Thread: Start")
         self.startAlgorithms()
         #Iniciando os algoritmos
         for sensorThread in self.sensorsThreads:
@@ -74,6 +75,7 @@ class Detect(Thread):
                 break
             time.sleep(0.1)
         self.end_run()
+        print("### ** Detect Thread: END")
 
     def norm_data(self,dict_sensor_data):
         dict_data = {}

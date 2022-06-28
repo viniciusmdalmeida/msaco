@@ -13,8 +13,7 @@ class Start(Thread):
     def __init__(self,routePoints,sensorsAlgorithms={'Vision':[VisionDetectSVM]},
                  avoidClass=FixAvoid,comunication=AirSimCommunication,fusionAlgorithm=FusionData_Mean,
                  configPath='config.yml',startPoint=None):
-        print("--------------------------------------")
-        print("      Start Simulation Config ")
+        print("Simulation Config - Start")
         Thread.__init__(self)
         # Iniciando variaveis
         self.status = 'start'
@@ -36,27 +35,26 @@ class Start(Thread):
         if sensorsAlgorithms is not None:
             self.detect = Detect(self,self.vehicleComunication,sensorsAlgorithms,
                                  self.avoidThread,fusionAlgorithm=fusionAlgorithm)
-        print("Simulation Config Finish")
-        print("--------------------------------------")
+        print("Simulation Config - Finish")
         #self.start()
 
     def run(self):
-        sep = "\n--------------------------------------"
-
+        print("-----------------------------------------")
+        print("-------- Start Thread :: Beging ---------")
         # Start Execution
-        print("Starting Drone...")
+        print("Starting Drone ...")
         self.start_run()
-        print(f"Drone Started!{sep}")
+        print(f"Drone Started!")
 
         #Wating from  time or collision
-        print("Start Detection Simulation")
         self.main_loop()
-        print(f"Detection Simulation Finish{sep}")
 
         #Reset Plane
         print(f"Ending Simulation, date:{datetime.now().isoformat()}")
         self.end_run()
-        print(f"Finish Simulation {sep}")
+        print(f"Finish Simulation")
+        print("-------- Start Thread :: Finish --------")
+        print("----------------------------------------")
 
     def main_loop(self):
         max_time = time.time() + self.config['algorithm']['time_max']

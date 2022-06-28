@@ -21,7 +21,8 @@ with open(config_path, 'r') as file_config:
 
 #Para iniciar o keras
 
-list_algorithms = [{"Vision": VisionStereoRF}]
+list_algorithms = [{"Vision": VisionStereoRF },
+                   {"Vision": VisionDetectRF }]
 """
 list_algorithms = [
     {"ADSB":ADS_B},
@@ -114,7 +115,7 @@ drone_start_point = [1,1,altura*-1,10]
 routePoints = [[1,1,altura*-1,10]]
 colision_point = [100, 100, 4900]
 #list_angle = [30,20,10,0,-10,-20,-30]
-list_angle = [30,0,-30]
+list_angle = [30,15,0,-15,-30]
 distance_plane = 5000
 num_repetitions = 1
 
@@ -144,9 +145,9 @@ for angle in tqdm(list_angle):
             for algorithm in list_algorithms:
                 for count in range(num_repetitions):
                     #Start simples
-                    print("\n###############")
+                    print("\n############################################################")
                     print(f"Iniciando execução Algoritmos:{algorithm}, rota:{routePoints}")
-                    print("###############")
+                    print("############################################################")
                     # Reset avião
                     unreal_communication.reset_plane(location, rotation)
                     #rodando algoritmo
@@ -154,7 +155,6 @@ for angle in tqdm(list_angle):
                                            fusionAlgorithm=fusion_algorithm,avoidClass=avoid_algorithm)
                     run_simulation.start()
                     run_simulation.join()
-                    print("Finish Test",algorithm)
                     #salvando resultado
                     status = run_simulation.get_status()
                     df_result = pd.DataFrame({'algoritmo': [algorithm], 'status': [status],'location_plane':[location],
@@ -163,6 +163,8 @@ for angle in tqdm(list_angle):
                                               'timestamp':datetime.now().timestamp()})
                     df_out_put = df_out_put.append(df_result,ignore_index=True,
                                                    sort=False)
+                    print("Finish Test", algorithm)
+                    print("############################################################\n")
                     #Finalizando simulação
                     time.sleep(2.5)
                     del run_simulation

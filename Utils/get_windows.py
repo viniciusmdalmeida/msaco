@@ -112,7 +112,7 @@ class Imagem_data:
             self.image = image
             self.keras = False
 
-    def slidingWindows(self, stepSize=50,config_path='../config.yml'):
+    def slidingWindows(self, config_path='../config.yml'):
         """
         Função para fazer a janela deslizante, ela pecorre a imagem e retorna um dicionario
         pequenas janelas com o tamanho windowSizeX x windowSizeY, no dicionario estão as
@@ -128,7 +128,7 @@ class Imagem_data:
             config = yaml.full_load(file_config)
         windowSizeX = config['algorithm']['vision']['windowSizeX']
         windowSizeY = config['algorithm']['vision']['windowSizeY']
-        stepSize = config['algorithm']['vision']['stepSize_getImagem']
+        stepSize = config['algorithm']['vision']['stepSize']
 
         windows = []
         xs = []

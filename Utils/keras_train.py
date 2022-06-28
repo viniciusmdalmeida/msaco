@@ -1,9 +1,3 @@
-from sklearn.preprocessing import LabelEncoder
-from os import listdir, mkdir
-import cv2
-from Utils.get_windows import *
-
-from keras.preprocessing.image import img_to_array
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.applications.xception import Xception
 from keras.models import Model,model_from_json

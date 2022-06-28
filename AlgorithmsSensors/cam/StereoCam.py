@@ -95,18 +95,20 @@ class VisionStereoBase(VisionBase):
         self.get_start_frame()
         img_left, img_rigth  = self.get_images()
         timestamp_detect = datetime.now().timestamp()
-        print("detect get_timestamp",datetime.now().isoformat())
+        start_time = datetime.now()
         bbox = self.detectObject.detect(img_left, self.start_frame)
         if not bbox:
-            print("Objeto não encontrado! timestamp:", datetime.now().isoformat())
+            end_detect = datetime.now()
+            print("NÃO encontrado! timestamp:", end_detect.isoformat(),"tempo exec:",end_detect-start_time)
+            print("---------------")
             return
         if self.save_vision_detect:
-            print("detect após escontrar imagem, timestamp:", datetime.now().isoformat())
+            end_detect = datetime.now()
+            print("--Objeto encontrado! timestamp:", datetime.now().isoformat(),"tempo exec:",end_detect-start_time)
             save_path = self.config['sensors']['Vision']['save_path']
             image_name_base = f'{save_path}/frame_{self.cont}_{timestamp_detect}'
             cv2.imwrite(f'{image_name_base}_left.jpg', img_left)
             cv2.imwrite(f'{image_name_base}_right.jpg', img_rigth)
-            print("detect após imprimir imagens", datetime.now().isoformat())
             self.cont += 1
         print(f"bbox:{bbox}, timestamp:{timestamp_detect}")
         self.printDetection(img_left, bbox, timestamp=timestamp_detect)
@@ -125,8 +127,8 @@ class VisionStereoBase(VisionBase):
 
         distance = self.calc_distance(relative_pos)
 
-        print(f"bbox final:{bbox}, timestamp:{int(timestamp_detect)}, distance: {distance}")
         self.detectData.updateData(distance=distance, otherPosition=np.array(real_pos),relativePosition=relative_pos,
                                    bbox=bbox, timestamp= int(timestamp_detect))
-        print(f"Data atualizada => bbox:{bbox}, real data:{real_pos}, relative:{relative_pos}")
+        print(f"Final detect => bbox:{bbox}, relative:{relative_pos}, real data:{real_pos}, distance: {distance}")
+        print("---------------")
         return real_pos

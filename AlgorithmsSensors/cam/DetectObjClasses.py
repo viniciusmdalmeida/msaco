@@ -105,27 +105,45 @@ class DetectMLBase(DetectBase):
             list_bbox_tuple.append([1,bbox])
         return list_bbox_tuple
 
+    def sliding_window(self, image, stepSize, windowSize):
+        # slide a window across the image
+        for y in range(0, image.shape[0], stepSize):
+            if (y + self.windowSizeY > image.shape[0]):
+                y = image.shape[0] - self.windowSizeY
+            for x in range(0, image.shape[1], stepSize):
+                # yield the current window
+                if (x + self.windowSizeX > image.shape[1]):
+                    x = image.shape[1] - self.windowSizeX
+                yield (x, y, image[y:y + windowSize[1], x:x + windowSize[0]])
+
+
     def detect(self, frame,primeioroFrame=None):
-        stepSize = self.config['algorithm']['vision']['stepSize']
         list_bbox_tuple = []
         if len(frame.shape) > 2:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         cont = 1
-        for y in range(0, frame.shape[0], stepSize):
-            cont += 1
-            if (y + self.windowSizeY > frame.shape[0]):
-                y = frame.shape[0] - self.windowSizeY
-            for x in range(0, frame.shape[1], stepSize):
-                if (x + self.windowSizeX > frame.shape[1]):
-                    x = frame.shape[1] - self.windowSizeX
-                crop_img = frame[y:y + self.windowSizeY, x:x + self.windowSizeX]
-                data = crop_img.reshape(-1)
-                if self.namePrepDataModel:
-                    data = self.prepData.transform([data])
-                predito = self.model.predict(data)
-                if predito[0] == 1:
-                    bbox = (x, y, self.windowSizeX, self.windowSizeY)
-                    list_bbox_tuple = self.update_list_bbox(bbox,list_bbox_tuple,frame.shape)
+
+        stepSize = self.config['algorithm']['vision']['stepSize']
+        windows_size = [self.windowSizeX, self.windowSizeY]
+
+        #resize frame
+        width = self.config['algorithm']['vision']['resize_width']
+        height = self.config['algorithm']['vision']['resize_height']
+        frame_resized = cv2.resize(frame, (width, height), interpolation=cv2.INTER_AREA)
+        list_windows = self.sliding_window(frame_resized, stepSize, windows_size)
+        perc_width = frame.shape[1] / width
+        perc_height = frame.shape[0] / height
+
+        for windows in list_windows:
+            x = windows[0]
+            y = windows[1]
+            data = windows[2].reshape(-1)
+            if self.namePrepDataModel:
+                data = self.prepData.transform([data])
+            predito = self.model.predict(data)
+            if predito[0] == 1:
+                bbox = (int(x*perc_width), int(y*perc_height), self.windowSizeX, self.windowSizeY)
+                list_bbox_tuple = self.update_list_bbox(bbox,list_bbox_tuple,frame.shape)
         max_bbox_tuple = [0,None]
         for bbox_tuple in list_bbox_tuple:
             if bbox_tuple[0] > max_bbox_tuple[0]:

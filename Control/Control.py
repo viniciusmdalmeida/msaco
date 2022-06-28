@@ -23,9 +23,11 @@ class Control(Thread):
         print("Take Off")
 
     def run(self):
+        print("### Control Thread: Start")
         self.moving =True
         self.unrealControl.start_plane()
         self.moveByPath()
+        print("### Control Thread: Finish")
 
     def moveByPoints(self):
         print("Iniciando Rota")
@@ -39,11 +41,11 @@ class Control(Thread):
         print("Fim")
 
     def moveByPath(self,velocity=10):
-        print("Start path",self.points)
+        print("control => Start path",self.points)
         self.vehicle.movePath(self.points,velocity)
 
     def updatePath(self,points,velocity):
-        #print("Start update Path:",points,velocity)
+        print("control => update Path:",points,velocity)
         self.points = points
         self.vehicle.movePath(points, velocity)
 

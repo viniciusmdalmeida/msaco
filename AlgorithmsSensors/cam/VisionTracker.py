@@ -93,12 +93,18 @@ class VisionDetectOnly(VisionTrackerBase):
 
     def detect(self):
         frame = self.getImage()
+        start_time = datetime.now()
         bbox = self.detectObject.detect(frame)
+        end_detect = datetime.now()
         if bbox :
+            print("**Objeto encontrado, timestamp:",
+                  end_detect.isoformat(), "tempo exec:",end_detect - start_time)
             self.printDetection(frame, bbox)
             self.calc_obj_position(bbox)
             status = True
         else:
+            print("**NÃO encontrado! timestamp:",
+                  datetime.now().isoformat(), "tempo exec:", end_detect - start_time)
             status = False
         if not self.check_status(status):
             self.start_tracker()
