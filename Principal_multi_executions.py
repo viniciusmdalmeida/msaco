@@ -22,10 +22,10 @@ with open(config_path, 'r') as file_config:
 #Para iniciar o keras
 
 list_algorithms = [{"Binocular": VisionStereoRF},
+                   {"Binocular": VisionStereoSVM},
                    {"Binocular": VisionStereoLGB},
-                   {"Binocular": VisionStereoNeural},
                    {"Binocular": VisionStereoNaiveBayes},
-                   {"Binocular": VisionStereoSVM}]
+                   {"Binocular": VisionStereoNeural}]
 """
 list_algorithms = [
     {"ADSB":ADS_B},
@@ -118,7 +118,7 @@ drone_start_point = [1,1,altura*-1,10]
 routePoints = [[1,1,altura*-1,10]]
 colision_point = [100, 100, 4900]
 #list_angle = [30,20,10,0,-10,-20,-30]
-list_angle = [30,15,0,-15,-30]
+list_angle = [30,20,10,0,-10,-20,-30]
 distance_plane = 5000
 num_repetitions = 1
 

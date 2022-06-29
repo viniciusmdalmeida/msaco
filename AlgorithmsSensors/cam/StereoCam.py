@@ -42,13 +42,15 @@ class VisionStereoBase(VisionBase):
 
     def template_matching(self, img_left, img_rigth, bbox):
         img = img_rigth.copy()
+        method = eval(self.template_matching_method)
+
         # Cortando a imagem para otimizar o algoritmo
-        min_x = (bbox[2] / 2) if  (bbox[0] > bbox[2]/2) else 0
+        min_x = (bbox[3] / 2) if  (bbox[1] > bbox[3]/2) else 0
         max_x = (bbox[3] * 1.5) if  (bbox[1] + (bbox[3] * 1.5) < img_left.shape[0]) else 1
         img = img[int(bbox[1] - min_x):int(bbox[1] + (bbox[3] * max_x)), :]
-        method = eval(self.template_matching_method)
-        template = img_left[int(bbox[1]):int(bbox[1] + bbox[3]), int(bbox[0]):int(bbox[0] + bbox[2])]
 
+        #Cortando o template
+        template = img_left[int(bbox[1]):int(bbox[1] + bbox[3]), int(bbox[0]):int(bbox[0] + bbox[2])]
         # Apply template Matching
         res = cv2.matchTemplate(img, template, method)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
@@ -63,13 +65,14 @@ class VisionStereoBase(VisionBase):
         return bbox_matching
 
     def calc_relative_pos(self,  img_left, img_rigth, bbox,
-                          focal_lengh_x=295, focal_lengh_y=295, px=511, py=290.1, b=25):
+                              focal_lengh_x=510, focal_lengh_y=510, px=960, py=540, b=25):
         bbox_matching = self.template_matching(img_left, img_rigth, bbox)
+        print(f"bbox_matching: {bbox_matching}")
 
         x1, y1 = bbox[0] + (bbox[2] / 2), bbox[1] + (bbox[3] / 2)
         x2, y2 = bbox_matching[0] + (bbox_matching[2]/2), bbox_matching[1] + (bbox_matching[3]/2)
 
-        d = x2 - x1
+        d = x1 - x2
         if d == 0:
             d = 1
 
@@ -92,20 +95,23 @@ class VisionStereoBase(VisionBase):
             self.start_frame = self.getImage()
 
 
-    def detect(self, focal_lengh_x=295, focal_lengh_y=295, px=511, py=290.1, b=25):
+    def detect(self, focal_lengh_x=510, focal_lengh_y=510, px=960, py=540, b=25):
         # Calculando bbox
         self.get_start_frame()
         img_left, img_rigth  = self.get_images()
         timestamp_detect = datetime.now().timestamp()
+        # Pegando valores de rotação
+        rotation_matrix, translation_matrix = self.calc_extrinsics_matrix()
+        translation_matrix[2] = translation_matrix[2] * -1 #Atualizando valor de Z
+
         start_time = datetime.now()
         bbox = self.detectObject.detect(img_left, self.start_frame)
+        end_detect = datetime.now()
         if not bbox:
-            end_detect = datetime.now()
             print("NÃO encontrado! timestamp:", end_detect.isoformat(),"tempo exec:",end_detect-start_time)
             print("---------------")
             return
         if self.save_vision_detect:
-            end_detect = datetime.now()
             print("--Objeto encontrado! timestamp:", datetime.now().isoformat(),"tempo exec:",end_detect-start_time)
             save_path = self.config['sensors']['Vision']['save_path']
             image_name_base = f'{save_path}/frame_{self.cont}_{timestamp_detect}'
@@ -119,9 +125,8 @@ class VisionStereoBase(VisionBase):
                                     focal_lengh_x=focal_lengh_x, focal_lengh_y=focal_lengh_y, px=px, py=py, b=b)
         relative_pos = np.array([x, y, z])
 
-        # Aplicando translaçãmote to patho e rotação
-        rotation_matrix,translation_matrix = self.calc_extrinsics_matrix()
         extrinsic_matrix = np.c_[rotation_matrix, translation_matrix]
+        print(f"rotation matrix:{rotation_matrix}, translation matrix:{translation_matrix}")
         real_pos = np.dot(extrinsic_matrix, np.array([x, y, z, 1]))
 
         # Convertendo de cm para metros

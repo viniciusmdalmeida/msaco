@@ -154,6 +154,7 @@ class DetectMLBase(DetectBase):
         for bbox_tuple in list_bbox_tuple:
             if bbox_tuple[0] > max_bbox_tuple[0]:
                 max_bbox_tuple = bbox_tuple
+        print(max_bbox_tuple)
         return max_bbox_tuple[1]
 
 

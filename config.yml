@@ -6,14 +6,14 @@ test:
 algorithm:
   time_max: 50 #1min10seg
   vision:
-    min_area: 350
-    dirPositveImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/background/
-    dirNegativeImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/windows/plane/
+    min_area: 6401
+    dirPositveImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/background+/
+    dirNegativeImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/plane+/
     dirModels: ../data/models/
     windowSizeX : 80
     windowSizeY : 80
     stepSize : 60
-    model_sufix: 80c
+    model_sufix: 80x80_200
     resize_width: 1024
     resize_height: 580
 

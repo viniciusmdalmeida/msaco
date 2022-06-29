@@ -88,7 +88,8 @@ class VisionBase(AlgorithmSensor):
         quaternion_angles = self.client.simGetGroundTruthKinematics().orientation #get quaternoin anglers
         drone_location = self.client.simGetGroundTruthKinematics().position #get position of drone
         #print("drone_location:",drone_location)
-        drone_location.z_val = drone_location.z_val# Corigindo o Z
+        #drone_location.z_val = drone_location.z_val# Corigindo o Z
+
         #Convert rotation to roll pitch yaw
         #Link: https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.as_euler.html
         rotation_obj = Rotation.from_quat([quaternion_angles.x_val,quaternion_angles.y_val,quaternion_angles.z_val,
@@ -100,7 +101,7 @@ class VisionBase(AlgorithmSensor):
 
         return rotation_matrix,translation_matrix
 
-    def calc_obj_position(self, bbox, fov_angle=120, width_image=1024, alt_image = 580, focal_lengh_x=179.53, focal_lengh_y=179.17):
+    def calc_obj_position(self, bbox, fov_angle=120, width_image=1024, alt_image = 580, focal_lengh_x=510, focal_lengh_y=510):
         #Link para descobrir focal length https://github.com/microsoft/AirSim/issues/2396
         #Formula para focal length (Horizontal FoV = 2 * arctan( width / 2f ) )
         y_camera = (bbox[0] + bbox[2]) / 2  # largura (y) camera

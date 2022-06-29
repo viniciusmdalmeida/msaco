@@ -64,7 +64,7 @@ class DetectionData:
             with open(file_path, 'a') as file:
                 header = 'timestamp,algoritmo,distance,myX,myY,myZ,myDirX,myDirY,myDirZ,' \
                          'relX,relY,relZ,reldirX,reldirY,reldirZ,otherX,otherY,otherZ,' \
-                         'otherDirX,otherDirY,otherDirZ,rotationX,rotationY,rotationZ,rotationW,' \
+                         'otherDirX,otherDirY,otherDirZ,rotationW,rotationX,rotationY,rotationZ,' \
                          'bbox1,bbox2,bbox3,bbox4'
                 file.write(header+'\n')
 
