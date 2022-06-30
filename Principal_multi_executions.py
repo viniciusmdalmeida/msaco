@@ -20,81 +20,53 @@ with open(config_path, 'r') as file_config:
     config = yaml.full_load(file_config)
 
 #Para iniciar o keras
+list_algorithms = [{"Depth": VisionDetectRF_Depth}]
+                   #{"Depth": VisionDetectSVM_Depth},
+                   #{"Depth": VisionDetectLGB_Depth},
+                   #{"Depth": VisionDetectNaive_Depth},
+                   #{"Depth": VisionDetectNeural_Depth}]
 
+"""
 list_algorithms = [{"Binocular": VisionStereoRF},
                    {"Binocular": VisionStereoSVM},
                    {"Binocular": VisionStereoLGB},
                    {"Binocular": VisionStereoNaiveBayes},
-                   {"Binocular": VisionStereoNeural}]
-"""
-list_algorithms = [
-    {"ADSB":ADS_B},
-    {"RGB":VisionTracker_Boosting_RF},
-    {"RGB":VisionDetectLGB},
-    {"DEPTH":VisionTracker_Boosting_RF_Depth},
-    {"DEPTH":VisionDetectNeural_Depth},
-    {'RGB':VisionTracker_Boosting_RF, 'DEPTH':VisionTracker_Boosting_RF_Depth},
-    {'RGB':VisionTracker_Boosting_RF, 'DEPTH':VisionDetectNeural_Depth},
-    {'RGB':VisionDetectLGB, 'DEPTH':VisionTracker_Boosting_RF_Depth},
-    {'RGB':VisionDetectLGB, 'DEPTH':VisionDetectNeural_Depth},
-    {'RGB':VisionTracker_Boosting_RF, 'DEPTH':VisionTracker_Boosting_RF_Depth, 'ADSB':ADS_B},
-    {'RGB':VisionDetectLGB, 'DEPTH':VisionDetectNeural_Depth, 'ADSB':ADS_B},
-]
+                   {"Binocular": VisionStereoNeural},
+                   {"Mix_Cam": VisionDetectRF},
+                   {"Mix_Cam": VisionDetectSVM},
+                   {"Mix_Cam": VisionDetectLGB},
+                   {"Mix_Cam": VisionDetectNaiveBayes},
+                   {"Mix_Cam": VisionDetectNeural}]
+# Stereo
+list_algorithms = [{"Mix_Cam": VisionTracker_KFC_RF},
+                   {"Binocular": VisionTrackerStereo_KFC_RF},
+                   {"Binocular": VisionTrackerStereo_KFC_Naive},
+                   {"Binocular": VisionTrackerStereo_MIL_RF},
+                   {"Binocular": VisionTrackerStereo_MIL_Naive},
+                   {"Binocular": VisionTrackerStereo_TLD_RF},
+                   {"Binocular": VisionTrackerStereo_TLD_Naive},
+                   {"Binocular": VisionTrackerStereo_Boosting_RF},
+                   {"Binocular": VisionTrackerStereo_Boosting_Naive},
+                   {"Mix_Cam": VisionTracker_KFC_Naive},
+                   {"Mix_Cam": VisionTracker_MIL_RF},
+                   {"Mix_Cam":VisionTracker_MIL_Naive},
+                   {"Mix_Cam": VisionTracker_KFC_Naive},
+                   {"Mix_Cam": VisionTracker_TLD_RF},
+                   {"Mix_Cam": VisionTracker_TLD_Naive},
+                   {"Mix_Cam": VisionTracker_Boosting_RF},
+                   {"Mix_Cam": VisionTracker_Boosting_Naive}]
 
+# Fusion
 list_algorithms = [
-    {"Vision": ADS_B },
-    {"Vision": VisionDetectLGB },
-    {"Vision": VisionDetectLGB_Depth },
-    {"Vision": VisionDetectNaiveBayes },
-    {"Vision": VisionDetectNaive_Depth },
-    {"Vision": VisionDetectNeural },
-    {"Vision": VisionDetectNeural_Depth },
-    {"Vision": VisionDetectRF },
-    {"Vision": VisionDetectRF_Depth },
-    {"Vision": VisionDetectSVM },
-    {"Vision": VisionDetectSVM_Depth },
-    {"Vision": VisionTracker_Boosting_LGB },
-    {"Vision": VisionTracker_Boosting_LGB_Depth },
-    {"Vision": VisionTracker_Boosting_Naive },
-    {"Vision": VisionTracker_Boosting_Naive_Depth },
-    {"Vision": VisionTracker_Boosting_RF },
-    {"Vision": VisionTracker_Boosting_RF_Depth },
-    {"Vision": VisionTracker_Boosting_RN },
-    {"Vision": VisionTracker_Boosting_RN_Depth },
-    {"Vision": VisionTracker_Boosting_SVM },
-    {"Vision": VisionTracker_Boosting_SVM_Depth },
-    {"Vision": VisionTracker_KFC_LGB },
-    {"Vision": VisionTracker_KFC_LGB_Depth },
-    {"Vision": VisionTracker_KFC_Naive },
-    {"Vision": VisionTracker_KFC_Naive_Depth },
-    {"Vision": VisionTracker_KFC_RF },
-    {"Vision": VisionTracker_KFC_RF_Depth },
-    {"Vision": VisionTracker_KFC_RN },
-    {"Vision": VisionTracker_KFC_RN_Depth },
-    {"Vision": VisionTracker_KFC_SVM },
-    {"Vision": VisionTracker_KFC_SVM_Depth },
-    {"Vision": VisionTracker_MIL_LGB },
-    {"Vision": VisionTracker_MIL_LGB_Depth },
-    {"Vision": VisionTracker_MIL_Naive },
-    {"Vision": VisionTracker_MIL_Naive_Depth },
-    {"Vision": VisionTracker_MIL_RF },
-    {"Vision": VisionTracker_MIL_RF_Depth },
-    {"Vision": VisionTracker_MIL_RN },
-    {"Vision": VisionTracker_MIL_RN_Depth },
-    {"Vision": VisionTracker_MIL_SVM },
-    {"Vision": VisionTracker_MIL_SVM_Depth },
-    {"Vision": VisionTracker_TLD_LGB },
-    {"Vision": VisionTracker_TLD_LGB_Depth },
-    {"Vision": VisionTracker_TLD_Naive },
-    {"Vision": VisionTracker_TLD_Naive_Depth },
-    {"Vision": VisionTracker_TLD_RF },
-    {"Vision": VisionTracker_TLD_RF_Depth },
-    {"Vision": VisionTracker_TLD_RN },
-    {"Vision": VisionTracker_TLD_RN_Depth },
-    {"Vision": VisionTracker_TLD_SVM },
-    {"Vision": VisionTracker_TLD_SVM_Depth },
+    {'Binocular':VisionTrackerStereo_MIL_Naive, 'MixCam':VisionTracker_MIL_Naive},
+    {'Binocular':VisionTrackerStereo_MIL_Naive, 'MixCam':VisionDetectRF},
+    {'Binocular':VisionTrackerStereo_TLD_RF, 'MixCam':VisionTracker_MIL_Naive},
+    {'Binocular':VisionTrackerStereo_TLD_RF, 'MixCam':VisionDetectRF},
+    {'Binocular':VisionTrackerStereo_MIL_Naive, 'MixCam':VisionTracker_MIL_Naive, 'ADS-B'},
+    {'Binocular':VisionTrackerStereo_TLD_RF, 'MixCam':VisionDetectRF, 'ADS-B'},
 ]
 """
+
 
 """
 from keras.models import Model,model_from_json
@@ -105,9 +77,9 @@ model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
 
-#list_fusion_algorithms = [FusionData_Mean, FusionData_MeanWeighted]
+list_fusion_algorithms = [FusionData_MeanWeighted, FusionData_Mean]
 #list_avoid_algorithms = [HorizontalAvoid, VerticalAvoid]
-list_fusion_algorithms = [FusionData_Mean]
+#list_fusion_algorithms = [FusionData_Mean]
 list_avoid_algorithms = [HorizontalAvoid]
 #Posição do avião
 
@@ -118,7 +90,7 @@ drone_start_point = [1,1,altura*-1,10]
 routePoints = [[1,1,altura*-1,10]]
 colision_point = [100, 100, 4900]
 #list_angle = [30,20,10,0,-10,-20,-30]
-list_angle = [30,20,10,0,-10,-20,-30]
+list_angle = [30,15,0,-15,-30]
 distance_plane = 5000
 num_repetitions = 1
 

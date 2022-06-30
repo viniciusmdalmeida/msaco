@@ -19,3 +19,9 @@ VisionDetectRF_Depth: 0.70
 #KFC
 VisionTracker_Boosting_RF: 0.89
 VisionTracker_Boosting_RF_Depth: 0.93
+
+
+VisionTrackerStereo_MIL_Naive: 0.17
+VisionTrackerStereo_TLD_RF: 0.7
+VisionDetectRF: 0.90
+VisionTracker_MIL_Naive: 0.12

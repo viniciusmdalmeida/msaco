@@ -30,7 +30,7 @@ def get_dict_dados(windowSizeY,windowSizeX,negativeImg_path,positiveImg_path,dep
     list_positive_files = listdir(positiveImg_path)
     print(f"arquivos negativos:{len(list_negative_files)}, arquivos positivos:{len(list_positive_files)}")
     random.shuffle(list_negative_files)
-    #list_negative_files = list_negative_files[:len(list_positive_files)]
+    list_negative_files = list_negative_files[:len(list_positive_files)]
     dict_data = {negativeImg_path:list_negative_files,positiveImg_path:list_positive_files}
     for path in dict_data:
         list_files = dict_data[path]

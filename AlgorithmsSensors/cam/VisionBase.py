@@ -18,6 +18,30 @@ class VisionBase(AlgorithmSensor):
         date_now = datetime.now()
         self.date_str = f"{date_now.day}-{date_now.month}_{date_now.hour}-{date_now.minute}-{date_now.second}"
 
+    def calc_distance(self,bbox):
+        x1, y1, x2, y2 = self.getPoints(bbox)
+        if x2 < x1:
+            aux = x1.copy()
+            x1 = x2
+            x2 = aux
+        elif x2 == x1:
+            return None
+        if y2 < y1:
+            aux = y1.copy()
+            y1 = y2
+            y2 = aux
+        elif y2 == y1:
+            return None
+        y1 = max(0,y1)
+        x1 = max(0,x1)
+        depthImage = self.getDepth()
+        shape_depth = depthImage.shape
+        y_proporcion = shape_depth[0] / 1080
+        x_proporcion = shape_depth[1] / 1920
+        distanceMin = depthImage[int(y1*y_proporcion):int(y2*y_proporcion),
+                                 int(x1*x_proporcion):int(x2*x_proporcion)].min()
+        return distanceMin
+
     def getPoints(self, bbox):
         x1 = int(bbox[0])
         y1 = int(bbox[1])
@@ -52,8 +76,8 @@ class VisionBase(AlgorithmSensor):
                     p1 = (x1, y1)
                     p2 = (x2, y2)
                     cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
-                    h,w,l = frame.shape
-                    cv2.putText(frame, f"p1:{p1}, p2:{p2}, w:{w}, h:{h}", (100, 80),
+                    shape = frame.shape
+                    cv2.putText(frame, f"p1:{p1}, p2:{p2}, w:{shape[1]}, h:{shape[0]}", (100, 80),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
                     cv2.putText(frame, f"bbox:{bbox}, timestamp:{timestamp}", (200, 160),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 1)
@@ -101,6 +125,49 @@ class VisionBase(AlgorithmSensor):
 
         return rotation_matrix,translation_matrix
 
+
+    # Teste Novo
+    def calc_obj_position(self, bbox, timestamp_detect = None, alt_image=1080):
+        # Link para descobrir focal length https://github.com/microsoft/AirSim/issues/2396
+        # Formula para focal length (Horizontal FoV = 2 * arctan( width / 2f ) )
+        focal_lengh_x =self.config['algorithm']['vision']['focal_lengh_x']
+        focal_lengh_y = self.config['algorithm']['vision']['focal_lengh_y']
+        px = self.config['algorithm']['vision']['px']
+        py = self.config['algorithm']['vision']['py']
+
+        if timestamp_detect == None:
+            timestamp_detect = datetime.now().timestamp()
+
+        x_imagem, y_imagem = bbox[0] + (bbox[2] / 2), bbox[1] + (bbox[3] / 2)
+
+        distance = self.calc_distance(bbox)
+        print("Distance:",distance, 'timestamp:',timestamp_detect)
+
+        z = (distance**2) / ((((px - x_imagem)/focal_lengh_x)**2) +  (((y_imagem - py)/focal_lengh_y)**2) + 1)
+        x = (z / focal_lengh_x) * (px-x_imagem)
+        y = (z /focal_lengh_y) * (y_imagem - py)
+
+        relative_pos = np.array([x, y, z])
+
+        # https://www.cs.cmu.edu/~16385/s17/Slides/11.1_Camera_matrix.pdf
+        rotation_matrix, translation_matrix = self.calc_extrinsics_matrix()
+
+        extrinsic_matrix = np.c_[rotation_matrix, translation_matrix]
+        real_pos = np.dot(extrinsic_matrix, np.array([x, y, z, 1]))
+
+        # Convertendo de cm para metros
+        real_pos = [x * 100 for x in real_pos]
+
+        # Escrevendo parametros
+        file_path = f'../data/camera_data/camera_{datetime.now().strftime("%Y_%m_%d")}.csv'
+        with open(file_path, 'a') as file:
+            file.write(
+                f"{datetime.now().timestamp()},{focal_lengh_y},{focal_lengh_x},{px},{py},{rotation_matrix.tolist()},{translation_matrix.tolist()}\n")
+
+        self.detectData.updateData(distance=distance, relativePosition=relative_pos, bbox=bbox, otherPosition=np.array(real_pos), timestamp= int(timestamp_detect))
+
+
+    '''
     def calc_obj_position(self, bbox, fov_angle=120, width_image=1024, alt_image = 580, focal_lengh_x=510, focal_lengh_y=510):
         #Link para descobrir focal length https://github.com/microsoft/AirSim/issues/2396
         #Formula para focal length (Horizontal FoV = 2 * arctan( width / 2f ) )
@@ -129,8 +196,7 @@ class VisionBase(AlgorithmSensor):
         #Real distance
         distance_real = self.calc_distance(bbox)
         #print(f"calcule position: {relativePosition}")
-        self.detectData.updateData(distance=distance_real, relativePosition=relativePosition, bbox=bbox)
-
+    '''
 class VisionDepthBase(VisionBase):
     def __init__(self,detectRoot):
         VisionBase.__init__(self, detectRoot)
@@ -176,29 +242,6 @@ class VisionDepthBase(VisionBase):
         cv2.imshow("Depth", image)
         cv2.waitKey(1)
 
-    def calc_distance(self,bbox):
-        x1, y1, x2, y2 = self.getPoints(bbox)
-        if x2 < x1:
-            aux = x1.copy()
-            x1 = x2
-            x2 = aux
-        elif x2 == x1:
-            return None
-        if y2 < y1:
-            aux = y1.copy()
-            y1 = y2
-            y2 = aux
-        elif y2 == y1:
-            return None
-        y1 = max(0,y1)
-        x1 = max(0,x1)
-        depthImage = self.getDepth()
-        shape_depth = depthImage.shape
-        y_proporcion = shape_depth[0] / 1080
-        x_proporcion = shape_depth[1] / 1920
-        distanceMin = depthImage[int(y1*y_proporcion):int(y2*y_proporcion),
-                                 int(x1*x_proporcion):int(x2*x_proporcion)].min()
-        return distanceMin
 
 class VisionCaptureImage(VisionBase):
     def __init__(self, detectRoot):

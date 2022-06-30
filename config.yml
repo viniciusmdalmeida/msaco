@@ -4,11 +4,12 @@ test:
   plane_velocity: 200
 
 algorithm:
-  time_max: 50 #1min10seg
+  time_max: 45 #1min10seg
   vision:
     min_area: 6401
-    dirPositveImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/background+/
-    dirNegativeImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/RGB/plane+/
+    dirPositveImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/Depth/windows/background/
+    dirNegativeImagem: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/Depth/windows/plane/
+    dirImageSemAviao: C:/Users/vinic/OneDrive/Mestrado/Programa/Python/data/imagens/FalsoNegativo/ult_test/
     dirModels: ../data/models/
     windowSizeX : 80
     windowSizeY : 80
@@ -16,6 +17,10 @@ algorithm:
     model_sufix: 80x80_200
     resize_width: 1024
     resize_height: 580
+    px: 206
+    py: 120
+    focal_lengh_y: 168
+    focal_lengh_x: 168
 
 
 detect:

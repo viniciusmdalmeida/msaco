@@ -33,14 +33,15 @@ class VisionTrackerBase(VisionDepthBase):
         # Pegando o primeiro frame
         print(f"Start or Restart Tracker {self.name}")
         start_frame = self.getImage()
-        while len(np.unique(start_frame)) < 20:
+        while len(np.unique(start_frame)) < 20 and self._stop_detect == False:
             start_frame = self.getImage()
+        timestamp = datetime.now().timestamp()
         #Primeira detecção
         bbox,frame = self.firstDetect(start_frame)
         if (not frame is None) and (len(frame.shape) < 3):
             frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
         if (not bbox is  None) and (not frame is  None):
-            self.calc_obj_position(bbox)
+            self.calc_obj_position(bbox, timestamp_detect=timestamp)
             print(f"Start Tracker {self.name}, with bbox: {bbox}")
             self.tracker.init(frame, bbox)
         else:
@@ -53,7 +54,13 @@ class VisionTrackerBase(VisionDepthBase):
         while bbox is None and self._stop_detect == False:
             frame = self.getImage()
             bbox = self.detectObject.detect(frame,start_frame)
-            self.printDetection(frame,bbox)
+            timestamp_detect = datetime.now().timestamp()
+            if bbox:
+                self.printDetection(frame,bbox)
+            else:
+                save_path = self.config['algorithm']['vision']['dirImageSemAviao']
+                image_name_base = f'{save_path}/frame_{self.__class__.__name__}_{int(timestamp_detect)}'
+                cv2.imwrite(f'{image_name_base}_FN.jpg', frame)
         print(f"First Detect ok, bbox:{bbox}")
         return bbox,frame
 
@@ -72,8 +79,9 @@ class VisionTrackerBase(VisionDepthBase):
             else:
                 frame = cv2.cvtColor(frame,cv2.COLOR_GRAY2RGB)
                 ok, bbox = self.tracker.update(frame)
+            timestmap = datetime.now().timestamp()
             self.printDetection(frame,bbox)
-            self.calc_obj_position(bbox)
+            self.calc_obj_position(bbox, timestamp_detect=timestmap)
             return ok
         else:
             return False
@@ -88,23 +96,28 @@ class VisionDetectOnly(VisionTrackerBase):
     def start_tracker(self):
         # Pegando o primeiro frame
         self.start_frame = self.getImage()
-        while len(np.unique(self.start_frame)) < 20:
+        while len(np.unique(self.start_frame)) < 20 and self._stop_detect == False:
             self.start_frame = self.getImage()
 
     def detect(self):
         frame = self.getImage()
         start_time = datetime.now()
         bbox = self.detectObject.detect(frame)
+        timestamp_detect = datetime.now().timestamp()
         end_detect = datetime.now()
         if bbox :
             print("**Objeto encontrado, timestamp:",
                   end_detect.isoformat(), "tempo exec:",end_detect - start_time)
+            timestamp = datetime.now().timestamp()
             self.printDetection(frame, bbox)
-            self.calc_obj_position(bbox)
+            self.calc_obj_position(bbox, timestamp_detect=timestamp)
             status = True
         else:
             print("**NÃO encontrado! timestamp:",
                   datetime.now().isoformat(), "tempo exec:", end_detect - start_time)
+            save_path = self.config['algorithm']['vision']['dirImageSemAviao']
+            image_name_base = f'{save_path}/frame_{self.__class__.__name__}_{int(timestamp_detect)}'
+            cv2.imwrite(f'{image_name_base}_FN.jpg', frame)
             status = False
         if not self.check_status(status):
             self.start_tracker()

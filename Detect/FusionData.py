@@ -74,7 +74,12 @@ class FusionData_Mean(BaseFusionData):
 class FusionData_MeanWeighted(BaseFusionData):
     def fusionLogic(self,list_data):
         #remove None
-        list_valid = [x != None for x in list_data]
+        list_valid = []
+        for x in list_data:
+            if type(x) == np.ndarray:
+                x = list(x)
+            is_valid = x != None
+            list_valid.append(is_valid)
         list_data_np = np.array([x for x in list_data if  not x is None])
         if np.issubdtype(list_data_np.dtype, np.number):
             path_algorithm = 'algorithm_metric.yml'
@@ -95,7 +100,6 @@ class FusionData_MeanWeighted(BaseFusionData):
             return list_data_np
 
     def cleanMean(self,list_data,list_weight):
-        print(f"list_data = {list_data}, list_weigth= {list_weight}")
         output_list = []
         if len(list_data.shape) < 2:
             list_valid = [np.isfinite(x) and (not np.isnan(x)) for x in list_data]
@@ -112,10 +116,10 @@ class FusionData_MeanWeighted(BaseFusionData):
                 list_data_valid = np.array(list_data[:, colun][list_valid])
                 list_weight_valid = list_weight[list_valid]
                 # normalizando peso
+                print(f"list_weight_valid:{list_weight_valid}  |  list_weight_valid:{list_weight_valid}")
                 list_weight_norm = list_weight_valid / sum(list_weight_valid)
                 if len(list_data_valid) <= 0:
                     output_list.append(np.inf)
                 else:
                     output_list.append(sum(list_data_valid*list_weight_norm)/list_data.shape[0])
-        print(f"output = {output_list}")
         return output_list

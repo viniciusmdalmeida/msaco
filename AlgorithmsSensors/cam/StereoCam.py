@@ -91,7 +91,7 @@ class VisionStereoBase(VisionBase):
     def get_start_frame(self):
         # Pegando o primeiro frame
         self.start_frame = self.getImage()
-        while len(np.unique(self.start_frame)) < 20:
+        while len(np.unique(self.start_frame)) < 20 and self._stop_detect == False:
             self.start_frame = self.getImage()
 
 
@@ -110,6 +110,9 @@ class VisionStereoBase(VisionBase):
         if not bbox:
             print("NÃO encontrado! timestamp:", end_detect.isoformat(),"tempo exec:",end_detect-start_time)
             print("---------------")
+            save_path = self.config['algorithm']['vision']['dirImageSemAviao']
+            image_name_base = f'{save_path}/frame_{self.__class__.__name__}_{int(timestamp_detect)}'
+            cv2.imwrite(f'{image_name_base}_FN.jpg', img_left)
             return
         if self.save_vision_detect:
             print("--Objeto encontrado! timestamp:", datetime.now().isoformat(),"tempo exec:",end_detect-start_time)
@@ -126,7 +129,6 @@ class VisionStereoBase(VisionBase):
         relative_pos = np.array([x, y, z])
 
         extrinsic_matrix = np.c_[rotation_matrix, translation_matrix]
-        print(f"rotation matrix:{rotation_matrix}, translation matrix:{translation_matrix}")
         real_pos = np.dot(extrinsic_matrix, np.array([x, y, z, 1]))
 
         # Convertendo de cm para metros
@@ -136,6 +138,118 @@ class VisionStereoBase(VisionBase):
 
         self.detectData.updateData(distance=distance, otherPosition=np.array(real_pos),relativePosition=relative_pos,
                                    bbox=bbox, timestamp= int(timestamp_detect))
+        print(f"Final detect => bbox:{bbox}, relative:{relative_pos}, real data:{real_pos}, distance: {distance}")
+        print("---------------")
+        return real_pos
+
+
+class VisionStereoTracker(VisionStereoBase):
+    name = 'vision stereo tracker'
+
+    def __init__(self, detectRoot, prep_data_name='pca', model_name='rf', template_matching_method='cv2.TM_CCOEFF'):
+        VisionStereoBase.__init__(self, detectRoot, prep_data_name, model_name, template_matching_method)
+        self.tracker = None
+        self.cont_status = 0
+
+    def check_status(self, status):
+        if status:
+            self.cont_status = 0
+            return True
+        else:
+            self.cont_status += 1
+            if self.cont_status >= 5:
+                self.cont_status = 0
+                return False
+        return True
+
+    def start_tracker(self):
+        # Pegando o primeiro frame
+        print(f"Start or Restart Tracker {self.name}")
+        start_frame = self.getImage()
+        while len(np.unique(start_frame)) < 20 and self._stop_detect == False:
+            start_frame = self.getImage()
+        # Primeira detecção
+        bbox, frame_left, frame_rigth = self.firstDetect(start_frame)
+        timestamp = datetime.now().timestamp()
+        if (not frame_left is None) and (len(frame_left.shape) < 3):
+            frame_left = cv2.cvtColor(frame_left, cv2.COLOR_GRAY2RGB)
+        if (not bbox is None) and (not frame_left is None):
+            self.calc_obj_position_stereo(frame_left, frame_rigth, bbox, timestamp_detect=timestamp)
+            print(f"Start Tracker {self.name}, with bbox: {bbox}")
+            self.tracker.init(frame_left, bbox)
+        else:
+            print("Target not detect!")
+
+    def firstDetect(self, start_frame):
+        print(f"Get First Detect {self.name}")
+        bbox = None
+        frame_left = None
+        frame_rigth = None
+        while bbox is None and self._stop_detect == False:
+            frame_left,frame_rigth  = self.get_images()
+            bbox = self.detectObject.detect(frame_left, start_frame)
+            timestamp_detect = datetime.now().timestamp()
+            if bbox:
+                self.printDetection(frame_left, bbox)
+            else:
+                save_path = self.config['algorithm']['vision']['dirImageSemAviao']
+                image_name_base = f'{save_path}/frame_{self.__class__.__name__}_{int(timestamp_detect)}'
+                cv2.imwrite(f'{image_name_base}_FN.jpg', frame_left)
+        print(f"First Detect ok, bbox:{bbox}")
+        return bbox, frame_left, frame_rigth
+
+    def detect(self):
+        status = self.updateTracker()
+        if not self.check_status(status):
+            # restart tracker
+            self.start_tracker()
+
+    def updateTracker(self):
+        frame_left, frame_rigth = self.get_images()
+        # Update tracker
+        if frame_left is not None:
+            if len(frame_left.shape) > 2:
+                ok, bbox = self.tracker.update(frame_left[:, :, :3])
+            else:
+                frame_left = cv2.cvtColor(frame_left, cv2.COLOR_GRAY2RGB)
+                ok, bbox = self.tracker.update(frame_left)
+            timestmap = datetime.now().timestamp()
+            self.printDetection(frame_left, bbox)
+            self.calc_obj_position(bbox, timestamp_detect=timestmap)
+            return ok
+        else:
+            return False
+
+    def calc_obj_position_stereo(self, img_left, img_rigth, bbox, timestamp_detect,
+               focal_lengh_x=510, focal_lengh_y=510, px=960, py=540, b=25):
+
+        # Pegando valores de rotação
+        rotation_matrix, translation_matrix = self.calc_extrinsics_matrix()
+        translation_matrix[2] = translation_matrix[2] * -1  # Atualizando valor de Z
+
+        if self.save_vision_detect:
+            print(f"--Objeto encontrado!bbox:{bbox}, timestamp:{timestamp_detect}")
+            save_path = self.config['sensors']['Vision']['save_path']
+            image_name_base = f'{save_path}/frame_{self.cont}_{timestamp_detect}'
+            cv2.imwrite(f'{image_name_base}_left.jpg', img_left)
+            cv2.imwrite(f'{image_name_base}_right.jpg', img_rigth)
+            self.cont += 1
+        self.printDetection(img_left, bbox, timestamp=timestamp_detect)
+        # Calculando posição relativa
+        x, y, z = self.calc_relative_pos(img_left, img_rigth, bbox,
+                                         focal_lengh_x=focal_lengh_x, focal_lengh_y=focal_lengh_y, px=px, py=py, b=b)
+        relative_pos = np.array([x, y, z])
+
+        extrinsic_matrix = np.c_[rotation_matrix, translation_matrix]
+        real_pos = np.dot(extrinsic_matrix, np.array([x, y, z, 1]))
+
+        # Convertendo de cm para metros
+        real_pos = [x * 100 for x in real_pos]
+
+        distance = self.calc_distance(relative_pos)
+
+        self.detectData.updateData(distance=distance, otherPosition=np.array(real_pos), relativePosition=relative_pos,
+                                   bbox=bbox, timestamp=int(timestamp_detect))
         print(f"Final detect => bbox:{bbox}, relative:{relative_pos}, real data:{real_pos}, distance: {distance}")
         print("---------------")
         return real_pos

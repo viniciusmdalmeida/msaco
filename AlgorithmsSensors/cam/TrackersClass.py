@@ -45,19 +45,19 @@ class VisionTracker_Depth(VisionDetectOnly):
         return img
 
 class VisionDetectSVM_Depth(VisionTracker_Depth):
-    name = 'svm'
+    name = 'svm_depth'
 
 class VisionDetectLGB_Depth(VisionTracker_Depth):
-    name = 'lgb'
+    name = 'lgb_depth'
 
 class VisionDetectRF_Depth(VisionTracker_Depth):
-    name = 'rf'
+    name = 'rf_depth'
 
 class VisionDetectNaive_Depth(VisionTracker_Depth):
-    name = 'naive'
+    name = 'naive_depth'
 
 class VisionDetectNeural_Depth(VisionTracker_Depth):
-    name = 'neural'
+    name = 'neural_depth'
 
 
 ################################
