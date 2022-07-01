@@ -20,13 +20,18 @@ with open(config_path, 'r') as file_config:
     config = yaml.full_load(file_config)
 
 #Para iniciar o keras
-list_algorithms = [{"Depth": VisionDetectRF_Depth}]
-                   #{"Depth": VisionDetectSVM_Depth},
-                   #{"Depth": VisionDetectLGB_Depth},
-                   #{"Depth": VisionDetectNaive_Depth},
-                   #{"Depth": VisionDetectNeural_Depth}]
+
+list_algorithms = [{"Depth": VisionTracker_KFC_Naive},
+                   {"Depth": VisionTracker_MIL_RF},
+                   {"Depth":VisionTracker_MIL_Naive},
+                   {"Depth": VisionTracker_KFC_Naive},
+                   {"Depth": VisionTracker_TLD_RF},
+                   {"Depth": VisionTracker_TLD_Naive},
+                   {"Depth": VisionTracker_Boosting_RF},
+                   {"Depth": VisionTracker_Boosting_Naive}]
 
 """
+#Algoritmos simples 
 list_algorithms = [{"Binocular": VisionStereoRF},
                    {"Binocular": VisionStereoSVM},
                    {"Binocular": VisionStereoLGB},
@@ -36,7 +41,13 @@ list_algorithms = [{"Binocular": VisionStereoRF},
                    {"Mix_Cam": VisionDetectSVM},
                    {"Mix_Cam": VisionDetectLGB},
                    {"Mix_Cam": VisionDetectNaiveBayes},
-                   {"Mix_Cam": VisionDetectNeural}]
+                   {"Mix_Cam": VisionDetectNeural},
+                   {'Depth':VisionDetectRF_Depth},
+                   {"Depth": VisionDetectSVM_Depth},
+                   {"Depth": VisionDetectLGB_Depth},
+                   {"Depth": VisionDetectNaive_Depth},
+                   {"Depth": VisionDetectNeural_Depth}]
+
 # Stereo
 list_algorithms = [{"Mix_Cam": VisionTracker_KFC_RF},
                    {"Binocular": VisionTrackerStereo_KFC_RF},
@@ -77,9 +88,9 @@ model = model_from_json(model_json)
 model.load_weights(path_model + 'keras_Xception.h5')
 """
 
-list_fusion_algorithms = [FusionData_MeanWeighted, FusionData_Mean]
+#list_fusion_algorithms = [FusionData_MeanWeighted, FusionData_Mean]
 #list_avoid_algorithms = [HorizontalAvoid, VerticalAvoid]
-#list_fusion_algorithms = [FusionData_Mean]
+list_fusion_algorithms = [FusionData_Mean]
 list_avoid_algorithms = [HorizontalAvoid]
 #Posição do avião
 

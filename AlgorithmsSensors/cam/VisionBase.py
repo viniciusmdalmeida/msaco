@@ -36,8 +36,11 @@ class VisionBase(AlgorithmSensor):
         x1 = max(0,x1)
         depthImage = self.getDepth()
         shape_depth = depthImage.shape
-        y_proporcion = shape_depth[0] / 1080
-        x_proporcion = shape_depth[1] / 1920
+        larg = self.config['algorithm']['vision']['image_width']
+        alt = self.config['algorithm']['vision']['image_heigth']
+        y_proporcion = shape_depth[0] / alt
+        x_proporcion = shape_depth[1] / larg
+        print(f"({x1},{y1})({x2},{y2}), shape:{depthImage.shape}, proporcion:{x_proporcion},{y_proporcion}, alt:{alt},{larg}")
         distanceMin = depthImage[int(y1*y_proporcion):int(y2*y_proporcion),
                                  int(x1*x_proporcion):int(x2*x_proporcion)].min()
         return distanceMin

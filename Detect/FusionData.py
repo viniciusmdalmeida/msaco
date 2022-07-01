@@ -116,10 +116,9 @@ class FusionData_MeanWeighted(BaseFusionData):
                 list_data_valid = np.array(list_data[:, colun][list_valid])
                 list_weight_valid = list_weight[list_valid]
                 # normalizando peso
-                print(f"list_weight_valid:{list_weight_valid}  |  list_weight_valid:{list_weight_valid}")
-                list_weight_norm = list_weight_valid / sum(list_weight_valid)
-                if len(list_data_valid) <= 0:
+                if len(list_data_valid) <= 0 or sum(list_weight_valid) == 0:
                     output_list.append(np.inf)
                 else:
+                    list_weight_norm = list_weight_valid / sum(list_weight_valid)
                     output_list.append(sum(list_data_valid*list_weight_norm)/list_data.shape[0])
         return output_list

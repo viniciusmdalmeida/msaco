@@ -21,6 +21,8 @@ algorithm:
     py: 120
     focal_lengh_y: 168
     focal_lengh_x: 168
+    image_width: 1024
+    image_heigth: 580
 
 
 detect:
@@ -62,5 +64,5 @@ sensors:
 
   Vision:
     show_video: false
-    save_vision_detect: true
+    save_vision_detect: false
     save_path: ../data/imagens/detect/voo
